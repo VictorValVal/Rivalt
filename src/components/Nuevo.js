@@ -25,7 +25,8 @@ function Nuevo() {
       titulo,
       deporte,
       modo,
-      tipo,
+      tipo, 
+      
       numEquipos,
       creadorId: user.uid,
       codigo,
