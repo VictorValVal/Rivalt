@@ -4,7 +4,7 @@ import { getAuth } from "firebase/auth";
 import { getFirestore, collection, query, where, onSnapshot } from "firebase/firestore";
 import { app } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { FaTrophy } from "react-icons/fa"; // Importamos el icono de trofeo
+import { FaTrophy } from "react-icons/fa"; 
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -22,13 +22,13 @@ function Home() {
         return;
       }
 
-      // Torneos creados por el usuario
+
       const qCreados = query(
         collection(db, "torneos"),
         where("creadorId", "==", currentUser.uid)
       );
 
-      // Torneos individuales donde el usuario es participante
+
       const qParticipantesIndividual = query(
         collection(db, "torneos"),
         where("participantes", "array-contains", currentUser.uid)
@@ -123,16 +123,8 @@ function Home() {
     <div>
       <header></header>
       <main style={{ position: "relative", padding: "1rem" }}>
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            display: "flex",
-            gap: "0.5rem",
-            padding: "1rem",
-          }}
-        >
+        <div className="main-buttons">
+        
           <button onClick={handleNuevoTorneo}>Añadir Torneo</button>
           <button onClick={handleUnirseTorneo}>Unirse a Torneo</button>
         </div>
@@ -161,7 +153,7 @@ function Home() {
                         <g strokeWidth="0" id="SVGRepo_bgCarrier"></g>
                         <g strokeLinejoin="round" strokeLinecap="round" id="SVGRepo_tracerCarrier"></g>
                         <g id="SVGRepo_iconCarrier">
-                        <FaTrophy size={50} color="white" /> {/* Icono de trofeo */}
+                        <FaTrophy size={50} color="white" />
                         </g>
                       </svg>
                       <strong>{torneo.titulo}</strong>
@@ -194,7 +186,6 @@ function Home() {
           })}
         </div>
       </main>
-      <footer></footer>
     </div>
   );
 }

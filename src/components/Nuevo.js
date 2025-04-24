@@ -25,12 +25,11 @@ function Nuevo() {
       titulo,
       deporte,
       modo,
-      tipo, 
-      
+      tipo,
       numEquipos,
       creadorId: user.uid,
       codigo,
-      participantes: [], // Siempre inicializamos con un array vacío
+      participantes: [],
       fechaCreacion: new Date(),
     };
 
@@ -47,8 +46,18 @@ function Nuevo() {
       {step === 1 && (
         <div>
           <h2>Paso 1: Información básica</h2>
-          <input type="text" placeholder="Título" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
-          <input type="text" placeholder="Deporte" value={deporte} onChange={(e) => setDeporte(e.target.value)} />
+          <input
+            type="text"
+            placeholder="Título"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Deporte"
+            value={deporte}
+            onChange={(e) => setDeporte(e.target.value)}
+          />
           <button onClick={() => setStep(2)}>Siguiente</button>
         </div>
       )}
@@ -56,10 +65,20 @@ function Nuevo() {
       {step === 2 && (
         <div>
           <h2>Paso 2: Tipo de participación</h2>
-          <button onClick={() => { setModo("individual"); setStep(3); }}>
+          <button
+            onClick={() => {
+              setModo("individual");
+              setStep(3);
+            }}
+          >
             Individual
           </button>
-          <button onClick={() => { setModo("equipo"); setStep(3); }}>
+          <button
+            onClick={() => {
+              setModo("equipo");
+              setStep(3);
+            }}
+          >
             Por equipos
           </button>
         </div>
@@ -68,24 +87,51 @@ function Nuevo() {
       {step === 3 && (
         <div>
           <h2>Paso 3: Tipo de torneo</h2>
-          <button onClick={() => { setTipo("liga"); setStep(4); }}>Liga</button>
-          <button onClick={() => { setTipo("torneo"); setStep(4); }}>Torneo</button>
+          <button
+            onClick={() => {
+              setTipo("liga");
+              setStep(4);
+            }}
+          >
+            Liga
+          </button>
+          <button
+            onClick={() => {
+              setTipo("torneo");
+              setStep(4);
+            }}
+          >
+            Torneo
+          </button>
         </div>
       )}
 
       {step === 4 && (
         <div>
           <h2>Paso 4: Número de {modo === "equipo" ? "equipos" : "participantes"}</h2>
-          <input
-            type="number"
-            value={numEquipos}
-            onChange={(e) => {
-              const value = parseInt(e.target.value);
-              setNumEquipos(value);
-            }}
-            max={tipo === "liga" ? 20 : 16}
-            min={2}
-          />
+          {tipo === "torneo" ? (
+            <select
+              value={numEquipos}
+              onChange={(e) => setNumEquipos(parseInt(e.target.value))}
+            >
+              <option value="">Seleccionar</option>
+              <option value={2}>2</option>
+              <option value={4}>4</option>
+              <option value={8}>8</option>
+              <option value={16}>16</option>
+            </select>
+          ) : (
+            <input
+              type="number"
+              value={numEquipos}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                setNumEquipos(value);
+              }}
+              max={20}
+              min={2}
+            />
+          )}
           <button onClick={handleSubmit}>Crear torneo</button>
         </div>
       )}
