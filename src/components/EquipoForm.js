@@ -23,7 +23,7 @@ function EquipoForm({ onSubmit, onCancel }) {
       alert("Todos los miembros deben tener nombre.");
       return;
     }
-    onSubmit(nombreEquipo, miembros); // Modificado para pasar nombreEquipo
+    onSubmit(nombreEquipo, miembros);
   };
 
   return (
