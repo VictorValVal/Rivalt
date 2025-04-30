@@ -302,11 +302,11 @@ function Calendario() {
     <div className="calendario-container">
       <h2>Calendario de Partidos</h2>
       <div className="calendario-header">
-        {esCreador && !mostrarFormulario && (
-          <button onClick={handleMostrarFormulario} className="calendario-add-button primary">
-            <FaPlus /> Añadir Partido
-          </button>
-        )}
+       {esCreador && !mostrarFormulario && torneoInfo?.tipo !== "torneo" && (
+  <button onClick={handleMostrarFormulario} className="calendario-add-button primary">
+    <FaPlus /> Añadir Partido
+  </button>
+)}
       </div>
 
       {mostrarFormulario && esCreador && (
