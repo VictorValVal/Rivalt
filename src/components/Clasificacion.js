@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react"; // Import useMemo
 import { useParams } from "react-router-dom";
 import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc } from "firebase/firestore";
 import { app } from "../firebase";
@@ -19,8 +19,8 @@ function Clasificacion() {
   const [showMatchForm, setShowMatchForm] = useState(false);
   const [showResultForm, setShowResultForm] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
-  const [selectedMatch, setSelectedMatch] = useState(null);
-  const [selectedResultMatch, setSelectedResultMatch] = useState(null);
+  const [selectedMatchSeed, setSelectedMatchSeed] = useState(null); // Store the seed clicked for match creation/info
+  const [selectedResultPartido, setSelectedResultPartido] = useState(null); // Store the raw partido for adding result
   const [localScore, setLocalScore] = useState("");
   const [visitanteScore, setVisitanteScore] = useState("");
   const [formData, setFormData] = useState({
@@ -28,9 +28,11 @@ function Clasificacion() {
     hora: "",
     localId: "",
     visitanteId: "",
+    local: "", // To store name if pre-filled
+    visitante: "", // To store name if pre-filled
   });
 
-  const [participantes, setParticipantes] = useState([]);
+  const [participantes, setParticipantes] = useState([]); // All participants
 
   useEffect(() => {
     setLoading(true);
@@ -42,15 +44,16 @@ function Clasificacion() {
           setTipoTorneo(data.tipo);
 
           const participantesRaw = data.participantes || [];
+          // Ensure participant IDs are treated consistently (e.g., as strings)
           const participantesFormateados = participantesRaw
             .map((p) => {
               if (typeof p === "object" && (p.nombre || p.capitan)) {
                 return {
-                  id: p.id || p.capitan,
-                  nombre: p.nombre || `Equipo (Cap: ${p.capitan?.substring(0, 6)}...)`,
+                  id: String(p.id || p.capitan), // Ensure ID is a string
+                  nombre: p.nombre || `Equipo (Cap: ${String(p.capitan || '').substring(0, 6)}...)`,
                 };
               } else if (typeof p === "string") {
-                return { id: p, nombre: p };
+                return { id: String(p), nombre: String(p) }; // Ensure ID and name are strings
               }
               return null;
             })
@@ -62,7 +65,10 @@ function Clasificacion() {
           if (data.tipo === "torneo" && num > 0 && Number.isInteger(Math.log2(num))) {
             setNumParticipantes(num);
           } else {
-            setNumParticipantes(0);
+            setNumParticipantes(0); // Invalid number for elimination
+            if (data.tipo === "torneo") {
+              console.error("Número de participantes para torneo de eliminación debe ser potencia de 2.");
+            }
           }
         } else {
           console.error("No tournament found with ID:", torneoId);
@@ -98,27 +104,79 @@ function Clasificacion() {
     return () => unsubscribe();
   }, [torneoId]);
 
+  // Calculate eliminated team IDs
+  const eliminatedTeamIds = useMemo(() => {
+    const losers = new Set();
+    rawPartidos.forEach(partido => {
+      if (partido.resultado && partido.resultado.includes('-')) {
+        const [score1, score2] = partido.resultado.split('-').map(Number);
+        // Assuming no ties or ties lead to one declared winner
+        if (score1 < score2 && partido.localId) {
+          losers.add(String(partido.localId)); // Ensure ID is string
+        } else if (score2 < score1 && partido.visitanteId) {
+          losers.add(String(partido.visitanteId)); // Ensure ID is string
+        }
+      }
+    });
+    //console.log("Eliminated IDs:", Array.from(losers)); // Debugging
+    return Array.from(losers);
+  }, [rawPartidos]);
+  // Equipos ya seleccionados en partidos existentes
+const selectedTeamIds = useMemo(() => {
+  const selectedIds = new Set();
+  rawPartidos.forEach((partido) => {
+    if (partido.localId) selectedIds.add(partido.localId);
+    if (partido.visitanteId) selectedIds.add(partido.visitanteId);
+  });
+  return Array.from(selectedIds);
+}, [rawPartidos]);
+
+  // Filter participants to get available ones for selection
+  const availableParticipants = useMemo(() => {
+    return participantes.filter(
+      (p) => !eliminatedTeamIds.includes(p.id) && !selectedTeamIds.includes(p.id)
+    );
+  }, [participantes, eliminatedTeamIds, selectedTeamIds]);
+
+
   const handleCreateMatch = async (e) => {
     e.preventDefault();
-    if (!formData.fecha || !formData.hora || !formData.localId || !formData.visitanteId) {
-      alert("Por favor complete todos los campos");
+
+    // Check if both slots are filled (either pre-filled or manually selected)
+    if (!formData.localId || !formData.visitanteId) {
+      alert("Por favor complete ambos equipos");
+      return;
+    }
+    if (!formData.fecha || !formData.hora) {
+      alert("Por favor complete fecha y hora");
       return;
     }
 
     try {
-      const local = participantes.find((p) => p.id === formData.localId);
-      const visitante = participantes.find((p) => p.id === formData.visitanteId);
+      // Find team names using the IDs from formData (which might be pre-filled)
+      const localTeam = participantes.find(p => p.id === formData.localId);
+      const visitanteTeam = participantes.find(p => p.id === formData.visitanteId);
+
+      if (!localTeam || !visitanteTeam) {
+        alert("Error: Equipos no encontrados.");
+        return;
+      }
 
       await addDoc(collection(db, `torneos/${torneoId}/calendario`), {
-        ...formData,
-        bracketMatchId: selectedMatch.id.toString(),
-        local: local.nombre,
-        visitante: visitante.nombre,
-        resultado: null,
+        fecha: formData.fecha,
+        hora: formData.hora,
+        localId: formData.localId,
+        visitanteId: formData.visitanteId,
+        bracketMatchId: selectedMatchSeed.id.toString(), // Use the seed ID clicked
+        local: localTeam.nombre, // Use found names
+        visitante: visitanteTeam.nombre, // Use found names
+        resultado: null, // Initially no result
       });
 
       setShowMatchForm(false);
-      setFormData({ fecha: "", hora: "", localId: "", visitanteId: "" });
+      // Reset form data after successful creation
+      setFormData({ fecha: "", hora: "", localId: "", visitanteId: "", local: "", visitante: "" });
+      setSelectedMatchSeed(null); // Clear selected seed
     } catch (error) {
       console.error("Error creating match:", error);
       alert("Error al crear el partido");
@@ -127,25 +185,106 @@ function Clasificacion() {
 
   const handleAddResult = async (e) => {
     e.preventDefault();
-    if (!selectedResultMatch || localScore === "" || visitanteScore === "") {
+  
+    if (!selectedResultPartido || localScore === "" || visitanteScore === "") {
       alert("Por favor complete ambos puntajes");
       return;
     }
-
+  
+    const score1 = parseInt(localScore, 10);
+    const score2 = parseInt(visitanteScore, 10);
+  
+    if (isNaN(score1) || isNaN(score2) || score1 < 0 || score2 < 0) {
+      alert("Por favor ingrese puntajes numéricos válidos (>= 0).");
+      return;
+    }
+  
     try {
-      const partidoRef = doc(db, `torneos/${torneoId}/calendario`, selectedResultMatch.id);
+      const partidoRef = doc(db, `torneos/${torneoId}/calendario`, selectedResultPartido.id);
       await updateDoc(partidoRef, {
-        resultado: `${localScore}-${visitanteScore}`,
+        resultado: `${score1}-${score2}`, // Guardar como "score1-score2"
       });
-
+  
+      // Actualizar el estado local para reflejar el cambio
+      setRawPartidos((prevPartidos) =>
+        prevPartidos.map((p) =>
+          p.id === selectedResultPartido.id
+            ? { ...p, resultado: `${score1}-${score2}` }
+            : p
+        )
+      );
+  
       setShowResultForm(false);
       setLocalScore("");
       setVisitanteScore("");
+      setSelectedResultPartido(null); // Limpiar el partido seleccionado
     } catch (error) {
       console.error("Error al actualizar resultado:", error);
       alert("Error al guardar el resultado");
     }
   };
+
+  // Handle click on a seed/match slot in the bracket
+  const handleBracketMatchClick = (seed) => {
+    const partido = rawPartidos.find(p => p.bracketMatchId === seed.id.toString());
+
+    if (partido) {
+      // If a partido exists for this seed, show info modal
+      setSelectedMatchSeed(partido); // Store the raw partido for info
+      setShowInfoModal(true);
+    } else {
+      // If no partido exists, show create match form
+      setSelectedMatchSeed(seed); // Store the seed object for form context
+
+      // Initialize form data, pre-filling teams if they've advanced
+      setFormData({
+        fecha: "",
+        hora: "",
+        localId: seed.teams[0]?.id || "",
+        visitanteId: seed.teams[1]?.id || "",
+        local: seed.teams[0]?.name || "", // Store name for display if pre-filled
+        visitante: seed.teams[1]?.name || "", // Store name for display if pre-filled
+      });
+      setShowMatchForm(true);
+    }
+  };
+
+  // Handle click on Modify button in the bracket
+  const handleModifyMatch = (seed) => {
+    const partido = rawPartidos.find(p => p.bracketMatchId === seed.id.toString());
+    if (partido) {
+      setSelectedMatchSeed(seed); // Store seed for context
+      // Initialize form data with existing partido data
+      setFormData({
+        fecha: partido.fecha || "",
+        hora: partido.hora || "",
+        localId: partido.localId || "",
+        visitanteId: partido.visitanteId || "",
+        local: partido.local || "",
+        visitante: partido.visitante || "",
+      });
+      setShowMatchForm(true); // Open the modal
+    }
+  };
+
+  // Handle click on Add Result button in the bracket
+  const handleAddResultClick = (seed) => {
+    const partido = rawPartidos.find(p => p.bracketMatchId === seed.id.toString());
+    if (partido) {
+      setSelectedResultPartido(partido); // Store the raw partido for result form
+      // Pre-fill score if it exists
+      if (partido.resultado && partido.resultado.includes('-')) {
+        const [score1, score2] = partido.resultado.split('-');
+        setLocalScore(score1);
+        setVisitanteScore(score2);
+      } else {
+        setLocalScore("");
+        setVisitanteScore("");
+      }
+      setShowResultForm(true);
+    }
+  };
+  
 
   if (loading) {
     return <div>Cargando información del torneo...</div>;
@@ -158,50 +297,21 @@ function Clasificacion() {
           <Llaves
             numParticipantes={numParticipantes}
             rawPartidos={rawPartidos}
-            onMatchClick={(seed) => {
-              const partido = rawPartidos.find((p) => p.bracketMatchId === seed.id.toString());
-              if (partido) {
-                setSelectedMatch(partido);
-                setShowInfoModal(true);
-              } else {
-                setSelectedMatch(seed);
-                setFormData({
-                  fecha: "",
-                  hora: "",
-                  localId: "",
-                  visitanteId: "",
-                });
-                setShowMatchForm(true);
-              }
-            }}
-            onModify={(seed) => {
-              const partido = rawPartidos.find((p) => p.bracketMatchId === seed.id.toString());
-              if (partido) {
-                setSelectedMatch(seed);
-                setFormData({
-                  fecha: partido.fecha,
-                  hora: partido.hora,
-                  localId: partido.localId,
-                  visitanteId: partido.visitanteId,
-                });
-                setShowMatchForm(true);
-              }
-            }}
-            onAddResult={(seed) => {
-              const partido = rawPartidos.find((p) => p.bracketMatchId === seed.id.toString());
-              if (partido) {
-                setSelectedResultMatch(partido);
-                setLocalScore(partido.resultado?.split("-")[0] || "");
-                setVisitanteScore(partido.resultado?.split("-")[1] || "");
-                setShowResultForm(true);
-              }
-            }}
+            onMatchClick={handleBracketMatchClick} // Use the new handler
+            onModify={handleModifyMatch} // Use the new handler
+            onAddResult={handleAddResultClick} // Use the new handler
           />
 
-          {/* Modal para añadir partido */}
-          <ReactModal isOpen={showMatchForm} onRequestClose={() => setShowMatchForm(false)}>
-            <h3>Crear Partido</h3>
-            <form onSubmit={handleCreateMatch}>
+          {/* Modal para añadir/modificar partido */}
+          {/* This modal now handles both creation and intended modification */}
+          <ReactModal isOpen={showMatchForm} onRequestClose={() => {
+            setShowMatchForm(false);
+            setFormData({ fecha: "", hora: "", localId: "", visitanteId: "", local: "", visitante: "" }); // Reset form
+            setSelectedMatchSeed(null); // Clear selected seed
+          }}>
+            <h3>{selectedMatchSeed?.partidoId ? "Modificar Partido" : "Crear Partido"}</h3> {/* Dynamic Title */}
+            {/* TODO: Implement update logic */}
+            <form onSubmit={handleCreateMatch}> {/* This form currently only supports creation */}
               <div className="form-group">
                 <label>Fecha:</label>
                 <input
@@ -222,44 +332,76 @@ function Clasificacion() {
               </div>
               <div className="form-group">
                 <label>Equipo Local:</label>
-                <select
-                  value={formData.localId}
-                  onChange={(e) => setFormData({ ...formData, localId: e.target.value })}
-                  required
-                >
-                  <option value="">Seleccionar</option>
-                  {participantes.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.nombre}
-                    </option>
-                  ))}
-                </select>
+                {formData.localId && selectedMatchSeed?.teams[0]?.id ? (
+                  <input type="text" value={formData.local || "Equipo Avanzado"} disabled />
+                ) : (
+                  <select
+                    value={formData.localId}
+                    onChange={(e) => {
+                      const selectedParticipant = participantes.find((p) => p.id === e.target.value);
+                      setFormData({
+                        ...formData,
+                        localId: e.target.value,
+                        local: selectedParticipant ? selectedParticipant.nombre : "",
+                      });
+                    }}
+                    required={!formData.localId}
+                  >
+                    <option value="">Seleccionar</option>
+                    {availableParticipants.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.nombre}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
+
               <div className="form-group">
                 <label>Equipo Visitante:</label>
-                <select
-                  value={formData.visitanteId}
-                  onChange={(e) => setFormData({ ...formData, visitanteId: e.target.value })}
-                  required
-                >
-                  <option value="">Seleccionar</option>
-                  {participantes.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.nombre}
-                    </option>
-                  ))}
-                </select>
+                {formData.visitanteId && selectedMatchSeed?.teams[1]?.id ? (
+                  <input type="text" value={formData.visitante || "Equipo Avanzado"} disabled />
+                ) : (
+                  <select
+                    value={formData.visitanteId}
+                    onChange={(e) => {
+                      const selectedParticipant = participantes.find((p) => p.id === e.target.value);
+                      setFormData({
+                        ...formData,
+                        visitanteId: e.target.value,
+                        visitante: selectedParticipant ? selectedParticipant.nombre : "",
+                      });
+                    }}
+                    required={!formData.visitanteId}
+                  >
+                    <option value="">Seleccionar</option>
+                    {availableParticipants.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.nombre}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
-              <button type="submit">Guardar</button>
+              {/* Show submit button only if at least one slot needs manual selection OR if it's a modification */}
+              {(formData.localId && formData.visitanteId) && (
+                <button type="submit">{selectedMatchSeed?.partidoId ? "Guardar Cambios" : "Crear Partido"}</button>
+              )}
+
             </form>
           </ReactModal>
 
           {/* Modal para añadir resultado */}
-          <ReactModal isOpen={showResultForm} onRequestClose={() => setShowResultForm(false)}>
+          <ReactModal isOpen={showResultForm} onRequestClose={() => {
+            setShowResultForm(false);
+            setLocalScore("");
+            setVisitanteScore("");
+            setSelectedResultPartido(null); // Clear selected partido
+          }}>
             <h3>Añadir Resultado</h3>
             <form onSubmit={handleAddResult}>
               <div className="form-group">
-                <label>{selectedResultMatch?.local}:</label>
+                <label>{selectedResultPartido?.local || "Local"}:</label>
                 <input
                   type="number"
                   value={localScore}
@@ -269,7 +411,7 @@ function Clasificacion() {
                 />
               </div>
               <div className="form-group">
-                <label>{selectedResultMatch?.visitante}:</label>
+                <label>{selectedResultPartido?.visitante || "Visitante"}:</label>
                 <input
                   type="number"
                   value={visitanteScore}
@@ -278,25 +420,38 @@ function Clasificacion() {
                   required
                 />
               </div>
-              <button type="submit">Guardar</button>
+              <button type="submit">Guardar Resultado</button>
             </form>
           </ReactModal>
 
           {/* Modal para mostrar información del partido */}
-          <ReactModal isOpen={showInfoModal} onRequestClose={() => setShowInfoModal(false)}>
+          <ReactModal isOpen={showInfoModal} onRequestClose={() => {
+            setShowInfoModal(false);
+            setSelectedMatchSeed(null); // Clear selected seed (which is a partido object here)
+          }}>
             <h3>Información del Partido</h3>
-            <p>
-              <strong>Local:</strong> {selectedMatch?.local || "Por determinar"}
-            </p>
-            <p>
-              <strong>Visitante:</strong> {selectedMatch?.visitante || "Por determinar"}
-            </p>
-            <p>
-              <strong>Fecha:</strong> {selectedMatch?.fecha || "Por determinar"}
-            </p>
-            <p>
-              <strong>Hora:</strong> {selectedMatch?.hora || "Por determinar"}
-            </p>
+            {selectedMatchSeed && ( // Use selectedMatchSeed (the raw partido object)
+              <>
+                <p>
+                  <strong>Local:</strong> {selectedMatchSeed.local || "Por determinar"}
+                  {selectedMatchSeed.resultado && ` (${selectedMatchSeed.resultado.split('-')[0]})`}
+                </p>
+                <p>
+                  <strong>Visitante:</strong> {selectedMatchSeed.visitante || "Por determinar"}
+                  {selectedMatchSeed.resultado && ` (${selectedMatchSeed.resultado.split('-')[1]})`}
+                </p>
+                {selectedMatchSeed.resultado && selectedMatchSeed.resultado.includes('-') && (
+                  <p><strong>Resultado:</strong> {selectedMatchSeed.resultado}</p>
+                )}
+
+                <p>
+                  <strong>Fecha:</strong> {selectedMatchSeed.fecha || "Por determinar"}
+                </p>
+                <p>
+                  <strong>Hora:</strong> {selectedMatchSeed.hora || "Por determinar"}
+                </p>
+              </>
+            )}
           </ReactModal>
         </>
       )}

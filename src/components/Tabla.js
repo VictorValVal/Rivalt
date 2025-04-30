@@ -1,6 +1,5 @@
-// src/components/Tabla.js
 import React, { useMemo } from "react";
-
+import "../components/estilos/Tabla.css";
 function Tabla({ rawPartidos }) {
   const leagueStandings = useMemo(() => {
     const standingsMap = new Map();
@@ -72,7 +71,6 @@ function Tabla({ rawPartidos }) {
 
   return (
     <div className="clasificacion-container">
-      <h2>Tabla de Clasificación</h2>
       {leagueStandings.length > 0 ? (
         <table className="standings-table">
           <thead>

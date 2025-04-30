@@ -1,0 +1,77 @@
+/* tabla.css */
+.clasificacion-container {
+    margin: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  .standings-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  
+  .standings-table thead th {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .standings-table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .standings-table tbody tr:last-child {
+    border-bottom: none;
+  }
+  
+  .standings-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .standings-table tbody td {
+    padding: 10px 15px;
+    text-align: left;
+  }
+  
+  .standings-table tbody td strong {
+    font-weight: 600;
+    color: #28a745;
+  }
+  
+  .standings-table tbody tr:hover {
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .standings-table th:first-child,
+  .standings-table td:first-child {
+    text-align: center;
+  }
+  
+  .standings-table th:nth-child(2),
+  .standings-table td:nth-child(2) {
+    font-weight: 500;
+  }
+  
+  .standings-table th:nth-child(8), /* GC */
+  .standings-table td:nth-child(8),
+  .standings-table th:nth-child(9), /* DG */
+  .standings-table td:nth-child(9),
+  .standings-table th:nth-child(10), /* Pts */
+  .standings-table td:nth-child(10) {
+    text-align: center;
+  }
+  
+  .clasificacion-container p {
+    margin-top: 15px;
+    font-style: italic;
+    color: #777;
+  }

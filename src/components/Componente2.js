@@ -105,7 +105,6 @@ function Componente2() {
 
   return (
     <div className="componente-participantes">
-      <h2>Participantes</h2>
       {puedeParticipar && (
         <button
           onClick={() => {

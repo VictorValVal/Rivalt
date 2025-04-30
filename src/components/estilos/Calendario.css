@@ -1,0 +1,146 @@
+
+  
+  .calendario-add-button {
+    background-color: #ff8c00; /* Naranja quemado */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .calendario-add-button:hover {
+    background-color: #e67700; /* Naranja más oscuro */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .calendario-partidos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+  }
+  
+  .calendario-partido-card {
+    background-color: #212529; /* Negro muy oscuro */
+    color: #f8f9fa; /* Texto blanco o muy claro */
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más intensa sobre fondo oscuro */
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+    border: 1px solid #343a40; /* Borde un poco más claro que el fondo */
+  }
+  
+  .calendario-partido-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  }
+  
+  .partido-block {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .partido-block.fecha-hora {
+    background-color: #343a40; /* Gris más oscuro para fecha/hora */
+  }
+  
+  .partido-block.equipos {
+    background-color: #282c34; /* Otro tono de negro */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .partido-block.resultado {
+    background-color: #495057; /* Gris más claro para el resultado */
+    text-align: center;
+  }
+  
+  .partido-block strong {
+    font-weight: 700;
+    color: #ff8c00; /* Naranja para destacar */
+  }
+  
+  .partido-block p {
+    margin: 5px 0;
+    font-size: 16px;
+  }
+  
+  .equipos span {
+    font-weight: 600;
+    font-size: 18px;
+  }
+  
+  .equipo-local {
+    color: #ffb347; /* Naranja más claro */
+  }
+  
+  .equipo-visitante {
+    color: #f44336; /* Rojo para el visitante (alternativa al negro si quieres más color) */
+  }
+  
+  .partido-vs {
+    color: #f8f9fa; /* Blanco para el "vs" */
+    margin: 0 10px;
+  }
+  
+  .boton-eliminar-partido,
+  .boton-resultado-partido {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff8c00;
+    color: #212529;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .boton-eliminar-partido:hover,
+  .boton-resultado-partido:hover {
+    background-color: #e67700;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  }
+  
+  .boton-resultado-partido {
+    left: 15px;
+    right: auto;
+    background-color: #f8f9fa;
+    color: #212529;
+  }
+  
+  .boton-resultado-partido:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .boton-eliminar-partido svg {
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+  
+  .eliminated-list {
+    padding: 20px;
+    background-color: #343a40;
+    border: 1px solid #495057;
+    border-radius: 10px;
+    margin-top: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #f8f9fa;
+  }
+  
+  .eliminated-list p {
+    margin: 0;
+    font-size: 15px;
+  }

@@ -1,6 +1,7 @@
 // src/components/Calendario.js
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
+import "../components/estilos/Calendario.css";
 import {
   getFirestore,
   collection,
@@ -300,7 +301,6 @@ function Calendario() {
 
   return (
     <div className="calendario-container">
-      <h2>Calendario de Partidos</h2>
       <div className="calendario-header">
        {esCreador && !mostrarFormulario && torneoInfo?.tipo !== "torneo" && (
   <button onClick={handleMostrarFormulario} className="calendario-add-button primary">
@@ -416,39 +416,38 @@ function Calendario() {
       ) : (
         <div className="calendario-partidos-grid">
           {partidos.map((partido) => (
-            <div key={partido.id} className="calendario-partido-card">
-              {esCreador && (
-                <>
-                  <button
-                    onClick={() => handleEliminarPartido(partido.id)}
-                    className="boton-eliminar-partido"
-                    title="Eliminar partido"
-                    aria-label="Eliminar partido"
-                  >
-                    <FaTrash />
-                  </button>
-                  <button
-                    onClick={() => handleActualizarResultado(partido.id)}
-                    className="boton-resultado-partido"
-                    title="Añadir/Editar resultado"
-                  >
-                    Añadir Resultado
-                  </button>
-                </>
-              )}
-             {partido.bracketMatchId !== undefined && partido.bracketMatchId !== null && (
-                 <p><strong>ID Esquema:</strong> {partido.bracketMatchId}</p>
-             )}
-              <p><strong>Fecha:</strong> {partido.fecha}</p>
-              <p><strong>Hora:</strong> {partido.hora}</p>
-              <p className="partido-vs">
-                <span className="equipo-local">{partido.local}</span>
-                <span> vs </span>
-                <span className="equipo-visitante">{partido.visitante}</span>
-              </p>
-              {partido.resultado && <p><strong>Resultado:</strong> {partido.resultado}</p>}
-            </div>
-          ))}
+  <div key={partido.id} className="calendario-partido-card">
+    {esCreador && (
+      <>
+        <button onClick={() => handleEliminarPartido(partido.id)} className="boton-eliminar-partido" title="Eliminar partido" aria-label="Eliminar partido">
+          <FaTrash />
+        </button>
+        <button onClick={() => handleActualizarResultado(partido.id)} className="boton-resultado-partido" title="Añadir/Editar resultado">
+          Añadir Resultado
+        </button>
+      </>
+    )}
+    {partido.bracketMatchId !== undefined && partido.bracketMatchId !== null && (
+      <div className="partido-block id-esquema">
+        <strong>ID Esquema:</strong> <p>{partido.bracketMatchId}</p>
+      </div>
+    )}
+    <div className="partido-block fecha-hora">
+      <strong>Fecha:</strong> <p>{partido.fecha}</p>
+      <strong>Hora:</strong> <p>{partido.hora}</p>
+    </div>
+    <div className="partido-block equipos">
+      <span className="equipo-local">{partido.local}</span>
+      <span className="partido-vs">vs</span>
+      <span className="equipo-visitante">{partido.visitante}</span>
+    </div>
+    {partido.resultado && (
+      <div className="partido-block resultado">
+        <strong>Resultado:</strong> <p>{partido.resultado}</p>
+      </div>
+    )}
+  </div>
+))}
         </div>
       )}
       {torneoInfo?.tipo === "torneo" && eliminatedParticipants.size > 0 && (
