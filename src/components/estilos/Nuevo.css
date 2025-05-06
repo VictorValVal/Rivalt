@@ -1,0 +1,220 @@
+/* ==================================================
+   NUEVO TORNEO FORMULARIO ESTILOS (MODIFICADO)
+   ================================================== */
+
+/* Contenedor para centrar en la página */
+.nuevo-torneo-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(90vh - 4rem);
+  padding: 3rem 1rem; /* Más padding superior */
+  box-sizing: border-box;
+  background-color: #121212; /* Fondo principal oscuro */
+}
+
+/* Contenedor principal del formulario */
+.nuevo-torneo-container {
+  width: 100%;
+  max-width: 550px;
+  background-color: #1e1e1e; /* Fondo contenedor */
+  padding: 2.5rem; /* Más padding */
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  color: #E0E0E0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #333;
+}
+
+/* Barra de Progreso */
+.progress-bar-container {
+  width: 100%;
+  height: 10px; /* Ligeramente más gruesa */
+  background-color: #333;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #FF6D14; /* Color de acento */
+  border-radius: 5px;
+  transition: width 0.4s ease-in-out;
+}
+
+.progress-step-text {
+  font-size: 0.85rem;
+  color: #aaa;
+  text-align: right;
+  margin-bottom: 2.5rem; /* Más espacio antes del contenido */
+}
+
+
+/* Contenido del paso */
+.form-step-content {
+  width: 100%;
+}
+
+.form-step {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem; /* Más espacio entre elementos */
+}
+
+.form-step h2 {
+  color: #FFFFFF;
+  margin-bottom: 1rem; /* Más espacio después del título */
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.6rem; /* Título de paso más grande */
+}
+
+/* Estilos para Inputs y Select (Consistente con Login.css) */
+.form-input {
+  background-color: #2a2a2a;
+  border: 1px solid #444444;
+  color: #E0E0E0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: #888888;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #FF6D14;
+  box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
+}
+
+/* Estilos específicos para Select si es necesario (apariencia) */
+.form-input select {
+ /* appearance: none; */ /* Descomentar si quieres personalizar la flecha */
+ /* background-image: url('path/to/your/arrow.svg'); */ /* Ejemplo */
+ /* background-repeat: no-repeat; */
+ /* background-position: right 15px center; */
+ /* background-size: 12px; */
+}
+
+/* Grupo de botones (para opciones) */
+.form-button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Estilos generales de botones (Consistente con Login.css) */
+.form-button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Botones de opción (Individual/Equipo, Liga/Torneo) */
+.form-button.choice {
+  flex-grow: 1;
+  background-color: #444; /* Fondo gris oscuro */
+  color: #ccc;
+  border: 1px solid #666;
+  font-weight: 500; /* Peso normal para no seleccionados */
+  text-transform: none; /* Quizás sin mayúsculas aquí */
+}
+
+.form-button.choice:hover:not(.selected) {
+  background-color: #555;
+  border-color: #888;
+  color: #fff;
+}
+
+.form-button.choice.selected {
+  background-color: #FF6D14; /* Naranja seleccionado */
+  color: #FFFFFF;
+  border-color: #FF6D14;
+  font-weight: 600; /* Más grueso seleccionado */
+  box-shadow: 0 0 10px rgba(255, 109, 20, 0.3);
+}
+
+
+/* Botones de navegación (Siguiente, Anterior, Crear) */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem; /* Más espacio antes de navegación */
+  gap: 1rem; /* Espacio entre botones si hay dos */
+}
+/* Si solo hay un botón (como en el primer paso), alinearlo a la derecha */
+.form-navigation > :only-child {
+  margin-left: auto;
+}
+
+
+/* Botón primario (Siguiente, Crear Torneo) */
+.form-button.primary {
+  background-color: #FF6D14;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.form-button.primary:hover:not(:disabled) {
+  background-color: #E05A0B;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Botón secundario (Anterior) */
+.form-button.secondary {
+  background-color: transparent;
+  color: #aaa;
+  border: 1px solid #555;
+  font-weight: 500; /* Menos peso que el primario */
+  text-transform: none;
+}
+
+.form-button.secondary:hover:not(:disabled) {
+  background-color: #333;
+  color: #ccc;
+  border-color: #777;
+  transform: translateY(-1px);
+}
+
+
+/* Estilo para botones deshabilitados (Consistente con Login.css) */
+.form-button:disabled {
+  background-color: #555;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+  transform: none;
+  border-color: transparent; /* Evita borde en botones choice desactivados */
+}
+/* Ajuste específico para primario deshabilitado */
+.form-button.primary:disabled {
+  background-color: rgba(255, 109, 20, 0.4); /* Naranja apagado */
+  color: rgba(255, 255, 255, 0.6);
+}
+.form-button.choice:disabled {
+  background-color: #444; /* Mantiene el fondo */
+  color: #777; /* Texto más apagado */
+  opacity: 0.6;
+  border-color: #666;
+}
+.form-button.secondary:disabled {
+  background-color: transparent;
+  color: #777;
+  border-color: #444;
+}

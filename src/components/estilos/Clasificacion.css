@@ -1,0 +1,186 @@
+/* ==================================================
+   CLASIFICACION & MODAL ESTILOS
+   ================================================== */
+
+/* Contenedor principal (mínimo estilo, deja que Tabla/Llaves definan el resto) */
+.clasificacion-container {
+    padding: 0; /* Sin padding extra aquí, se maneja en el bloque */
+    color: #E0E0E0;
+  }
+  
+  /* --- Estilos para ReactModal --- */
+  
+  .ReactModal__Overlay {
+    background-color: rgba(18, 18, 18, 0.85) !important;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 250ms ease-in-out;
+  }
+  
+  .ReactModal__Overlay--after-open{
+    opacity: 1;
+  }
+  
+  .ReactModal__Overlay--before-close{
+    opacity: 0;
+  }
+  
+  .ReactModal__Content {
+    background: #252525 !important; /* Fondo modal ligeramente más claro */
+    color: #E0E0E0 !important;
+    padding: 2.5rem !important;
+    border-radius: 8px !important;
+    border: 1px solid #444 !important;
+    max-width: 550px; /* Ancho máximo */
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7) !important;
+    position: relative !important; /* Reset position */
+    top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+    inset: auto !important;
+    outline: none; /* Quitar borde de foco */
+    transform: scale(0.95);
+    transition: transform 250ms ease-in-out;
+  }
+  
+  .ReactModal__Content--after-open {
+      transform: scale(1);
+  }
+  
+  .ReactModal__Content--before-close {
+      transform: scale(0.95);
+  }
+  
+  
+  /* Estilos dentro del Modal */
+  .ReactModal__Content h3 {
+    color: #FFFFFF;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 2rem; /* Más espacio */
+    font-weight: 600;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #FF6D14; /* Línea separadora */
+    padding-bottom: 0.8rem;
+  }
+  
+  /* Reutilizar clases de formulario existentes */
+  .ReactModal__Content .form-group {
+    margin-bottom: 1.3rem;
+  }
+  
+  .ReactModal__Content label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-size: 0.9rem;
+    color: #AAAAAA;
+    font-weight: 500;
+  }
+  
+  /* Reutilizar .form-input para inputs y selects dentro del modal */
+  .ReactModal__Content .form-input, /* Clase global si existe */
+  .ReactModal__Content input[type="date"],
+  .ReactModal__Content input[type="time"],
+  .ReactModal__Content input[type="number"],
+  .ReactModal__Content input[type="text"][disabled], /* Estilo para inputs disabled */
+  .ReactModal__Content select {
+     background-color: #1e1e1e; /* Fondo más oscuro */
+     border: 1px solid #555; /* Borde más visible */
+     color: #E0E0E0;
+     padding: 12px 15px; /* Mismo padding */
+     border-radius: 6px;
+     font-size: 1rem;
+     width: 100%;
+     box-sizing: border-box;
+     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .ReactModal__Content input[type="text"][disabled] {
+      background-color: #333;
+      cursor: not-allowed;
+      opacity: 0.7;
+  }
+  
+  .ReactModal__Content .form-input:focus,
+  .ReactModal__Content input:focus,
+  .ReactModal__Content select:focus {
+     outline: none;
+     border-color: #FF6D14;
+     box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
+  }
+  
+  /* Botones dentro del modal */
+  .ReactModal__Content .modal-actions {
+      display: flex;
+      justify-content: flex-end; /* Alinear botones a la derecha */
+      gap: 1rem;
+      margin-top: 2.5rem; /* Más espacio antes de botones */
+      padding-top: 1.5rem;
+      border-top: 1px solid #444; /* Línea separadora */
+  }
+  
+  /* Reutilizar .form-button y modificadores */
+  .ReactModal__Content .form-button,
+  .ReactModal__Content button[type="submit"],
+  .ReactModal__Content button[type="button"] {
+    /* Estilos base heredados o definidos aquí si no existen */
+    padding: 10px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .ReactModal__Content .form-button.primary, /* Para Guardar */
+  .ReactModal__Content button[type="submit"] {
+     background-color: #FF6D14;
+     color: white;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+  .ReactModal__Content .form-button.secondary, /* Para Cancelar */
+  .ReactModal__Content button[type="button"] {
+     background-color: #555;
+     color: #ccc;
+     font-weight: 500;
+     text-transform: none;
+  }
+  
+  .ReactModal__Content .form-button.primary:hover:not(:disabled),
+  .ReactModal__Content button[type="submit"]:hover:not(:disabled) {
+    background-color: #E05A0B;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
+  .ReactModal__Content .form-button.secondary:hover:not(:disabled),
+  .ReactModal__Content button[type="button"]:hover:not(:disabled) {
+    background-color: #666;
+    color: #fff;
+  }
+  
+  /* Estilos específicos para modal de información */
+  .ReactModal__Content.info-modal p {
+      margin: 0.8rem 0;
+      font-size: 1rem;
+      color: #ccc;
+      line-height: 1.5;
+  }
+  .ReactModal__Content.info-modal p strong {
+      color: #FF6D14;
+      font-weight: 600;
+      margin-right: 8px;
+  }
+  .ReactModal__Content.info-modal hr {
+      border: 0;
+      border-top: 1px solid #444;
+      margin: 1.5rem 0;
+  }
+  .ReactModal__Content.info-modal small {
+      font-size: 0.8rem;
+      color: #888;
+      display: block;
+  }

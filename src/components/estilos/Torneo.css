@@ -1,0 +1,237 @@
+/* ==================================================
+   TORNEO ESTILOS (MODIFICADO - Bloques y Sidebar Pro V2)
+   ================================================== */
+
+/* Estilo general de la página del torneo */
+.torneo-page-container {
+    background-color: #121212;
+    color: #E0E0E0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Cabecera del Torneo */
+.torneo-header {
+    background-color: #1e1e1e;
+    color: #FFFFFF;
+    padding: 1.2rem 2rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #FF6D14;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+}
+
+/* Contenedor principal (Sidebar + Contenido) */
+.torneo-main {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+/* Sidebar Vertical Profesional */
+.vertical-sidebar {
+    width: 80px;
+    background-color: #1e1e1e;
+    padding: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    border-right: 1px solid #333;
+    transition: width 0.3s ease;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.sidebar-item {
+    background-color: transparent;
+    border: none;
+    color: #AAAAAA;
+    padding: 15px 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    position: relative;
+}
+
+.sidebar-item svg {
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar-item:hover {
+    background-color: #2a2a2a;
+    color: #FFFFFF;
+}
+.sidebar-item:hover svg {
+    color: #FFFFFF;
+    transform: scale(1.1);
+}
+
+.sidebar-item.active {
+    background-color: rgba(255, 109, 20, 0.1);
+    color: #FF6D14;
+}
+.sidebar-item.active svg {
+     color: #FF6D14;
+}
+
+.sidebar-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    height: 70%;
+    width: 4px;
+    background-color: #FF6D14;
+    border-radius: 0 3px 3px 0;
+    transition: transform 0.25s ease;
+    transform-origin: center;
+}
+.sidebar-item.active::before {
+    transform: translateY(-50%) scaleY(1);
+}
+
+.sidebar-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 110%;
+    top: 50%;
+    transform: translateY(-50%) scale(0.9) translateX(-10px);
+    background-color: #101010;
+    color: #FFFFFF;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease 0.1s, visibility 0.2s ease 0.1s, transform 0.2s ease 0.1s;
+    z-index: 20;
+    pointer-events: none;
+    border: 1px solid #444;
+}
+
+.sidebar-item:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) scale(1) translateX(0);
+}
+
+
+/* --- Área de Contenido Principal --- */
+.torneo-contenido {
+    flex-grow: 1;
+    padding: 2rem 2.5rem;
+    background-color: #121212;
+    overflow-y: auto;
+}
+
+/* --- Contenedor de Bloque para el Componente Cargado --- */
+.contenido-bloque {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 2rem;
+    border: 1px solid #333;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    min-height: 80vh;
+}
+
+/* Estilos para el placeholder cuando no hay nada seleccionado */
+.contenido-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 70vh;
+    color: #AAAAAA;
+}
+.contenido-placeholder h2 {
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+.contenido-placeholder p {
+    font-size: 1.1rem;
+    max-width: 400px;
+}
+
+/* --- Ajustes para componentes hijos --- */
+.contenido-bloque > div,
+.contenido-bloque > section {
+}
+
+.contenido-bloque .clasificacion-container,
+.contenido-bloque .calendario-container,
+.contenido-bloque .componente-participantes,
+.contenido-bloque .componente1-container {
+   padding: 0;
+   margin: 0;
+   box-shadow: none;
+   border: none;
+   background-color: transparent;
+   max-width: none;
+}
+
+/* Ajustes específicos si algún componente hijo tiene estilos muy dominantes */
+.contenido-bloque .componente1-container {
+   text-align: center;
+}
+
+.contenido-bloque .codigo-display {
+   background-color: #2a2a2a;
+   color: #FF6D14;
+   padding: 1rem 1.5rem;
+   border-radius: 6px;
+   font-size: 1.8rem;
+   font-weight: 600;
+   letter-spacing: 2px;
+   margin: 1rem auto;
+   display: inline-block;
+   border: 1px solid #444;
+}
+
+.contenido-bloque .button,
+.contenido-bloque .form-button {
+    /* Puedes reusar estilos de botones globales aquí si es necesario */
+    /* Ejemplo: */
+    background-color: #FF6D14;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+.contenido-bloque .button:hover:not(:disabled),
+.contenido-bloque .form-button:hover:not(:disabled) {
+    background-color: #E05A0B;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Asegúrate de que los estilos de las tablas, llaves, etc., no rompan el layout */
+.contenido-bloque .standings-table {
+    margin: 0; /* Quitar márgenes si los tuviera */
+}
+
+.contenido-bloque .llaves-container {
+    padding: 0; /* Quitar padding si lo tuviera */
+}

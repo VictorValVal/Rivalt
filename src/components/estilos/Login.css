@@ -1,0 +1,167 @@
+/* ==================================================
+   LOGIN/REGISTRO FORMULARIO ESTILOS (MODIFICADO)
+   ================================================== */
+
+/* Contenedor para centrar en la página */
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Centra verticalmente también */
+  min-height: 90vh; /* Ocupa casi toda la altura */
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  background-color: #121212; /* Fondo principal oscuro */
+}
+
+/* Contenedor principal del formulario */
+.login-container {
+  width: 100%;
+  max-width: 420px;
+  background-color: #1e1e1e; /* Fondo ligeramente más claro para el contenedor */
+  padding: 2.5rem 3rem;
+  border-radius: 8px; /* Bordes menos redondeados para solidez */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); /* Sombra más pronunciada */
+  color: #E0E0E0; /* Texto claro por defecto */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border: 1px solid #333; /* Borde sutil para definición */
+}
+
+.login-container h2 {
+  color: #FFFFFF;
+  text-align: center;
+  margin-bottom: 1rem; /* Más espacio después del título */
+  font-size: 1.9rem; /* Ligeramente más grande */
+  font-weight: 600;
+}
+
+/* Estilo del formulario */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem; /* Espacio entre grupos y botón */
+}
+
+/* Grupo de Label + Input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Espacio entre label e input */
+}
+
+/* Estilo de las etiquetas */
+.form-label {
+  font-size: 0.9rem; /* Ligeramente más grande */
+  color: #AAAAAA;
+  font-weight: 500;
+}
+
+/* Estilos para Inputs (Asegúrate que sean consistentes con Nuevo.css) */
+.form-input {
+  background-color: #2a2a2a;
+  border: 1px solid #444444;
+  color: #E0E0E0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: #888888;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #FF6D14;
+  box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
+}
+
+/* Estilos generales de botones (Asegúrate que sean consistentes) */
+.form-button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600; /* Más grueso */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  text-align: center;
+  text-transform: uppercase; /* Moderno */
+  letter-spacing: 0.5px;
+}
+
+/* Botón primario (Login/Registro) */
+.form-button.primary {
+  background-color: #FF6D14;
+  color: #FFFFFF;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.form-button.primary:hover:not(:disabled) {
+  background-color: #E05A0B;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Estilo para botones deshabilitados */
+.form-button:disabled {
+  background-color: #555; /* Gris oscuro para deshabilitado */
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+  transform: none;
+}
+.form-button.primary:disabled {
+  background-color: rgba(255, 109, 20, 0.4); /* Naranja apagado */
+  color: rgba(255, 255, 255, 0.6);
+}
+
+
+/* Utilidad para botón de ancho completo */
+.full-width {
+  width: 100%;
+}
+
+/* Botón/Enlace para cambiar modo Login/Registro */
+.toggle-link {
+  background-color: transparent;
+  border: none;
+  color: #FF6D14; /* Usa el color de acento */
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.toggle-link:hover:not(:disabled) {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+
+.toggle-link:disabled {
+  color: #888;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* Mensaje de error */
+.form-error-message {
+  color: #ff9a9a; /* Rojo más brillante sobre fondo oscuro */
+  background-color: rgba(255, 80, 80, 0.15); /* Fondo rojo más visible */
+  border: 1px solid rgba(255, 80, 80, 0.4);
+  padding: 12px; /* Más padding */
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}

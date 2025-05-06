@@ -46,31 +46,31 @@ const generateBracketStructure = (numParticipants) => {
 // --- Components ---
 
 const CustomSeed = React.memo(({ seed, breakpoint, onClick, onModify, onAddResult }) => {
-  // Default values for teams if they don't exist in the seed data
   const homeTeam = seed.teams[0] || { name: "Por definir", score: undefined, id: null };
   const awayTeam = seed.teams[1] || { name: "Por definir", score: undefined, id: null };
-
-  // Determine if the seed is visually distinct as 'clickable' (e.g., has teams or an associated match)
   const isVisuallyClickable = homeTeam.id || awayTeam.id || seed.partidoId;
-  // Determine if actions (modify/add result) should be potentially available
   const isReadyForActions = seed.partidoId || (homeTeam.id !== null && awayTeam.id !== null);
-   // Determine if the "add result" button specifically should be shown
-  const needsResult = isReadyForActions && seed.state !== 'completed'; // Show checkmark if ready & not completed
+  const needsResult = isReadyForActions && seed.state !== 'completed';
 
   return (
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 12 }}>
-      {/* Core Change: onClick is now always attached to allow interaction with any seed */}
       <SeedItem
-        style={{ cursor: isVisuallyClickable ? "pointer" : "default" }} // Cursor changes based on visual state
-        onClick={() => onClick(seed)} // Always call the passed onClick handler
+        style={{ cursor: isVisuallyClickable ? "pointer" : "default" }}
+        onClick={() => onClick(seed)}
       >
-        {/* Team Display */}
-        <div>
-          <SeedTeam style={{ backgroundColor: homeTeam.isWinner ? "#d4edda" : undefined }} className={homeTeam.isWinner ? "winner-team" : ""}>
+        {/* Team Display: Añadimos la clase 'teams-display-container' */}
+        <div className="teams-display-container"> {/* <--- CLASE AÑADIDA AQUÍ */}
+          <SeedTeam 
+            style={{ backgroundColor: homeTeam.isWinner ? "rgba(255, 109, 20, 0.15)" : undefined }} 
+            className={homeTeam.isWinner ? "winner-team" : ""}
+          >
             <div className="team-name">{homeTeam.name}</div>
             {homeTeam.score !== undefined && <div className="score">{homeTeam.score}</div>}
           </SeedTeam>
-          <SeedTeam style={{ backgroundColor: awayTeam.isWinner ? "#d4edda" : undefined }} className={awayTeam.isWinner ? "winner-team" : ""}>
+          <SeedTeam 
+            style={{ backgroundColor: awayTeam.isWinner ? "rgba(255, 109, 20, 0.15)" : undefined }} 
+            className={awayTeam.isWinner ? "winner-team" : ""}
+          >
             <div className="team-name">{awayTeam.name}</div>
             {awayTeam.score !== undefined && <div className="score">{awayTeam.score}</div>}
           </SeedTeam>
@@ -79,13 +79,11 @@ const CustomSeed = React.memo(({ seed, breakpoint, onClick, onModify, onAddResul
         {/* Action Buttons */}
         {isReadyForActions && (
           <div className="seed-actions">
-            {/* Modify button: Only shown if a partidoId (Firestore doc ID) exists for this seed */}
             {seed.partidoId && (
               <button className="modify-button" onClick={(e) => { e.stopPropagation(); onModify(seed); }}>
                 <FaEdit />
               </button>
             )}
-            {/* Add Result button: Shown if the seed is ready and not already completed */}
             {needsResult && (
               <button className="add-result-button" onClick={(e) => { e.stopPropagation(); onAddResult(seed); }}>
                 <FaCheck />

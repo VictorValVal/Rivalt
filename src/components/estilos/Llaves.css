@@ -1,40 +1,138 @@
+/* Estilos generales para el contenedor de las llaves */
+.llaves-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #121212;
+  color: #FFFFFF;
+  padding: 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Títulos de Ronda */
+.round-title {
+  color: #FF6D14;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Estilos para cada enfrentamiento (Seed) */
+.SeedItem {
+  position: relative; /* Necesario para el posicionamiento absoluto de .seed-actions */
+  background-color: #2a2a2a;
+  border: 1px solid #FF6D14;
+  border-radius: 8px;
+  padding: 10px; /* Padding general del SeedItem */
+  margin-bottom: 10px;
+  color: #FFFFFF;
+  transition: transform 0.2s ease-in-out;
+}
+
+.SeedItem:hover {
+  transform: scale(1.02);
+}
+
+/* Contenedor de la información de los equipos (nombre y resultado) */
+.teams-display-container {
+  /* Este padding-right crea el espacio necesario para los botones de acción */
+  /* Ajusta este valor según el tamaño y número de tus botones */
+  padding-right: 85px; /* Espacio para ~2 botones pequeños */
+}
+
+/* Estilos para los equipos dentro de un enfrentamiento */
+.SeedTeam {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Eliminamos padding horizontal aquí, ya que .teams-display-container y .SeedItem lo manejan */
+  padding: 8px 0px; 
+  border-bottom: 1px solid #444444;
+}
+
+.SeedTeam:last-child {
+  border-bottom: none;
+}
+
+.team-name {
+  font-weight: 500;
+  margin-right: 5px; /* Pequeño espacio por si el nombre es largo y se acerca al score */
+  /* Opcional: para truncar nombres largos */
+  /* overflow: hidden; */
+  /* text-overflow: ellipsis; */
+  /* white-space: nowrap; */
+}
+
+.score {
+  font-weight: bold;
+  color: #FF6D14;
+  margin-left: 8px; /* Espacio entre el nombre del equipo y el marcador */
+  white-space: nowrap; /* Evita que el marcador se parta en dos líneas */
+}
+
+/* Estilos para el equipo ganador */
+/* El fondo se aplica inline en el JS con rgba(255, 109, 20, 0.15) */
+.winner-team .team-name {
+  font-weight: bold; 
+  /* No es necesario cambiar el color del texto si el fondo ya lo resalta */
+}
+
+/* Ajustes para los botones de acción */
 .seed-actions {
   display: flex;
-  gap: 5px;
-  position: absolute; /* Posiciona los botones dentro de la celda */
-  right: 40%; /* Alinea los botones a la derecha */
-  bottom: 65%; /* Centra verticalmente */
-  transform: translateY(-50%); /* Ajusta el centrado vertical */
+  /* flex-direction: column; */ /* Descomenta si prefieres botones apilados verticalmente */
+  /* align-items: flex-end; */ /* Si se apilan verticalmente y quieres alinearlos a la derecha */
+  gap: 6px; /* Espacio entre botones, reducido un poco */
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Posicionados dentro del padding derecho de SeedItem */
+  transform: translateY(-50%);
+  z-index: 1; /* Para asegurar que estén por encima de otros elementos si es necesario */
 }
 
 .modify-button,
 .add-result-button {
-  padding: 3px 6px; /* Reduce el tamaño de los botones */
-  font-size: 0.7em; /* Reduce el tamaño del texto */
+  background-color: #FF6D14;
+  color: #121212; /* Texto oscuro para contraste */
+  padding: 5px 8px; /* Botones un poco más compactos */
+  font-size: 0.75em; /* Tamaño de fuente un poco más pequeño */
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; /* Asegura que el texto/icono dentro del botón no añada altura extra */
 }
 
-.modify-button {
-  background-color: #007bff;
-  color: white;
-}
-
-.add-result-button {
-  background-color: #28a745;
-  color: white;
-}
-
-.modify-button:hover {
-  background-color: #0056b3;
-}
-
+.modify-button:hover,
 .add-result-button:hover {
-  background-color: #218838;
+  background-color: #e05a03; /* Naranja un poco más oscuro */
 }
 
-.SeedItem {
-  position: relative; /* Asegúrate de que los botones se posicionen dentro de la celda */
-  padding: 10px; /* Ajusta el espacio interno de la celda */
+/* Estilos para los iconos dentro de los botones */
+.modify-button svg,
+.add-result-button svg {
+  /* El tamaño del icono se hereda o puede ser ajustado aquí si es necesario */
+  /* Ejemplo: font-size: 1.2em; */
+}
+
+/* Líneas del bracket (inspecciona el SVG generado si esto no funciona) */
+svg path {
+  stroke: #FF6D14 !important;
+  stroke-width: 2px !important;
+}
+/* Si el componente Bracket usa una clase específica para el contenedor SVG */
+.bracket-svg-container svg path { 
+  stroke: #FF6D14 !important;
+  stroke-width: 2px !important;
+}
+
+/* Mensajes de estado */
+.llaves-container p {
+  color: #FFFFFF;
+  text-align: center;
+  width: 100%;
 }

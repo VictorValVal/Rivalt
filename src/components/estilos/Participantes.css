@@ -1,0 +1,198 @@
+/* ==================================================
+   PARTICIPANTES ESTILOS (Nuevo Diseño)
+   ================================================== */
+
+   .componente-participantes {
+    padding: 1rem; /* Añadir padding si no lo hereda del bloque */
+    color: #E0E0E0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .componente-participantes h3 {
+    color: #FFFFFF;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    border-bottom: 2px solid #FF6D14;
+    padding-bottom: 0.5rem;
+    display: inline-block; /* Para que el borde no ocupe todo el ancho */
+  }
+  
+  .mensaje-participacion {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    padding: 12px 18px;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+  
+  /* Botón de inscripción (Reutiliza estilos primarios si es posible) */
+  .componente-participantes .button.primary {
+    /* Asume estilos definidos globalmente o en Torneo.css */
+    /* Si no, definir aquí: */
+    background-color: #FF6D14;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.5rem;
+  }
+  .componente-participantes .button.primary:hover:not(:disabled) {
+    background-color: #E05A0B;
+  }
+  .componente-participantes .button.primary:disabled {
+     background-color: #555;
+     color: #888;
+     cursor: not-allowed;
+  }
+  
+  
+  /* Lista de participantes */
+  .lista-participantes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Espacio entre items */
+  }
+  
+  .participante-item {
+    background-color: #2c2c2c; /* Fondo item */
+    padding: 15px 20px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #444;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .participante-item:hover {
+      background-color: #353535;
+      border-color: #555;
+  }
+  
+  .nombre-participante {
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: #FFFFFF;
+  }
+  
+  /* Contenedor Opciones (Botón + Menú) */
+  .opciones-participante {
+    position: relative; /* Para posicionar el menú desplegable */
+  }
+  
+  .boton-opciones {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1.2rem; /* Tamaño icono ellipsis */
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .boton-opciones:hover {
+    background-color: #444;
+    color: #fff;
+  }
+  .boton-opciones:disabled {
+      color: #666;
+      cursor: not-allowed;
+  }
+  .boton-opciones:disabled:hover {
+      background-color: transparent;
+  }
+  
+  
+  /* Menú Desplegable */
+  .menu-desplegable {
+    position: absolute;
+    right: 0;
+    top: 110%; /* Ligeramente debajo del botón */
+    background-color: #1c1c1c; /* Fondo menú */
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+    border: 1px solid #555;
+    z-index: 10;
+    min-width: 180px; /* Ancho mínimo */
+    overflow: hidden; /* Para que el borde redondeado afecte a los items */
+    padding: 5px 0; /* Padding vertical */
+  }
+  
+  .menu-item {
+    background: none;
+    border: none;
+    color: #ccc;
+    padding: 10px 18px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio icono-texto */
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  .menu-item svg {
+      font-size: 1em; /* Tamaño icono */
+      color: #888; /* Color icono por defecto */
+      transition: color 0.2s ease;
+  }
+  
+  .menu-item:hover {
+    background-color: #FF6D14;
+    color: #fff;
+  }
+  .menu-item:hover svg {
+    color: #fff;
+  }
+  
+  .menu-item.eliminar:hover {
+    background-color: #e74c3c; /* Rojo específico para eliminar */
+    color: #fff;
+  }
+  .menu-item.eliminar:hover svg {
+    color: #fff;
+  }
+  
+  /* Mensaje si no hay participantes */
+  .componente-participantes > p {
+      color: #aaa;
+      font-style: italic;
+      text-align: center;
+      margin-top: 2rem;
+  }
+  
+  /* Estilos para loading/error */
+  .componente-participantes.loading,
+  .componente-participantes.error-message {
+      text-align: center;
+      color: #aaa;
+      font-size: 1.1rem;
+      padding: 2rem;
+  }
+  .componente-participantes.error-message {
+      color: #ff9a9a;
+  }
+  
+  /* Estilos para EquipoForm si se renderiza aquí */
+  .componente-participantes .equipo-form-container { /* Asumiendo clase base en EquipoForm */
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: #252525;
+      border: 1px solid #444;
+      border-radius: 8px;
+  }

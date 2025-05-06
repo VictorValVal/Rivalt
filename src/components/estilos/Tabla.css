@@ -1,77 +1,89 @@
-/* tabla.css */
+/* tabla.css (MODIFICADO) */
+
 .clasificacion-container {
-    margin: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-  }
-  
-  .standings-table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
-  }
-  
-  .standings-table thead th {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 15px;
-    text-align: left;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .standings-table tbody tr {
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .standings-table tbody tr:last-child {
-    border-bottom: none;
-  }
-  
-  .standings-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .standings-table tbody td {
-    padding: 10px 15px;
-    text-align: left;
-  }
-  
-  .standings-table tbody td strong {
-    font-weight: 600;
-    color: #28a745;
-  }
-  
-  .standings-table tbody tr:hover {
-    background-color: #f0f0f0;
-    transition: background-color 0.3s ease;
-  }
-  
-  .standings-table th:first-child,
-  .standings-table td:first-child {
-    text-align: center;
-  }
-  
-  .standings-table th:nth-child(2),
-  .standings-table td:nth-child(2) {
-    font-weight: 500;
-  }
-  
-  .standings-table th:nth-child(8), /* GC */
-  .standings-table td:nth-child(8),
-  .standings-table th:nth-child(9), /* DG */
-  .standings-table td:nth-child(9),
-  .standings-table th:nth-child(10), /* Pts */
-  .standings-table td:nth-child(10) {
-    text-align: center;
-  }
-  
-  .clasificacion-container p {
-    margin-top: 15px;
-    font-style: italic;
-    color: #777;
-  }
+  margin: 20px auto; /* Centrar contenedor si tiene max-width */
+  max-width: 900px; /* O el ancho que prefieras */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Mantener o cambiar a fuente moderna */
+  color: #E0E0E0; /* Texto claro por defecto */
+  background-color: #1e1e1e; /* Fondo para el contenedor si es necesario */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  border: 1px solid #333;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse; /* Mantiene bordes limpios */
+  background-color: transparent; /* El contenedor ya tiene fondo */
+  color: #E0E0E0;
+  /* Quitar box-shadow y border-radius si el contenedor los maneja */
+  /* overflow: hidden; */
+}
+
+.standings-table thead th {
+  background-color: #333333; /* Fondo cabecera oscuro */
+  color: #FF6D14; /* Color de acento para texto cabecera */
+  padding: 14px 15px; /* Más padding vertical */
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase; /* Moderno */
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #FF6D14; /* Línea de acento inferior */
+}
+
+.standings-table tbody tr {
+  border-bottom: 1px solid #444444; /* Separador de filas */
+  transition: background-color 0.2s ease;
+}
+
+.standings-table tbody tr:last-child {
+  border-bottom: none; /* Sin borde en la última fila */
+}
+
+.standings-table tbody tr:nth-child(even) {
+  background-color: #2a2a2a; /* Rayado sutil */
+}
+
+.standings-table tbody td {
+  padding: 12px 15px; /* Padding celdas */
+  text-align: left;
+}
+
+/* Celda de Puntos destacada */
+.standings-table tbody td strong {
+  font-weight: 700;
+  color: #FFFFFF; /* Puntos en blanco para destacar sobre fondos oscuros */
+}
+
+.standings-table tbody tr:hover {
+  background-color: #383838; /* Resaltado al pasar el ratón */
+}
+
+/* Alineación específica de columnas */
+.standings-table th:first-child, /* Pos */
+.standings-table td:first-child {
+  text-align: center;
+  width: 50px; /* Ancho fijo para posición */
+}
+
+.standings-table th:nth-child(2), /* Equipo */
+.standings-table td:nth-child(2) {
+  font-weight: 500; /* Nombre de equipo normal */
+  text-align: left;
+}
+
+/* Columnas numéricas (centradas o derechas) */
+.standings-table th:nth-child(n+3):nth-child(-n+10), /* PJ a Pts */
+.standings-table td:nth-child(n+3):nth-child(-n+10) {
+  text-align: center; /* Centrar datos numéricos */
+  width: 60px; /* Ancho más o menos fijo */
+}
+
+.clasificacion-container p {
+  margin-top: 15px;
+  font-style: italic;
+  color: #999999; /* Texto secundario para notas */
+  text-align: center;
+  font-size: 0.9em;
+}

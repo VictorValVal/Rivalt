@@ -14,6 +14,7 @@ import { app } from "../firebase"; // Asegúrate que la ruta es correcta
 import Llaves from "./Llaves";
 import Tabla from "./Tabla";
 import ReactModal from "react-modal";
+import "./estilos/Clasificacion.css";
 
 const db = getFirestore(app);
 ReactModal.setAppElement("#root"); // O el selector de tu elemento raíz

@@ -1,146 +1,253 @@
+/* calendario.css (MODIFICADO) */
 
-  
-  .calendario-add-button {
-    background-color: #ff8c00; /* Naranja quemado */
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .calendario-add-button:hover {
-    background-color: #e67700; /* Naranja más oscuro */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .calendario-partidos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 25px;
-  }
-  
-  .calendario-partido-card {
-    background-color: #212529; /* Negro muy oscuro */
-    color: #f8f9fa; /* Texto blanco o muy claro */
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más intensa sobre fondo oscuro */
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-    border: 1px solid #343a40; /* Borde un poco más claro que el fondo */
-  }
-  
-  .calendario-partido-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
-  }
-  
-  .partido-block {
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: 8px;
-  }
-  
-  .partido-block.fecha-hora {
-    background-color: #343a40; /* Gris más oscuro para fecha/hora */
-  }
-  
-  .partido-block.equipos {
-    background-color: #282c34; /* Otro tono de negro */
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-  }
-  
-  .partido-block.resultado {
-    background-color: #495057; /* Gris más claro para el resultado */
-    text-align: center;
-  }
-  
-  .partido-block strong {
-    font-weight: 700;
-    color: #ff8c00; /* Naranja para destacar */
-  }
-  
-  .partido-block p {
-    margin: 5px 0;
-    font-size: 16px;
-  }
-  
-  .equipos span {
-    font-weight: 600;
-    font-size: 18px;
-  }
-  
-  .equipo-local {
-    color: #ffb347; /* Naranja más claro */
-  }
-  
-  .equipo-visitante {
-    color: #f44336; /* Rojo para el visitante (alternativa al negro si quieres más color) */
-  }
-  
-  .partido-vs {
-    color: #f8f9fa; /* Blanco para el "vs" */
-    margin: 0 10px;
-  }
-  
-  .boton-eliminar-partido,
-  .boton-resultado-partido {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: #ff8c00;
-    color: #212529;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .boton-eliminar-partido:hover,
-  .boton-resultado-partido:hover {
-    background-color: #e67700;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
-  }
-  
-  .boton-resultado-partido {
-    left: 15px;
-    right: auto;
-    background-color: #f8f9fa;
-    color: #212529;
-  }
-  
-  .boton-resultado-partido:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .boton-eliminar-partido svg {
-    vertical-align: middle;
-    margin-right: 5px;
-  }
-  
-  .eliminated-list {
-    padding: 20px;
-    background-color: #343a40;
-    border: 1px solid #495057;
-    border-radius: 10px;
-    margin-top: 30px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    color: #f8f9fa;
-  }
-  
-  .eliminated-list p {
-    margin: 0;
-    font-size: 15px;
-  }
+.calendario-container {
+  padding: 2rem;
+  background-color: #121212; /* Fondo general */
+  color: #E0E0E0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.calendario-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: flex-end; /* Alinea botón a la derecha */
+}
+
+/* Botón Añadir Partido (Reutilizando clases primarias) */
+.calendario-add-button {
+  /* Aplicar estilos .form-button y .primary definidos en Nuevo/Login */
+  /* Ejemplo de cómo se vería si no estuvieran globales */
+  background-color: #FF6D14;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex; /* Para alinear icono y texto */
+  align-items: center;
+  gap: 8px; /* Espacio entre icono y texto */
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.calendario-add-button:hover:not(:disabled) {
+  background-color: #E05A0B;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.calendario-partidos-grid {
+  display: grid;
+  /* Ajustar minmax para que quepan bien, 300px puede ser mejor */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+.calendario-partido-card {
+  background-color: #1e1e1e; /* Fondo de tarjeta */
+  color: #E0E0E0;
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5); /* Sombra más oscura */
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+  border: 1px solid #333; /* Borde sutil */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espacio entre bloques internos */
+}
+
+.calendario-partido-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+.partido-block {
+  padding: 15px;
+  border-radius: 6px;
+  background-color: #2a2a2a; /* Fondo uniforme para bloques internos */
+  border: 1px solid #444;
+}
+
+.partido-block strong {
+  font-weight: 600;
+  color: #FF6D14; /* Naranja para destacar labels */
+  display: block; /* Para que ocupe su línea */
+  margin-bottom: 5px; /* Espacio después del label */
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+
+.partido-block p {
+  margin: 0;
+  font-size: 1rem;
+  color: #FFFFFF; /* Texto principal blanco */
+}
+
+.partido-block.equipos {
+  display: flex;
+  justify-content: space-between; /* Alinea equipos a los lados */
+  align-items: center;
+  text-align: center;
+  background-color: #333; /* Fondo diferente para equipos */
+}
+
+.equipos span {
+  font-weight: 600;
+  font-size: 1.1rem; /* Tamaño nombre equipo */
+  flex: 1; /* Ocupa espacio */
+}
+
+.equipo-local {
+  color: #FFFFFF; /* Blanco por defecto */
+  text-align: left;
+}
+
+.equipo-visitante {
+  color: #FFFFFF; /* Blanco por defecto */
+  text-align: right;
+}
+
+.partido-vs {
+  color: #FF6D14; /* VS en naranja */
+  font-weight: 700;
+  font-size: 1em;
+  margin: 0 10px;
+  flex: 0 0 auto; /* No crece ni se encoge */
+}
+
+.partido-block.resultado {
+  text-align: center;
+  background-color: #FF6D14; /* Fondo naranja para resultado */
+  color: #FFFFFF; /* Texto blanco */
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 10px 15px;
+}
+.partido-block.resultado strong { /* Quitar estilo strong si no es necesario */
+ color: inherit;
+ display: inline;
+ margin: 0;
+ font-size: inherit;
+ text-transform: none;
+}
+
+/* Botones de acción en la tarjeta */
+.botones-accion-card {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.boton-eliminar-partido,
+.boton-resultado-partido {
+  background: rgba(42, 42, 42, 0.8); /* Fondo semitransparente */
+  color: #CCCCCC;
+  border: 1px solid #555;
+  cursor: pointer;
+  font-size: 0.9rem; /* Más pequeño */
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; /* Ajuste vertical */
+}
+.boton-eliminar-partido:hover,
+.boton-resultado-partido:hover {
+  background-color: #FF6D14; /* Naranja al pasar el ratón */
+  color: #FFFFFF;
+  border-color: #FF6D14;
+  transform: scale(1.05);
+}
+
+.boton-eliminar-partido svg {
+  /* Ajusta si es necesario */
+}
+
+
+/* Formulario de añadir partido (si se muestra inline o modal) */
+.calendario-form {
+  background-color: #1e1e1e;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #333;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+.calendario-form h3 {
+  color: #FFFFFF;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+.calendario-form .form-group { /* Reutiliza estructura de Login/Nuevo */
+  margin-bottom: 1.5rem;
+}
+.calendario-form label { /* Reutiliza .form-label */
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #AAAAAA;
+  font-weight: 500;
+}
+.calendario-form input[type="date"],
+.calendario-form input[type="time"],
+.calendario-form input[type="number"], /* Si añades input number */
+.calendario-form select { /* Reutiliza .form-input */
+  background-color: #2a2a2a;
+  border: 1px solid #444444;
+  color: #E0E0E0;
+  padding: 10px 12px; /* Ligeramente menos padding que el general */
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.calendario-form input:focus,
+.calendario-form select:focus {
+   outline: none;
+  border-color: #FF6D14;
+  box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
+}
+
+.calendario-form .form-actions { /* Contenedor para botones del form */
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+/* Reutilizar .form-button */
+.calendario-form .button.primary { /* Para Guardar */
+   /* Hereda .form-button.primary */
+}
+.calendario-form .button.secondary { /* Para Cancelar */
+  /* Hereda .form-button.secondary */
+}
+
+
+/* Lista de eliminados */
+.eliminated-list {
+  padding: 15px;
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  margin-top: 30px;
+  color: #AAAAAA; /* Texto secundario */
+  font-size: 0.9em;
+}
+.eliminated-list p {
+  margin: 0;
+}
+.eliminated-list strong {
+  color: #CCCCCC; /* Ligeramente más claro */
+  font-weight: 500;
+}

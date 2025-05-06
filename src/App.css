@@ -2,10 +2,14 @@
    CONFIGURACIÓN GLOBAL
    ================================================== */
 
+body {
+  background-color: #121212;
+}
+
 header {
-  background-color: yellow;
+  background-color: #222222;
   width: 100%;
-  height: 10vh;
+  max-height: 10vh;
 }
 
 footer {
@@ -51,15 +55,9 @@ footer {
   -webkit-backface-visibility: hidden;
   border-radius: 5px;
   overflow: hidden;
-}
-
-.back {
-  width: 100%;
-  height: 100%;
   justify-content: center;
   display: flex;
   align-items: center;
-  overflow: hidden;
 }
 
 .back::before {
@@ -68,8 +66,8 @@ footer {
   display: block;
   width: 160px;
   height: 160%;
-  background: linear-gradient(90deg, transparent, #ff9966, #ff9966, #ff9966, #ff9966, transparent);
-  animation: rotation_481 5000ms infinite linear;
+  background: linear-gradient(90deg, transparent, #FF6D14, #FF6D14, #FF6D14, #FF6D14, transparent);
+  animation: rotation_481 8000ms infinite linear;
 }
 
 .back-content {
@@ -119,15 +117,44 @@ footer {
 .front-content .badge {
   background-color: #00000055;
   padding: 2px 10px;
+  margin: 5px;
   border-radius: 10px;
   backdrop-filter: blur(2px);
   width: fit-content;
 }
+.front-content .trash-icon {
+  position: absolute;
+  top: 10px;        /* Distancia desde arriba */
+  right: 10px;       /* Distancia desde la derecha */
+  color: rgba(255, 255, 255, 0.7); /* Color semi-transparente */
+  cursor: pointer;
+  z-index: 10;       /* Asegura que esté por encima de otros elementos si es necesario */
+  font-size: 16px;   /* Tamaño del icono */
+}
+
+/* Efecto hover para el icono */
+.front-content .trash-icon:hover {
+  color: #FF6D14;   /* Cambia a un color más brillante al pasar el ratón */
+}
+
+/* Ajusta el padding del badge si se solapa con el icono */
+.front-content .badge {
+  background-color: #00000055;
+  padding: 2px 10px;
+  margin: 5px;
+  border-radius: 10px;
+  backdrop-filter: blur(2px);
+  width: fit-content;
+  align-self: flex-start; /* Asegura que el badge se quede a la izquierda */
+ /* Puede que necesites ajustar el margin-top si el icono es muy grande */
+ /* margin-top: 30px; */
+}
 
 .description {
   box-shadow: 0px 0px 10px 5px #00000088;
-  width: 100%;
+  width: 80%;
   padding: 10px;
+  margin: 10px;
   background-color: #00000099;
   backdrop-filter: blur(5px);
   border-radius: 5px;
@@ -146,8 +173,8 @@ footer {
 
 .card-footer {
   color: #ffffff88;
-  margin-top: 5px;
-  font-size: 8px;
+
+  font-size: 12px;
 }
 
 .front .img {
@@ -162,14 +189,14 @@ footer {
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background-color: #ffbb66;
+  background-color: #ff6e1498;
   position: relative;
   filter: blur(15px);
   animation: floating 2600ms infinite linear;
 }
 
 #bottom {
-  background-color: #ff8866;
+  background-color: #FF6D14;
   left: 50px;
   top: 0px;
   width: 150px;
@@ -177,8 +204,9 @@ footer {
   animation-delay: -800ms;
 }
 
+
 #right {
-  background-color: #ff2233;
+  background-color: #461e06;
   left: 160px;
   top: -80px;
   width: 30px;
@@ -200,13 +228,42 @@ footer {
   }
 }
 
+.main-buttons button {
+  background-color: #FF6D14; /* Color de fondo principal */
+  color: white;             /* Color del texto */
+  border: none;             /* Sin borde */
+  padding: 10px 20px;       /* Espaciado interno (vertical, horizontal) */
+  border-radius: 8px;       /* Bordes redondeados */
+  font-size: 1rem;          /* Tamaño de la fuente */
+  font-weight: 600;         /* Grosor de la fuente (semi-bold) */
+  cursor: pointer;          /* Cursor de mano */
+  transition: background-color 0.3s ease, transform 0.1s ease; /* Transiciones suaves */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+}
+
+/* Efecto al pasar el ratón (hover) */
+.main-buttons button:hover {
+  background-color: #E05A0B; /* Un tono de naranja un poco más oscuro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+}
+
+/* Efecto al hacer clic (active) */
+.main-buttons button:active {
+  background-color: #C74F09; /* Un tono aún más oscuro */
+  transform: scale(0.98);   /* Efecto de "presionado" */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Sombra reducida */
+}
+
+/* Asegúrate de que los estilos anteriores para .main-buttons no interfieran */
+/* Si .main-buttons ya tenía estilos, puede que necesites ajustarlos */
 .main-buttons {
   position: absolute;
   top: 0;
   right: 0;
   display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
+  gap: 1rem; /* Aumentamos un poco el espacio entre botones */
+  padding: 1rem; /* Mantenemos el padding */
+  z-index: 20; /* Asegura que estén por encima de las tarjetas si es necesario */
 }
 
 
@@ -224,12 +281,21 @@ main {
   gap: 16px;
   align-items: flex-start;
   width: 10%;
-  background-color: red;
 }
+
+.item {
+  /* Add this rule to remove list bullets */
+  list-style: none;
+  /* If the dots are still there, it might mean display: list-item; is applied elsewhere. */
+  /* In that case, you might need to override the display property as well: */
+  /* display: block; */
+  /* or inline-block, flex, etc., depending on desired layout */
+  color: white;
+}
+
 
 .contenido {
   width: 90%;
-  background-color: blue;
 }
 
 
@@ -351,8 +417,37 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* Deshabilitar scroll */
+  overflow: hidden;
+  /* Deshabilitar scroll */
 }
 
+::-webkit-scrollbar {
+  width: 12px;  /* Ancho de la barra de scroll vertical */
+  height: 12px; /* Alto de la barra de scroll horizontal */
+}
 
+::-webkit-scrollbar-track {
+  background: #1e1e1e; /* Un color de fondo oscuro para la pista (similar al fondo de tus contenedores) */
+  /* border-radius: 6px; */ /* Opcional: si quieres bordes redondeados para la pista */
+}
 
+::-webkit-scrollbar-thumb {
+  background-color: #000000; /* Negro para el "pulgar" de la barra */
+  border-radius: 6px;      /* Bordes redondeados para el pulgar */
+  border: 2px solid #1e1e1e; /* Un borde del color de la pista para dar efecto de padding */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #333333; /* Un gris un poco más claro al pasar el ratón */
+}
+
+::-webkit-scrollbar-corner {
+  background: #121212; /* Color para la esquina (si tienes scroll horizontal y vertical a la vez) */
+}
+
+/* Para Firefox (a partir de la versión 64) */
+/* Estos estilos se aplican al elemento raíz (html) o al body */
+html {
+  scrollbar-width: auto; /* O 'thin' para una barra más delgada */
+  scrollbar-color: #000000 #1e1e1e; /* color-del-pulgar color-de-la-pista */
+}

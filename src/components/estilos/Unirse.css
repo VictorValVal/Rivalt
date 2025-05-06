@@ -1,0 +1,140 @@
+/* ==================================================
+   UNIRSE TORNEO FORMULARIO ESTILOS (MODIFICADO)
+   ================================================== */
+
+/* Contenedor para centrar en la página */
+.unirse-torneo-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(90vh - 4rem);
+    padding: 3rem 1rem;
+    box-sizing: border-box;
+    background-color: #121212; /* Fondo principal oscuro */
+}
+
+/* Contenedor principal del formulario */
+.unirse-torneo-container {
+    width: 100%;
+    max-width: 480px;
+    background-color: #1e1e1e; /* Fondo contenedor */
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    color: #E0E0E0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem; /* Más espacio entre elementos principales */
+    border: 1px solid #333;
+}
+
+.unirse-torneo-container h1 {
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.9rem;
+    font-weight: 600;
+}
+
+/* Para el div que contiene input y botón inicial */
+.unirse-torneo-container .form-step {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espacio entre input y botón */
+    width: 100%;
+}
+
+/* --- REUTILIZAR ESTILOS DE INPUT Y BOTÓN DEFINIDOS EN Login.css/Nuevo.css --- */
+/* Asegúrate de que .form-input y .form-button.primary tengan los estilos definidos */
+/* Las clases ya se usan en Unirse.js, así que heredarán los estilos si están globales o importados */
+
+/* Mensaje de error (Consistente con Login.css) */
+.form-error-message {
+    color: #ff9a9a;
+    background-color: rgba(255, 80, 80, 0.15);
+    border: 1px solid rgba(255, 80, 80, 0.4);
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+/* Estilos para la sección del formulario de equipo */
+.equipo-form-section {
+    border-top: 1px solid #555; /* Línea separadora más visible */
+    padding-top: 2.5rem; /* Más espacio sobre la sección */
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espacio dentro de la sección */
+}
+
+.equipo-form-section h2 {
+    color: #f0f0f0;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+.equipo-form-section p {
+    color: #aaa;
+    text-align: center;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+/* --- ESTILOS PARA EquipoForm --- */
+/* Asumiendo que EquipoForm usa clases como .equipo-form-container, .equipo-form-group, etc. */
+/* Deberás añadir estas clases en EquipoForm.js */
+
+.equipo-form-container { /* Contenedor dentro de la sección */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.equipo-form-group { /* Para cada input (nombre equipo, miembro) */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Reutilizar .form-input para los inputs de EquipoForm */
+.equipo-form-container .form-input {
+    /* Hereda estilos */
+}
+
+/* Botones dentro de EquipoForm */
+.equipo-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: center; /* O flex-end */
+}
+
+/* Reutilizar .form-button para botones de EquipoForm */
+.equipo-form-actions .form-button {
+    /* Hereda estilos */
+}
+.equipo-form-actions .form-button.primary {
+    /* Hereda estilos */
+}
+.equipo-form-actions .form-button.secondary {
+    /* Hereda estilos (si usas un botón de cancelar) */
+}
+
+/* Botón específico para añadir miembro si es necesario */
+.add-member-button {
+    /* Estilos si quieres que sea diferente */
+    align-self: flex-start; /* Ejemplo */
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    background-color: #444;
+    color: #ccc;
+    /* ... */
+}
+.add-member-button:hover {
+    background-color: #555;
+    color: #fff;
+}

@@ -1,0 +1,222 @@
+/* estilos/Informacion.css */
+
+.informacion-container {
+    background-color: #1e1e1e; /* Fondo oscuro similar a las tarjetas */
+    color: #e0e0e0;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    max-width: 800px; /* Ancho máximo para mejor legibilidad */
+    margin: 2rem auto; /* Centrar el contenedor */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .info-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #333;
+  }
+  
+  .info-header svg {
+    font-size: 2.5rem; /* Tamaño del icono principal */
+    color: #FF6D14; /* Color naranja de Rivalt */
+  }
+  
+  .info-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Grid responsivo */
+    gap: 1.5rem; /* Espacio entre items */
+    margin-bottom: 2.5rem;
+  }
+  
+  .info-item {
+    background-color: #2a2a2a; /* Fondo ligeramente más claro para los items */
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start; /* Alinear items al inicio para descripciones largas */
+    gap: 0.8rem;
+    border-left: 4px solid #FF6D14; /* Indicador de color */
+  }
+  
+  .info-item.full-width {
+      grid-column: 1 / -1; /* Para que ocupe todo el ancho */
+  }
+  
+  .info-icon {
+    font-size: 1.3rem;
+    color: #FF6D14;
+    margin-top: 0.2rem; /* Pequeño ajuste vertical */
+  }
+  
+  .info-item div strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+  }
+  
+  .info-item div p {
+    font-size: 1rem;
+    color: #e0e0e0;
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .descripcion-text {
+      white-space: pre-wrap; /* Para respetar saltos de línea en la descripción */
+      word-break: break-word;
+  }
+  
+  .codigo-torneo-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #333;
+    text-align: center;
+  }
+  
+  .codigo-torneo-section h3 {
+    font-size: 1.4rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+  }
+  
+  .codigo-display-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem; /* Espacio entre input y botón */
+    margin-bottom: 0.5rem;
+  }
+  
+  .codigo-input {
+    background-color: #1a1a1a;
+    color: #FF6D14; /* Código en color naranja */
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    flex-grow: 1; /* Permite que el input crezca */
+    max-width: 300px; /* Límite para que no sea demasiado ancho */
+    font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada para códigos */
+  }
+  
+  .copy-button {
+    background-color: #FF6D14;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espacio entre icono y texto */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+  
+  .copy-button:hover:not(:disabled) {
+    background-color: #E05A0B;
+    transform: translateY(-1px);
+  }
+  
+  .copy-button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+  }
+  
+  .copy-button svg {
+    font-size: 1.1rem;
+  }
+  
+  .copy-feedback {
+    color: #4caf50; /* Verde para feedback positivo */
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+  
+  /* Estilos para estados de carga y error */
+  .loading-container,
+  .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+    min-height: 200px; /* Altura mínima para que no se vea vacío */
+  }
+  
+  .spinner-icon {
+    font-size: 3rem;
+    color: #FF6D14;
+    animation: spin 1.5s linear infinite;
+    margin-bottom: 1rem;
+  }
+  
+  .error-icon {
+    font-size: 3rem;
+    color: #f44336; /* Rojo para errores */
+    margin-bottom: 1rem;
+  }
+  
+  .retry-button {
+      background-color: #FF6D14;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background-color 0.2s ease;
+  }
+  
+  .retry-button:hover {
+      background-color: #E05A0B;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Responsividad */
+  @media (max-width: 768px) {
+    .informacion-container {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+    .info-header h1 {
+      font-size: 1.6rem;
+    }
+    .info-header svg {
+      font-size: 2rem;
+    }
+    .info-grid {
+      grid-template-columns: 1fr; /* Una columna en móviles */
+    }
+    .codigo-input {
+      font-size: 1rem;
+      padding: 0.7rem;
+    }
+    .copy-button {
+      padding: 0.7rem 1rem;
+      font-size: 0.8rem;
+    }
+  }
