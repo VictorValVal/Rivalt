@@ -263,7 +263,8 @@ footer {
   display: flex;
   gap: 1rem; /* Aumentamos un poco el espacio entre botones */
   padding: 1rem; /* Mantenemos el padding */
-  z-index: 20; /* Asegura que estén por encima de las tarjetas si es necesario */
+  z-index: 1001; /* Asegura que estén por encima de las tarjetas si es necesario */
+  margin-top: 4%;
 }
 
 

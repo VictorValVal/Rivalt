@@ -90,6 +90,41 @@
   transform: translateY(-50%);
   z-index: 1; /* Para asegurar que estén por encima de otros elementos si es necesario */
 }
+/* Cambiar el color de fondo y bordes de las celdas de las llaves */
+.SeedItem {
+  position: relative;
+  background-color: #FF6D14; /* Fondo naranja Rivalt */
+  border: 1px solid #FF6D14; /* Borde naranja Rivalt */
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: #FFFFFF; /* Texto blanco para contraste */
+  transition: transform 0.2s ease-in-out;
+}
+
+.SeedItem:hover {
+  transform: scale(1.02);
+  background-color: #e05a03; /* Naranja más oscuro al pasar el mouse */
+}
+
+/* Estilos para los equipos dentro de un enfrentamiento */
+.SeedTeam {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0px;
+  border-bottom: 1px solid #FFFFFF; /* Línea divisoria blanca */
+}
+
+.SeedTeam:last-child {
+  border-bottom: none;
+}
+
+/* Estilos para el equipo ganador */
+.winner-team .team-name {
+  font-weight: bold;
+  color: #FFFFFF; /* Texto blanco para el equipo ganador */
+}
 
 .modify-button,
 .add-result-button {

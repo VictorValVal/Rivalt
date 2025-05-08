@@ -3,13 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { app } from "../firebase";
-import "./estilos/Nuevo.css"; // Ruta relativa al archivo Home.js
-// Importa el CSS si decides crear un archivo separado, si no, asegúrate que App.css se carga globalmente.
-// import './Nuevo.css'; // Opcional: Crear y usar Nuevo.css
+import "./estilos/Nuevo.css";
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 
 const db = getFirestore(app);
 const auth = getAuth(app);
-const TOTAL_STEPS = 4; // Definir el número total de pasos
+const TOTAL_STEPS = 4;
 
 function Nuevo() {
   const [step, setStep] = useState(1);
@@ -17,8 +16,8 @@ function Nuevo() {
   const [deporte, setDeporte] = useState("");
   const [modo, setModo] = useState("");
   const [tipo, setTipo] = useState("");
-  // Inicializar numEquipos a un valor por defecto válido para el select o input
-  const [numEquipos, setNumEquipos] = useState(''); // Usar '' o un valor por defecto como 4 u 8
+  const [numEquipos, setNumEquipos] = useState('');
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   const handleSubmit = async () => {
     const user = auth.currentUser;
@@ -31,7 +30,6 @@ function Nuevo() {
         return;
     }
 
-
     const codigo = uuidv4().slice(0, 6).toUpperCase();
 
     const torneoData = {
@@ -39,7 +37,6 @@ function Nuevo() {
       deporte,
       modo,
       tipo,
-      // Asegúrate que numEquipos sea un número al guardar
       numEquipos: parseInt(numEquipos, 10),
       creadorId: user.uid,
       codigo,
@@ -50,15 +47,17 @@ function Nuevo() {
     try {
       const docRef = await addDoc(collection(db, "torneos"), torneoData);
       alert(`Torneo "${titulo}" creado con éxito.\nCódigo: ${codigo}\nID: ${docRef.id}`);
-      // Podrías redirigir al usuario aquí si quieres
-      // navigate(`/torneo/${docRef.id}`);
-      // O resetear el formulario
-      setStep(1);
-      setTitulo('');
-      setDeporte('');
-      setModo('');
-      setTipo('');
-      setNumEquipos('');
+      
+      // Navegar a Home después de crear el torneo y mostrar la alerta
+      navigate("/home"); 
+
+      // Ya no es necesario resetear el formulario aquí si navegas inmediatamente
+      // setStep(1);
+      // setTitulo('');
+      // setDeporte('');
+      // setModo('');
+      // setTipo('');
+      // setNumEquipos('');
 
     } catch (error) {
       console.error("Error creando torneo:", error);
@@ -67,18 +66,14 @@ function Nuevo() {
   };
 
   const handleNextStep = () => setStep(prev => prev + 1);
-  const handlePrevStep = () => setStep(prev => prev - 1); // Función para volver atrás (opcional)
+  const handlePrevStep = () => setStep(prev => prev - 1);
 
-  // Calcular progreso
   const progressPercent = (step / TOTAL_STEPS) * 100;
 
   return (
-    // Contenedor para centrar todo el componente
     <div className="nuevo-torneo-page-container">
-      {/* Contenedor principal del formulario */}
       <div className="nuevo-torneo-container">
 
-        {/* Barra de Progreso */}
         <div className="progress-bar-container">
           <div
             className="progress-bar-fill"
@@ -87,7 +82,6 @@ function Nuevo() {
         </div>
         <span className="progress-step-text">Paso {step} de {TOTAL_STEPS}</span>
 
-        {/* Contenido del paso actual */}
         <div className="form-step-content">
           {step === 1 && (
             <div className="form-step">
@@ -109,7 +103,6 @@ function Nuevo() {
                 required
               />
               <div className="form-navigation">
-                 {/* No hay botón "Anterior" en el primer paso */}
                 <button className="form-button primary" onClick={handleNextStep} disabled={!titulo || !deporte}>Siguiente</button>
               </div>
             </div>
@@ -134,7 +127,6 @@ function Nuevo() {
               </div>
               <div className="form-navigation">
                 <button className="form-button secondary" onClick={handlePrevStep}>Anterior</button>
-                 {/* El "Siguiente" se activa al hacer clic en una opción */}
               </div>
             </div>
           )}
@@ -158,7 +150,6 @@ function Nuevo() {
               </div>
                <div className="form-navigation">
                  <button className="form-button secondary" onClick={handlePrevStep}>Anterior</button>
-                 {/* El "Siguiente" se activa al hacer clic en una opción */}
               </div>
             </div>
           )}
@@ -166,17 +157,14 @@ function Nuevo() {
           {step === 4 && (
             <div className="form-step">
               <h2>Número de {modo === "equipo" ? "equipos" : "participantes"}</h2>
-              {/* Cambiado a select para ambos casos para limitar opciones */}
               <select
-                className="form-input" // Reutilizamos la clase de input para el select
+                className="form-input"
                 value={numEquipos}
                 onChange={(e) => setNumEquipos(e.target.value)}
                 required
               >
                 <option value="" disabled>Seleccionar número...</option>
-                {/* Opciones condicionales o fijas */}
                 {tipo === 'torneo' ? (
-                  // Potencias de 2 para eliminatorias
                   <>
                     <option value={4}>4</option>
                     <option value={8}>8</option>
@@ -184,9 +172,8 @@ function Nuevo() {
                     <option value={32}>32</option>
                   </>
                 ) : (
-                  // Rango para ligas
                   <>
-                    {[...Array(19)].map((_, i) => ( // Genera números del 2 al 20
+                    {[...Array(19)].map((_, i) => (
                         <option key={i + 2} value={i + 2}>{i + 2}</option>
                     ))}
                   </>

@@ -1,0 +1,331 @@
+/* components/estilos/Home.css */
+
+/* Banner para Home (con centrado de bienvenida si se usa) */
+.home-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Espacio entre logo y botón logout */
+    padding: 0 1.5rem;
+    background-color: #1e1e1e;
+    border-bottom: 1px solid #333;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+    height: 65px;
+}
+
+.rivalt-logo-home {
+    height: 35px;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.user-info-home {
+    color: #E0E0E0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Posicionamiento opcional si se quiere centrado absoluto */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.user-info-home span {
+
+    padding: 6px 12px;
+
+    color: #ffffff;
+    display: inline-block;
+}
+
+.logout-button-home {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background-color: #FF6D14;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.logout-button-home:hover {
+    background-color: #E05A0B;
+    transform: translateY(-1px);
+}
+
+.logout-button-home svg {
+    font-size: 1rem;
+}
+
+/* Botones flotantes principales (+ / ->) */
+.main-buttons {
+    position: fixed;
+    top: calc(65px + 30px); /* Debajo del banner + margen */
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1001;
+}
+
+.main-buttons button {
+    background-color: #FF6D14;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.main-buttons button:hover {
+    background-color: #E05A0B;
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Contenedor de la parrilla de tarjetas */
+.card-grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px; /* Espacio entre tarjetas */
+    justify-content: center; /* Centra las tarjetas */
+    padding: 20px 0; /* Padding arriba/abajo */
+}
+
+/* Estilos para la nueva tarjeta (card-v2) */
+.card-v2 {
+    width: 300px;
+    height: 320px;
+    perspective: 1000px;
+    cursor: pointer;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card-v2-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.card-v2:hover .card-v2-content {
+    transform: rotateY(180deg);
+}
+
+.card-v2-front,
+.card-v2-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    color: #e0e0e0;
+    border: 1px solid #333; /* Borde sutil */
+}
+
+/* Cara Frontal */
+.card-v2-front {
+    background-color: #242424;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    overflow: hidden;
+    background-image: linear-gradient(to bottom right, #242424, #1e1e1e);
+}
+
+.card-v2-front-header-icons {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between; /* Separa campana (izq) y papelera (der) si ambos están */
+    /* Si solo hay un icono y quieres que esté a la derecha (ej. papelera): */
+    /* justify-content: flex-end; */
+    align-items: center;
+    z-index: 2;
+    pointer-events: none; /* Contenedor no interactivo */
+}
+
+.card-v2-front-header-icons > * {
+    pointer-events: auto; /* Iconos sí son interactivos */
+}
+
+.notification-badge-card {
+    color: #FFD700;
+    font-size: 1.3rem;
+    animation: pulse-card 1.8s infinite ease-in-out;
+}
+
+@keyframes pulse-card {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+.trash-icon-card { /* Estilo para la papelera en el frontal */
+    color: #888;
+    font-size: 1.2rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.trash-icon-card:hover {
+    color: #e74c3c;
+    transform: scale(1.1);
+}
+
+.card-v2-front-trophy {
+    font-size: 4.5em;
+    color: #FF6D14;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 8px rgba(255, 109, 20, 0.5));
+}
+
+.card-v2-front-title {
+    font-size: 1.6em;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.card-v2-front-subtitle { /* Para el deporte en el frontal */
+    font-size: 0.95em;
+    color: #aaaaaa;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.card-v2-front-footer {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    font-size: 0.8em;
+    color: #777;
+    font-style: italic;
+}
+
+/* Cara Trasera */
+.card-v2-back {
+    background-color: #2c2c2e;
+    transform: rotateY(180deg);
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.card-v2-back-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #FF6D14;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+    text-align: center;
+}
+
+.card-v2-back-details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: calc(100% - 100px); /* Ajustar si la altura del título/footer cambia */
+}
+
+/* Estilo para scrollbar */
+.card-v2-back-details::-webkit-scrollbar { width: 5px; }
+.card-v2-back-details::-webkit-scrollbar-track { background: transparent; }
+.card-v2-back-details::-webkit-scrollbar-thumb { background-color: #555; border-radius: 3px; }
+
+.card-v2-back-details li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #c0c0c0;
+}
+
+.card-v2-back-details li .detail-icon {
+    color: #FF6D14;
+    margin-right: 10px;
+    font-size: 1.1em;
+    min-width: 20px; /* Alineación */
+    text-align: center;
+}
+
+.card-v2-back-details li div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.card-v2-back-details li strong {
+    color: #f0f0f0;
+    margin-right: 5px;
+    font-weight: 500;
+}
+
+.join-code-v2 { /* Estilo para el código de unión */
+    background-color: #1e1e1e;
+    color: #FFC107;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    border: 1px solid #404040;
+}
+
+.card-v2-back-footer {
+    font-size: 0.8em;
+    color: #777;
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+    font-style: italic;
+}
+
+/* Ajustes responsivos */
+main[style*="paddingTop: 80px"] {
+  padding-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .card-grid-container { gap: 20px; }
+  .card-v2 { width: calc(50% - 20px); min-width: 280px; height: 300px; }
+  .card-v2-front-title { font-size: 1.4em; }
+  .card-v2-front-trophy { font-size: 4em; }
+  .card-v2-back-title { font-size: 1.2em; }
+  .card-v2-back-details li { font-size: 0.85em; }
+}

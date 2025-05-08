@@ -1,63 +1,63 @@
 /* ==================================================
-   LOGIN/REGISTRO FORMULARIO ESTILOS (MODIFICADO)
+   LOGIN/REGISTRO FORMULARIO ESTILOS (MODIFICADO CON FONDO)
    ================================================== */
 
 /* Contenedor para centrar en la página */
 .login-page-container {
   display: flex;
   justify-content: center;
-  align-items: center; /* Centra verticalmente también */
-  min-height: 90vh; /* Ocupa casi toda la altura */
+  align-items: center;
+  min-height: 100vh; /* Cambiado a 100vh para ocupar toda la altura */
   padding: 2rem 1rem;
   box-sizing: border-box;
   background-color: #121212; /* Fondo principal oscuro */
+  position: relative; /* Necesario para posicionar formas absolutas */
+  overflow: hidden; /* Para evitar barras de scroll por las formas */
 }
 
 /* Contenedor principal del formulario */
 .login-container {
   width: 100%;
   max-width: 420px;
-  background-color: #1e1e1e; /* Fondo ligeramente más claro para el contenedor */
+  background-color: #1e1e1e;
   padding: 2.5rem 3rem;
-  border-radius: 8px; /* Bordes menos redondeados para solidez */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); /* Sombra más pronunciada */
-  color: #E0E0E0; /* Texto claro por defecto */
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  color: #E0E0E0;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  border: 1px solid #333; /* Borde sutil para definición */
+  border: 1px solid #333;
+  position: relative; /* Para asegurar que esté sobre las formas */
+  z-index: 2;       /* Mayor que el z-index de .animated-shape */
 }
 
 .login-container h2 {
   color: #FFFFFF;
   text-align: center;
-  margin-bottom: 1rem; /* Más espacio después del título */
-  font-size: 1.9rem; /* Ligeramente más grande */
+  margin-bottom: 1rem;
+  font-size: 1.9rem;
   font-weight: 600;
 }
 
-/* Estilo del formulario */
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.4rem; /* Espacio entre grupos y botón */
+  gap: 1.4rem;
 }
 
-/* Grupo de Label + Input */
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* Espacio entre label e input */
+  gap: 0.5rem;
 }
 
-/* Estilo de las etiquetas */
 .form-label {
-  font-size: 0.9rem; /* Ligeramente más grande */
+  font-size: 0.9rem;
   color: #AAAAAA;
   font-weight: 500;
 }
 
-/* Estilos para Inputs (Asegúrate que sean consistentes con Nuevo.css) */
 .form-input {
   background-color: #2a2a2a;
   border: 1px solid #444444;
@@ -80,21 +80,19 @@
   box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
 }
 
-/* Estilos generales de botones (Asegúrate que sean consistentes) */
 .form-button {
   padding: 12px 25px;
   border: none;
   border-radius: 6px;
   font-size: 1rem;
-  font-weight: 600; /* Más grueso */
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
   text-align: center;
-  text-transform: uppercase; /* Moderno */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Botón primario (Login/Registro) */
 .form-button.primary {
   background-color: #FF6D14;
   color: #FFFFFF;
@@ -107,9 +105,8 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* Estilo para botones deshabilitados */
 .form-button:disabled {
-  background-color: #555; /* Gris oscuro para deshabilitado */
+  background-color: #555;
   color: #888;
   cursor: not-allowed;
   opacity: 0.7;
@@ -117,21 +114,18 @@
   transform: none;
 }
 .form-button.primary:disabled {
-  background-color: rgba(255, 109, 20, 0.4); /* Naranja apagado */
+  background-color: rgba(255, 109, 20, 0.4);
   color: rgba(255, 255, 255, 0.6);
 }
 
-
-/* Utilidad para botón de ancho completo */
 .full-width {
   width: 100%;
 }
 
-/* Botón/Enlace para cambiar modo Login/Registro */
 .toggle-link {
   background-color: transparent;
   border: none;
-  color: #FF6D14; /* Usa el color de acento */
+  color: #FF6D14;
   cursor: pointer;
   text-align: center;
   font-size: 0.9rem;
@@ -153,15 +147,49 @@
   text-decoration: none;
 }
 
-/* Mensaje de error */
 .form-error-message {
-  color: #ff9a9a; /* Rojo más brillante sobre fondo oscuro */
-  background-color: rgba(255, 80, 80, 0.15); /* Fondo rojo más visible */
+  color: #ff9a9a;
+  background-color: rgba(255, 80, 80, 0.15);
   border: 1px solid rgba(255, 80, 80, 0.4);
-  padding: 12px; /* Más padding */
+  padding: 12px;
   border-radius: 6px;
   text-align: center;
   font-size: 0.9rem;
   margin-top: 0.5rem;
   font-weight: 500;
+}
+
+/* --- Formas de Fondo Reactivas (Adaptadas para Login) --- */
+.animated-shape {
+  position: absolute;
+  z-index: 1; /* Detrás del login-container */
+  pointer-events: none;
+  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); /* Transición un poco más suave */
+  /* Considera un blur ligeramente mayor si quieres más sutileza */
+  /* filter: blur(80px);  <-- Ligeramente aumentado respecto a los 70px originales */
+}
+
+.shape1-login {
+  width: 65vw;
+  height: 65vh;
+  top: -25vh;
+  left: -30vw;
+  /* Reducir un poco la opacidad máxima del gradiente para más sutileza */
+  background: radial-gradient(circle, rgba(255, 110, 20, 0.35) 0%, rgba(255, 110, 20, 0.15) 70%);
+  border-radius: 50%;
+  filter: blur(75px); /* Ajuste específico para esta forma */
+  transform: translate(0px, 0px) scale(1);
+}
+
+.shape2-login {
+  width: 280px;
+  height: 140px;
+  bottom: 5%;
+  right: -15%;
+  border-radius: 45% 55% 65% 35% / 55% 45% 55% 45%;
+  /* Reducir opacidad */
+  background-color: rgba(255, 110, 20, 0.25);
+  filter: blur(90px); /* Aumentar blur para esta forma más pequeña */
+  transform: translate(0px, 0px) rotate(20deg);
+  transition-duration: 1s;
 }
