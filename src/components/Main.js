@@ -1,31 +1,29 @@
 // components/Main.js
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import "./estilos/Main.css"; // Asegúrate que la ruta es correcta y Main.css está actualizado
+import "./estilos/Main.css";
 import logoRivalt from "../img/logoRivaltN.png";
 import imagenPrincipal from '../img/laptop.png';
-
+import phoneImage from '../img/phone.png'; // Asegúrate de que la ruta sea correcta
 import {
   FaFutbol,
   FaBasketballBall,
   FaGolfBall,
   FaFootballBall,
   FaBaseballBall,
-  FaVolleyballBall
+  FaVolleyballBall,
+  FaRegLightbulb, // Icono para "Crea"
+  FaUserCog, // Icono para "Gestiona"
+  FaChartLine // Icono para "Resultados"
 } from 'react-icons/fa';
 
-const RIVALT_ORANGE_RGB = '255, 109, 20'; // Para usar en rgba()
 
-// --- Configuración Estela ---
-const MAX_TRAIL_SEGMENTS = 100; // Número de segmentos de línea en la estela.
-
-// Opacidad MÁXIMA para cada segmento de la estela (del más nuevo al más viejo).
-const SEGMENT_BASE_OPACITY = [0.6, 0.45, 0.3,0.2,0.27,0.25,0.2,0.17,0.15,0.15,0.15,0.12,0.10,0.06,0.03]; // Ajusta para MAX_TRAIL_SEGMENTS
-
+// ... (constantes y lógica de las pelotas y glow como estaban)
+const RIVALT_ORANGE_RGB = '255, 109, 20';
 
 // --- Configuración Pelota de Tenis ---
 const TENNIS_BALL_ICON = FaBaseballBall;
-const TENNIS_BALL_SIZE = 28; // Este valor se usará para el grosor de su estela
+const TENNIS_BALL_SIZE = 28;
 const TENNIS_BALL_WEIGHT = 0.3;
 const TENNIS_GRAVITY = 0.3;
 const TENNIS_BOUNCE_DAMPING = 0.75;
@@ -35,7 +33,7 @@ const TENNIS_INITIAL_VERTICAL_FACTOR = 4.5;
 
 // --- Configuración Pelotas Aleatorias ---
 const OTHER_BALL_TYPES = [
-  { id: 'soccer', IconComponent: FaFutbol, size: 40, weight: 1.0 }, // 'size' se usará para el grosor
+  { id: 'soccer', IconComponent: FaFutbol, size: 40, weight: 1.0 },
   { id: 'basketball', IconComponent: FaBasketballBall, size: 45, weight: 1.2 },
   { id: 'rugby', IconComponent: FaFootballBall, size: 40, weight: 1.1 },
   { id: 'volleyball', IconComponent: FaVolleyballBall, size: 38, weight: 0.9 },
@@ -46,9 +44,20 @@ const MAX_OTHER_BALLS_ON_SCREEN = 3;
 
 // Glow effect configuration
 const GLOW_EDGE_THRESHOLD_PERCENT = 7;
-const GLOW_DURATION_MS = 300;
+const GLOW_DURATION_MS = 300; // Duración del brillo
 const GLOW_LENGTH_PX = 80;
 const GLOW_THICKNESS_PX = 2;
+
+// Nuevas constantes para la intensidad del brillo
+const WALL_GLOW_BASE_ALPHA = 0.25;
+const WALL_GLOW_SHADOW_ALPHA = 0.2;
+const WALL_GLOW_SHADOW_BLUR = '4px';
+const WALL_GLOW_SHADOW_SPREAD = '0px';
+
+const BOUNCE_GLOW_BASE_ALPHA = 0.7; // Más opaco para el bote
+const BOUNCE_GLOW_SHADOW_ALPHA = 0.6; // Sombra más opaca
+const BOUNCE_GLOW_SHADOW_BLUR = '12px'; // Sombra más difusa y grande
+const BOUNCE_GLOW_SHADOW_SPREAD = '3px'; // Sombra más extendida
 
 
 function Main() {
@@ -56,6 +65,7 @@ function Main() {
   const shape1Ref = useRef(null);
   const shape2Ref = useRef(null);
   const infoSectionRef = useRef(null);
+  const mobilePromoSectionRef = useRef(null);
 
   const [tennisBall, setTennisBall] = useState(null);
   const [randomOtherBalls, setRandomOtherBalls] = useState([]);
@@ -87,16 +97,38 @@ function Main() {
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
-    const observer = new IntersectionObserver((entries) => entries.forEach(entry => entry.target.classList.toggle("visible", entry.isIntersecting)), { threshold: 0.1 });
-    if (infoSectionRef.current) observer.observe(infoSectionRef.current);
+
+    const observerOptions = { threshold: 0.1 }; // Umbral para que se active la animación
+
+    const observerCallback = (entries) => {
+      entries.forEach(entry => {
+        // El navegador gestionará la animación CSS via la clase 'visible'
+        entry.target.classList.toggle("visible", entry.isIntersecting);
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    const sectionsToObserve = [infoSectionRef.current, mobilePromoSectionRef.current];
+    sectionsToObserve.forEach(section => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      if (infoSectionRef.current) observer.unobserve(infoSectionRef.current);
+      sectionsToObserve.forEach(section => {
+        if (section) {
+          observer.unobserve(section);
+        }
+      });
     };
-  }, [handleMouseMove]);
+  }, [handleMouseMove]); // handleMouseMove no cambia, pero es buena práctica listarlo si se usa en el efecto.
 
   const handleLogin = () => navigate("/login");
 
+  // ... (lógica de initializeTennisBall, spawnRandomOtherBall, addGlowEffect, y useEffect de animación de pelotas como estaban)
   const initializeTennisBall = useCallback((serveFromLeft = true) => {
     const screenWidth = window.innerWidth; const screenHeight = window.innerHeight;
     let startX, velocityX, startY, velocityY;
@@ -112,7 +144,6 @@ function Main() {
       size: TENNIS_BALL_SIZE, weight: TENNIS_BALL_WEIGHT, x: startX, y: startY,
       velocityX, velocityY, rotation: 0, rotationSpeed: (Math.random() - 0.5) * 8,
       hasBouncedOnGround: false, isMovingLeftToRight: serveFromLeft,
-      trail: [],
     });
   }, []);
 
@@ -138,7 +169,6 @@ function Main() {
           id, type: ballType, x: startX, y: startY,
           velocityX, velocityY, rotation: Math.random() * 360,
           rotationSpeed: (Math.random() - 0.5) * 4,
-          trail: [],
         },
       ];
     });
@@ -155,7 +185,7 @@ function Main() {
     return () => { if (intervalId) { clearInterval(intervalId); } document.removeEventListener("visibilitychange", handleVisibilityChange); };
   }, [spawnRandomOtherBall]);
 
-  const addGlowEffect = useCallback((edge, positionValue, yPosition = null) => {
+  const addGlowEffect = useCallback((edge, positionValue, yPosition = null, glowType = 'wall') => {
     const newGlow = {
       id: Date.now() + Math.random(),
       edge,
@@ -164,14 +194,14 @@ function Main() {
       length: GLOW_LENGTH_PX,
       thickness: GLOW_THICKNESS_PX,
       timestamp: Date.now(),
+      type: glowType,
     };
-  
+
     setActiveGlows((prevGlows) => [...prevGlows, newGlow]);
   }, []);
 
   useEffect(() => {
     let animationFrameId;
-    const MAX_POINTS_FOR_TRAIL = MAX_TRAIL_SEGMENTS + 1;
 
     const animateAllBalls = () => {
       const screenWidth = window.innerWidth;
@@ -183,24 +213,20 @@ function Main() {
         if (!ball) return;
         const ballSize = ball.size || ball.type.size;
         if (currentX < edgeThresholdX || currentX < 0) {
-          addGlowEffect('left', Math.max(0, Math.min(currentY + ballSize / 2 - GLOW_LENGTH_PX / 2, screenHeight - GLOW_LENGTH_PX)));
+          addGlowEffect('left', Math.max(0, Math.min(currentY + ballSize / 2 - GLOW_LENGTH_PX / 2, screenHeight - GLOW_LENGTH_PX)), null, 'wall');
         }
         if (currentX + ballSize > screenWidth - edgeThresholdX || currentX + ballSize > screenWidth) {
-          addGlowEffect('right', Math.max(0, Math.min(currentY + ballSize / 2 - GLOW_LENGTH_PX / 2, screenHeight - GLOW_LENGTH_PX)));
+          addGlowEffect('right', Math.max(0, Math.min(currentY + ballSize / 2 - GLOW_LENGTH_PX / 2, screenHeight - GLOW_LENGTH_PX)), null, 'wall');
         }
         if (currentY < edgeThresholdY || currentY < 0) {
-          addGlowEffect('top', Math.max(0, Math.min(currentX + ballSize / 2 - GLOW_LENGTH_PX / 2, screenWidth - GLOW_LENGTH_PX)));
+          addGlowEffect('top', Math.max(0, Math.min(currentX + ballSize / 2 - GLOW_LENGTH_PX / 2, screenWidth - GLOW_LENGTH_PX)), null, 'wall');
         }
       };
 
       setTennisBall(prevTB => {
         if (!prevTB) return null;
-        let { x, y, velocityX, velocityY, rotation, rotationSpeed, hasBouncedOnGround, isMovingLeftToRight, size, weight, trail } = prevTB;
-        const currentTrailPoint = { x, y, id: Date.now() + Math.random() };
-        let updatedTrail = [currentTrailPoint, ...(trail || [])];
-        if (updatedTrail.length > MAX_POINTS_FOR_TRAIL) {
-          updatedTrail = updatedTrail.slice(0, MAX_POINTS_FOR_TRAIL);
-        }
+        let { x, y, velocityX, velocityY, rotation, rotationSpeed, hasBouncedOnGround, isMovingLeftToRight, size, weight } = prevTB;
+
         const nextX = x + velocityX;
         const nextY = y + velocityY;
         checkAndTriggerWallGlow(prevTB, nextX, nextY);
@@ -213,11 +239,10 @@ function Main() {
           prevTB.hasBouncedOnGround = true;
           prevTB.velocityX *= 0.98;
           prevTB.rotationSpeed *= 0.8;
-        
-          // Generar el glow del bote con las mismas propiedades que los glows de las paredes
+
           const ballCenterXOnBounce = x + size / 2;
           const glowStartX = Math.max(0, Math.min(ballCenterXOnBounce - GLOW_LENGTH_PX / 2, screenWidth - GLOW_LENGTH_PX));
-          addGlowEffect('groundBounce', glowStartX, groundContactY);
+          addGlowEffect('groundBounce', glowStartX, groundContactY, 'bounce');
         } else {
           y = nextY;
           prevTB.velocityY = newVelocityY;
@@ -229,18 +254,14 @@ function Main() {
           initializeTennisBall(!isMovingLeftToRight);
           return null;
         }
-        return { ...prevTB, x, y, rotation, velocityX: prevTB.velocityX, velocityY: prevTB.velocityY, rotationSpeed: prevTB.rotationSpeed, hasBouncedOnGround: prevTB.hasBouncedOnGround, trail: updatedTrail };
+        return { ...prevTB, x, y, rotation, velocityX: prevTB.velocityX, velocityY: prevTB.velocityY, rotationSpeed: prevTB.rotationSpeed, hasBouncedOnGround: prevTB.hasBouncedOnGround };
       });
 
       setRandomOtherBalls(currentBalls =>
         currentBalls.map(ball => {
           if (!ball) return null;
-          let { x, y, velocityX, velocityY, rotation, rotationSpeed, type, trail } = ball;
-          const currentTrailPoint = { x, y, id: Date.now() + Math.random() };
-          let updatedTrail = [currentTrailPoint, ...(trail || [])];
-          if (updatedTrail.length > MAX_POINTS_FOR_TRAIL) {
-            updatedTrail = updatedTrail.slice(0, MAX_POINTS_FOR_TRAIL);
-          }
+          let { x, y, velocityX, velocityY, rotation, rotationSpeed, type } = ball;
+
           const nextX = x + velocityX;
           const nextY = y + velocityY;
           checkAndTriggerWallGlow(ball, nextX, nextY);
@@ -252,7 +273,7 @@ function Main() {
               (nextY < -type.size * 3 && newVelocityY < 0)) {
             return null;
           }
-          return { ...ball, x: nextX, y: nextY, velocityY: newVelocityY, rotation: newRotation, trail: updatedTrail };
+          return { ...ball, x: nextX, y: nextY, velocityY: newVelocityY, rotation: newRotation };
         }).filter(Boolean)
       );
 
@@ -263,77 +284,62 @@ function Main() {
     return () => cancelAnimationFrame(animationFrameId);
   }, [addGlowEffect, initializeTennisBall]);
 
+
   return (
     <div className="main-page-container">
+      {/* Glow Container */}
       <div className="localized-glow-container">
         {activeGlows.map(glow => {
-          const timeElapsed = Date.now() - glow.timestamp;
-          const opacity = Math.max(0, 1 - timeElapsed / GLOW_DURATION_MS);
-          if (opacity <= 0) return null;
-          const currentScrollX = window.scrollX;
-          const currentScrollY = window.scrollY;
-          const style = { position: 'fixed', opacity: opacity };
-          if (glow.edge === 'top') {
-            style.top = `0px`; style.left = `${glow.position - currentScrollX}px`;
-            style.width = `${glow.length}px`; style.height = `${glow.thickness}px`;
-          } else if (glow.edge === 'left') {
-            style.left = `0px`; style.top = `${glow.position - currentScrollY}px`;
-            style.height = `${glow.length}px`; style.width = `${glow.thickness}px`;
-          } else if (glow.edge === 'right') {
-            style.right = `0px`; style.top = `${glow.position - currentScrollY}px`;
-            style.height = `${glow.length}px`; style.width = `${glow.thickness}px`;
-          } else if (glow.edge === 'groundBounce' && glow.yPosition !== null) {
-            style.top = `${glow.yPosition - glow.thickness / 2 - currentScrollY}px`;
-            style.left = `${glow.position - currentScrollX}px`;
-            style.width = `${glow.length}px`; style.height = `${glow.thickness}px`;
-          } else { return null; }
-          return <div key={glow.id} className="screen-edge-glow-segment" style={style}></div>;
+           const timeElapsed = Date.now() - glow.timestamp;
+           let visualOpacity = Math.max(0, 1 - timeElapsed / GLOW_DURATION_MS);
+           if (visualOpacity <= 0) return null;
+
+           const currentScrollX = window.scrollX;
+           const currentScrollY = window.scrollY;
+
+           const isBounceGlow = glow.type === 'bounce';
+           const baseAlpha = isBounceGlow ? BOUNCE_GLOW_BASE_ALPHA : WALL_GLOW_BASE_ALPHA;
+           const shadowAlpha = isBounceGlow ? BOUNCE_GLOW_SHADOW_ALPHA : WALL_GLOW_SHADOW_ALPHA;
+           const shadowBlur = isBounceGlow ? BOUNCE_GLOW_SHADOW_BLUR : WALL_GLOW_SHADOW_BLUR;
+           const shadowSpread = isBounceGlow ? BOUNCE_GLOW_SHADOW_SPREAD : WALL_GLOW_SHADOW_SPREAD;
+
+           const style = {
+             position: 'fixed',
+             opacity: visualOpacity,
+             backgroundColor: `rgba(${RIVALT_ORANGE_RGB}, ${baseAlpha})`,
+             boxShadow: `0 0 ${shadowBlur} ${shadowSpread} rgba(${RIVALT_ORANGE_RGB}, ${shadowAlpha})`,
+             borderRadius: '1px',
+           };
+
+           if (glow.edge === 'top') {
+             style.top = `0px`; style.left = `${glow.position - currentScrollX}px`;
+             style.width = `${glow.length}px`; style.height = `${glow.thickness}px`;
+           } else if (glow.edge === 'left') {
+             style.left = `0px`; style.top = `${glow.position - currentScrollY}px`;
+             style.height = `${glow.length}px`; style.width = `${glow.thickness}px`;
+           } else if (glow.edge === 'right') {
+             style.right = `0px`; style.top = `${glow.position - currentScrollY}px`;
+             style.height = `${glow.length}px`; style.width = `${glow.thickness}px`;
+           } else if (glow.edge === 'groundBounce' && glow.yPosition !== null) {
+             style.top = `${glow.yPosition - glow.thickness / 2 - currentScrollY}px`;
+             style.left = `${glow.position - currentScrollX}px`;
+             style.width = `${glow.length}px`; style.height = `${glow.thickness}px`;
+           } else { return null; }
+
+           return <div key={glow.id} className="screen-edge-glow-segment" style={style}></div>;
         })}
       </div>
 
+      {/* Formas animadas de fondo */}
       <div ref={shape1Ref} className="animated-shape shape1"></div>
       <div ref={shape2Ref} className="animated-shape shape2"></div>
 
-      {/* Estela de LÍNEA con GRADIENTE para la Pelota de Tenis */}
-      {tennisBall && tennisBall.trail && tennisBall.trail.length > 1 &&
-        tennisBall.trail.slice(0, -1).map((point, index) => {
-          const nextPoint = tennisBall.trail[index + 1];
-          if (!point || !nextPoint) return null;
-          const deltaX = nextPoint.x - point.x;
-          const deltaY = nextPoint.y - point.y;
-          const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-          const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-          const baseOpacity = SEGMENT_BASE_OPACITY[index] !== undefined ? SEGMENT_BASE_OPACITY[index] : 0;
-          if (baseOpacity <= 0 || length < 0.5) return null; // No dibujar líneas muy cortas o invisibles
-          const gradientDirection = 'to right';
-          const gradientColorStart = `rgba(${RIVALT_ORANGE_RGB}, ${baseOpacity})`;
-          const gradientColorEnd = `rgba(${RIVALT_ORANGE_RGB}, 0)`;
-          return (
-            <div
-              key={`tennis-trail-line-${point.id}`}
-              className="ball-line-segment"
-              style={{
-                position: 'absolute',
-                left: `${point.x + (tennisBall.size / 2)}px`,
-                top: `${point.y + (tennisBall.size / 2)}px`,
-                width: `${length}px`,
-                height: `${tennisBall.size}px`, // Grosor igual al tamaño de la pelota
-                background: `linear-gradient(${gradientDirection}, ${gradientColorStart}, ${gradientColorEnd})`,
-                transform: `rotate(${angle}deg) translateY(-50%)`, // Centrar verticalmente la línea gruesa
-                transformOrigin: '0 0',
-                zIndex: 4,
-                pointerEvents: 'none',
-                borderRadius: `${tennisBall.size / 2}px`, // Extremos redondeados
-              }}
-            />
-          );
-        })}
-
+      {/* Pelota de tenis */}
       {tennisBall && (
         <div
           key={tennisBall.id} className="flying-ball tennis-rally-ball"
           style={{
-            width: `${tennisBall.size}px`, height: `${tennisBall.size}px`, color: `rgba(${RIVALT_ORANGE_RGB}, 1)`, // Color de la pelota principal
+            width: `${tennisBall.size}px`, height: `${tennisBall.size}px`, color: `rgba(${RIVALT_ORANGE_RGB}, 1)`,
             transform: `translate(${tennisBall.x}px, ${tennisBall.y}px) rotate(${tennisBall.rotation}deg)`,
             zIndex: 5
           }}>
@@ -341,42 +347,7 @@ function Main() {
         </div>
       )}
 
-      {randomOtherBalls.map(ball => (
-        ball.trail && ball.trail.length > 1 &&
-        ball.trail.slice(0, -1).map((point, index) => {
-          const nextPoint = ball.trail[index + 1];
-          if (!point || !nextPoint) return null;
-          const deltaX = nextPoint.x - point.x;
-          const deltaY = nextPoint.y - point.y;
-          const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-          const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-          const baseOpacity = SEGMENT_BASE_OPACITY[index] !== undefined ? SEGMENT_BASE_OPACITY[index] : 0;
-          if (baseOpacity <= 0 || length < 0.5) return null;
-          const gradientDirection = 'to right';
-          const gradientColorStart = `rgba(${RIVALT_ORANGE_RGB}, ${baseOpacity})`;
-          const gradientColorEnd = `rgba(${RIVALT_ORANGE_RGB}, 0)`;
-          return (
-            <div
-              key={`other-trail-line-${ball.id}-${point.id}`}
-              className="ball-line-segment"
-              style={{
-                position: 'absolute',
-                left: `${point.x + (ball.type.size / 2)}px`,
-                top: `${point.y + (ball.type.size / 2)}px`,
-                width: `${length}px`,
-                height: `${ball.type.size}px`, // Grosor igual al tamaño de la pelota
-                background: `linear-gradient(${gradientDirection}, ${gradientColorStart}, ${gradientColorEnd})`,
-                transform: `rotate(${angle}deg) translateY(-50%)`, // Centrar verticalmente
-                transformOrigin: '0 0',
-                zIndex: 4,
-                pointerEvents: 'none',
-                borderRadius: `${ball.type.size / 2}px`, // Extremos redondeados
-              }}
-            />
-          );
-        })
-      ))}
-
+      {/* Otras pelotas */}
       {randomOtherBalls.map(ball => {
         const BallIcon = ball.type.IconComponent;
         return (
@@ -418,6 +389,9 @@ function Main() {
       </section>
 
       <section ref={infoSectionRef} className="info-section">
+        <div className="info-shape info-shape-1"></div>
+        <div className="info-shape info-shape-2"></div>
+        <div className="info-shape info-shape-3"></div>
         <h2>Descubre lo que puedes hacer</h2>
         <p>
           Rivalt te ofrece todas las herramientas necesarias para organizar
@@ -425,11 +399,43 @@ function Main() {
           Desde la creación de brackets hasta el seguimiento en tiempo real.
         </p>
         <div className="info-features">
-          <div>Crea Torneos Personalizados</div>
-          <div>Gestiona Participantes Fácilmente</div>
-          <div>Resultados en Tiempo Real</div>
+          <div><FaRegLightbulb /> Crea Torneos Personalizados</div>
+          <div><FaUserCog /> Gestiona Participantes Fácilmente</div>
+          <div><FaChartLine /> Resultados en Tiempo Real</div>
         </div>
       </section>
+
+      {/* =============================================== */}
+      {/* =========== NUEVA SECCIÓN PROMOCIÓN MÓVIL =========== */}
+      {/* =============================================== */}
+      <section ref={mobilePromoSectionRef} className="mobile-promo-section">
+        {/* NUEVO: Shapes de fondo para la sección móvil */}
+        <div className="mobile-promo-shape mobile-promo-shape-1"></div>
+        <div className="mobile-promo-shape mobile-promo-shape-2"></div>
+        <div className="mobile-promo-shape mobile-promo-shape-3"></div> {/* Opcional, puedes quitarla si no la quieres */}
+
+        <div className="mobile-promo-content">
+          <div className="mobile-promo-image-container">
+            <img src={phoneImage} alt="Rivalt en el móvil" />
+          </div>
+          <div className="mobile-promo-text-container">
+            <h2>Rivalt donde quieras</h2>
+            <p>
+              Lleva la gestión de tus torneos contigo. Rivalt también está
+              disponible en móvil, para que no te pierdas ni un detalle.
+              Accede y administra desde cualquier dispositivo.
+            </p>
+            {/* Podrías añadir un botón aquí si quieres, ej:
+            <button className="form-button promo-button">
+              Más Información
+            </button>
+            */}
+          </div>
+        </div>
+      </section>
+      {/* =============================================== */}
+      {/* ============ FIN NUEVA SECCIÓN ============ */}
+      {/* =============================================== */}
 
       <footer className="main-footer">
         <p>&copy; {new Date().getFullYear()} Rivalt. Todos los derechos reservados.</p>

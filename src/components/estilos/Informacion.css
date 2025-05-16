@@ -1,47 +1,36 @@
-/* components/estilos/Informacion.css */
+/* styles/Informacion.css */
 
-.informacion-page-layout {
-  display: flex;
-  gap: 1.5rem; 
-  align-items: flex-start; 
-  /* QUITAMOS: height: 100%; */
-  /* QUITAMOS: overflow: hidden; */
-  /* Su altura será determinada por el contenido de sus hijos */
+.informacion-page-layout2 {
+  display: flex; /* CLAVE: Esto crea el layout de columnas para sus hijos directos */
+  gap: 1.5rem;
+  align-items: stretch; /* Hace que .novedades-section e .informacion-container tengan la misma altura */
+  height: 100%; /* Asume que el padre (.contenido-bloque) tiene una altura definida */
   box-sizing: border-box;
 }
 
+/* --- Columna Izquierda: Novedades --- */
 .novedades-section {
-  flex: 0 0 320px; 
+  flex: 0 0 320px; /* Ancho fijo para la columna de novedades. Puedes usar % (ej: 30%) o minmax */
+  display: flex;
+  flex-direction: column; /* Para el contenido interno de novedades (título y lista) */
   background-color: #262626;
   padding: 1.2rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   border: 1px solid #383838;
-  /* align-self: stretch;  Puede que no sea necesario si no hay altura fija en el padre */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* Mantenemos para que .novedades-list haga scroll interno */
-  /* QUITAMOS: height: 100%; */
-  /* Dejamos que su altura se defina por su contenido, hasta un max-height si es necesario */
-  max-height: 70vh; /* Ejemplo: Limitar altura de novedades para que no sea excesiva */
   box-sizing: border-box;
-  min-width: 30%;
+  /* No necesita height: 100% si align-items: stretch funciona en el padre */
 }
 
 .novedades-section.placeholder-novedades {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #777;
-    /* Asegurar que el placeholder también tenga una altura razonable */
-    min-height: 200px; 
-    max-height: 70vh; /* Consistente con la sección de novedades real */
+  justify-content: center;
+  align-items: center;
+  color: #777;
+  min-height: 200px;
 }
 .novedades-section.placeholder-novedades .loading-novedades {
-    padding: 0;
+  padding: 0;
 }
-
 
 .novedades-section h2 {
   font-size: 1.4rem;
@@ -79,8 +68,8 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-y: auto; 
-  flex-grow: 1; 
+  overflow-y: auto;
+  flex-grow: 1; /* Para que la lista ocupe el espacio vertical en .novedades-section */
 }
 .novedades-list::-webkit-scrollbar { width: 7px; }
 .novedades-list::-webkit-scrollbar-track { background: #262626; border-radius: 0 5px 5px 0; }
@@ -137,113 +126,117 @@
   font-size: 0.9rem;
 }
 
+/* --- Columna Derecha: Información del Torneo --- */
 .informacion-container {
-  flex-grow: 1; 
+  flex-grow: 1; /* Ocupa el espacio horizontal restante */
+  display: flex;
+  flex-direction: column; /* Apila sus 3 secciones internas verticalmente */
   background-color: #1e1e1e;
   color: #e0e0e0;
   padding: 1.5rem;
   border-radius: 8px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  flex-direction: column;
   box-sizing: border-box;
   border: 1px solid #333;
-  position: relative;
-  /* QUITAMOS: height: 100%; */
-  /* QUITAMOS: overflow-y: auto; */
-  /* Su altura será determinada por su contenido */
+  position: relative; /* Para .loading-inline */
+  /* No necesita height: 100% si align-items: stretch funciona en el padre */
 }
-.informacion-container::-webkit-scrollbar { width: 7px; }
-.informacion-container::-webkit-scrollbar-track { background: #1e1e1e; border-radius: 0 5px 5px 0; }
-.informacion-container::-webkit-scrollbar-thumb { background-color: #4e4e4e; border-radius: 3px; }
-.informacion-container::-webkit-scrollbar-thumb:hover { background-color: #666; }
-
 
 .informacion-container.loading-container.main-loading {
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    flex-grow: 1;
-    min-height: 300px; /* Para que tenga algo de altura mientras carga */
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-grow: 1;
+  min-height: 300px;
 }
 .informacion-container.loading-container.main-loading .spinner-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .loading-inline {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(40,40,40,0.85);
-    color: #FF6D14;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    z-index: 10;
-    border: 1px solid #444;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(40,40,40,0.85);
+  color: #FF6D14;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+  border: 1px solid #444;
 }
 .loading-inline .spinner-icon.small {
-    font-size: 0.9rem;
-    margin: 0;
-    color: #FF6D14;
+  font-size: 0.9rem;
+  margin: 0;
+  color: #FF6D14;
 }
 
 .form-error-message.main-error {
-    background-color: rgba(255, 80, 80, 0.1);
-    border: 1px solid rgba(255, 80, 80, 0.3);
-    color: #ffacac;
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  background-color: rgba(255, 80, 80, 0.1);
+  border: 1px solid rgba(255, 80, 80, 0.3);
+  color: #ffacac;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 .retry-button.small-retry {
-    padding: 0.3rem 0.8rem;
-    font-size: 0.8rem;
-    margin-left: auto;
-    background-color: #555;
-    color: #ddd;
-    border: 1px solid #666;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  margin-left: auto;
+  background-color: #555;
+  color: #ddd;
+  border: 1px solid #666;
 }
 .retry-button.small-retry:hover {
-    background-color: #666;
-    color: #fff;
+  background-color: #666;
+  color: #fff;
 }
 
+/* Sección 1 (Derecha): Contenido principal de info (scrollable) */
+.informacion-contenido-scrollable {
+  flex-grow: 1; /* CLAVE: Esta sección toma el espacio vertical disponible */
+  overflow-y: auto; /* Permite scroll si el contenido (info-header + info-grid) es muy largo */
+  margin-bottom: 1.5rem; /* Espacio antes de la sección de código */
+}
+.informacion-contenido-scrollable::-webkit-scrollbar { width: 7px; }
+.informacion-contenido-scrollable::-webkit-scrollbar-track { background: #1e1e1e; border-radius: 0 5px 5px 0; }
+.informacion-contenido-scrollable::-webkit-scrollbar-thumb { background-color: #4e4e4e; border-radius: 3px; }
+.informacion-contenido-scrollable::-webkit-scrollbar-thumb:hover { background-color: #666; }
 
 .info-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid #333;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0; /* Importante para que no se encoja */
 }
 .info-header svg { font-size: 2.2rem; color: #FF6D14; }
 .info-header h1 { font-size: 1.8rem; font-weight: 700; color: #ffffff; margin: 0; }
 
 .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.2rem;
-    margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+  /* No necesita flex-grow aquí, su padre .informacion-contenido-scrollable lo maneja */
 }
 .info-item {
-    background-color: #2a2a2a;
-    padding: 0.9rem 1.1rem;
-    border-radius: 6px;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.7rem;
-    border-left: 3px solid #FF6D14;
+  background-color: #2a2a2a;
+  padding: 0.9rem 1.1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  border-left: 3px solid #FF6D14;
 }
 .info-item.full-width { grid-column: 1 / -1; }
 .info-icon { font-size: 1.1rem; color: #FF6D14; margin-top: 0.15rem; flex-shrink: 0; }
@@ -251,55 +244,84 @@
 .info-item div p { font-size: 0.95rem; color: #e0e0e0; margin: 0; line-height: 1.4; }
 .descripcion-text { white-space: pre-wrap; word-break: break-word; }
 
+/* Sección 2 (Derecha): Código Torneo */
 .codigo-torneo-section {
-    /* QUITAMOS: margin-top: auto; Para que fluya naturalmente */
-    padding-top: 1.2rem;
-    margin-top: 1.5rem; /* Espacio antes de esta sección */
-    border-top: 1px solid #333;
-    text-align: center;
-    flex-shrink: 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid #333;
+  text-align: left; /* MODIFICADO: de center a left */
+  flex-shrink: 0; /* Importante para que no se encoja */
 }
-.codigo-torneo-section h3 { font-size: 1.3rem; color: #ffffff; margin-bottom: 0.8rem; }
-.codigo-display-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; max-width: 380px; margin-left: auto; margin-right: auto;}
-.codigo-input { background-color: #1a1a1a; color: #FF6D14; border: 1px solid #444; border-radius: 6px; padding: 0.7rem 0.9rem; font-size: 1rem; font-weight: bold; text-align: center; flex-grow: 1; font-family: 'Courier New', Courier, monospace; }
-.copy-button { background-color: #FF6D14; color: white; border: none; border-radius: 6px; padding: 0.7rem 1rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: background-color 0.2s ease, transform 0.1s ease; }
-.copy-button:hover:not(:disabled) { background-color: #E05A0B; transform: translateY(-1px); }
-.copy-button:disabled { background-color: #555; cursor: not-allowed; }
-.copy-button svg { font-size: 1rem; }
-.copy-feedback { color: #4caf50; font-size: 0.85rem; margin-top: 0.5rem; }
-
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.codigo-torneo-section h3 {
+  font-size: 1.3rem;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
 }
-.spinner-icon {
-    animation: spin 1.5s linear infinite;
+.codigo-display-container {
+  display: flex;
+  justify-content: flex-start; /* MODIFICADO: de center a flex-start */
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  max-width: 380px; /* Mantener o ajustar según preferencia visual */
+  margin-left: 0; /* MODIFICADO: quitado auto */
+  margin-right: 0; /* MODIFICADO: quitado auto */
+}
+.codigo-input {
+  background-color: #1a1a1a;
+  color: #FF6D14;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: left; /* MODIFICADO: de center a left, si se desea */
+  flex-grow: 1;
+  font-family: 'Courier New', Courier, monospace;
+}
+.copy-button {
+  background-color: #FF6D14;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.copy-button:hover:not(:disabled) {
+  background-color: #E05A0B;
+  transform: translateY(-1px);
+}
+.copy-button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+.copy-button svg {
+  font-size: 1rem;
+}
+.copy-feedback {
+  color: #4caf50;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  /* Se alineará a la izquierda si .codigo-torneo-section es text-align: left */
 }
 
-/* Placeholder para el panel de información principal durante la carga de la página */
-.informacion-container.loading-container.main-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 1rem;
-    text-align: center;
-    min-height: 200px;
-}
-
-/* --- Danger Zone Section --- */
+/* Sección 3 (Derecha): Zona de Peligro / Eliminar Torneo */
 .danger-zone-section {
-  margin-top: 2.5rem;
+  margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 2px solid #552200; 
   background-color: rgba(255, 80, 80, 0.05); 
   padding: 1.5rem;
   border-radius: 6px;
   border: 1px solid #552200;
-  flex-shrink: 0; /* Para que no se encoja si el contenido principal es corto */
+  flex-shrink: 0; /* Importante para que no se encoja */
+  /* Por defecto, el contenido se alineará a la izquierda si no se especifica text-align: center aquí */
 }
-
 .danger-zone-title {
   font-size: 1.3rem;
   color: #ff9a9a; 
@@ -307,18 +329,18 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  /* justify-content: flex-start; es el valor por defecto para flex items */
 }
 .danger-zone-title svg {
   font-size: 1.2em;
 }
-
 .danger-zone-description {
   font-size: 0.9rem;
   color: #aaa;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+  /* text-align: left; por defecto */
 }
-
 .danger-zone-button {
   background-color: #c0392b; 
   color: #ffffff;
@@ -328,49 +350,54 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  display: inline-flex;
+  display: inline-flex; /* Para que se comporte como texto y respete text-align del padre si fuera necesario, y no ocupe todo el ancho */
   align-items: center;
   gap: 0.7rem;
   transition: background-color 0.2s ease, transform 0.1s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  /* margin-left: 0;  Asegurar que no haya un margin: auto que lo centre */
 }
-
 .danger-zone-button:hover:not(:disabled) {
   background-color: #a93226; 
   transform: translateY(-1px);
 }
-
 .danger-zone-button:disabled {
   background-color: #777;
   color: #bbb;
   cursor: not-allowed;
 }
-
 .danger-zone-button .spinner-icon {
   font-size: 1em; 
   margin: 0; 
   animation: spin 1s linear infinite; 
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.spinner-icon {
+  animation: spin 1.5s linear infinite;
+}
 
+/* --- Media Queries --- */
+/* Si quieres que en pantallas pequeñas las columnas se apilen una encima de otra: */
 @media (max-width: 992px) {
-    .informacion-page-layout {
-        flex-direction: column;
-        gap: 1.5rem;
-        /* overflow: visible; YA NO ES NECESARIO CON LOS CAMBIOS GLOBALES */
+    .informacion-page-layout2 { /* Renombrada la clase en el JS para evitar colisión, asegúrate que sea -layout2 o la que uses */
+        flex-direction: column; /* Apila Novedades encima de InformacionContainer */
+        height: auto; /* La altura se ajusta al contenido */
     }
     .novedades-section {
-        flex: 1 1 auto; /* Permitir que crezca/se encoja */
+        flex-basis: auto; /* Permite que la altura se ajuste al contenido o a max-height */
+        max-height: 40vh; /* Limita la altura de novedades en móvil, por ejemplo */
         min-width: 100%;
-        max-height: 350px; 
-        height: auto; 
     }
     .informacion-container {
         min-width: 100%;
-        height: auto; 
-        max-height: none;
-        /* overflow-y: visible; YA NO ES NECESARIO */
+    }
+    .informacion-contenido-scrollable {
+        overflow-y: visible; /* En móvil, es probable que toda la página scrollee */
     }
 }
 

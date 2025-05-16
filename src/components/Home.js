@@ -227,14 +227,7 @@ function Home() {
                 <div className="card-v2-content">
                   {/* CARA FRONTAL (Nuevo diseño) */}
                   <div className="card-v2-front">
-                    <div className="card-v2-front-header-icons">
-                      {/* Campana: visible si hay notificaciones Y NO es el creador */}
-                      {torneo.tieneNotificacionesNoLeidas && !esCreador && (
-                        <FaBell className="notification-badge-card" title="Nuevas novedades"/>
-                      )}
-                      {/* Papelera: visible si ES el creador */}
-                      
-                    </div>
+                    
                     {/* Contenido principal frontal */}
                     <FaTrophy className="card-v2-front-trophy" />
                     <h2 className="card-v2-front-title">{torneo.titulo || "Torneo sin título"}</h2>

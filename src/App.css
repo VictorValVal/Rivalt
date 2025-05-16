@@ -1,9 +1,15 @@
 /* ==================================================
    CONFIGURACIÓN GLOBAL
    ================================================== */
+   @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 body {
   background-color: #121212;
+  font-family: 'LEXEND', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 header {
@@ -12,10 +18,9 @@ header {
   max-height: 10vh;
 }
 
-footer {
-  background-color: pink;
-  width: 100%;
-  height: 10vh;
+main {
+  display: flex;
+  height: 90vh;
 }
 
 /* ==================================================
@@ -300,91 +305,10 @@ main {
 }
 
 
-/*------------------ CALENDARIO ------------------*/
-.calendario-container {
-  padding: 1rem;
-}
 
-.calendario-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1rem;
-}
 
-.calendario-add-button {
-  padding: 0.5rem 1rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-}
 
-.calendario-add-button:hover {
-  background-color: #0056b3;
-}
 
-.calendario-form {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.calendario-form h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-.calendario-form .form-group {
-  margin-bottom: 0.8rem;
-}
-
-.calendario-form label {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-weight: bold;
-}
-
-.calendario-form input[type="date"],
-.calendario-form input[type="time"],
-.calendario-form select {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  font-size: 1rem;
-}
-
-.calendario-form .form-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.calendario-partidos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-}
-
-.calendario-partido-card {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 5px;
-  background-color: white;
-}
-
-.calendario-partido-card h4 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-.calendario-partido-card p {
-  margin-bottom: 0.3rem;
-}
 
 .button {
   padding: 0.7rem 1.2rem;
@@ -451,4 +375,153 @@ main {
 html {
   scrollbar-width: auto; /* O 'thin' para una barra más delgada */
   scrollbar-color: #000000 #1e1e1e; /* color-del-pulgar color-de-la-pista */
+}
+/* ==================================================
+   FOOTER PROFESIONAL
+   ================================================== */
+
+.main-footer {
+  background-color: #1a1a1a; /* Un poco más claro que el body para diferenciar */
+  color: #a0a0a0; /* Gris claro para texto general */
+  padding: 40px 20px 20px 20px; /* top | horizontal | bottom */
+  border-top: 3px solid #FF6D14; /* Borde naranja Rivalt */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin-top: auto; /* Para empujar el footer al final si el contenido es corto */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px; /* Ancho máximo del contenido del footer */
+  margin: 0 auto 30px auto; /* Centrar y margen inferior */
+  gap: 30px; /* Espacio entre secciones */
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 250px; /* Para que las secciones no se compriman demasiado */
+  padding: 0 15px;
+}
+
+.footer-section h2,
+.footer-section h3 {
+  color: #FF6D14; /* Naranja Rivalt para títulos */
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.footer-logo {
+  font-family: 'Arial Black', Gadget, sans-serif; /* O la fuente de tu logo */
+  font-size: 1.8rem;
+  color: #FF6D14;
+  margin-bottom: 10px;
+}
+
+.footer-section p {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.footer-section.about p {
+    color: #c0c0c0; /* Texto de "acerca de" un poco más brillante */
+}
+
+/* Enlaces */
+.footer-section.links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section.links ul li {
+  margin-bottom: 10px;
+}
+
+.footer-section.links ul li a {
+  color: #a0a0a0;
+  text-decoration: none;
+  transition: color 0.3s ease, padding-left 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.footer-section.links ul li a:hover {
+  color: #FF6D14; /* Naranja al pasar el ratón */
+  padding-left: 5px;
+}
+
+/* Iconos Sociales (ejemplo si usas react-icons con <a>) */
+.social-icons {
+  margin-top: 20px;
+}
+
+.social-icons a {
+  color: #a0a0a0;
+  margin-right: 15px;
+  font-size: 1.3rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #FF6D14;
+  transform: scale(1.1);
+}
+
+/* Sección de Contacto */
+.footer-section.contact p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.footer-section.contact p i { /* Si usas FontAwesome o similar para iconos */
+  color: #FF6D14;
+}
+
+
+/* Parte inferior del footer */
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #333; /* Separador sutil */
+  font-size: 0.85rem;
+  color: #777; /* Texto más oscuro para el copyright */
+}
+
+.footer-bottom a {
+    color: #999;
+    text-decoration: none;
+}
+.footer-bottom a:hover {
+    color: #FF6D14;
+    text-decoration: underline;
+}
+
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-section {
+    margin-bottom: 30px;
+    min-width: 100%; /* Ocupar todo el ancho en móvil */
+    padding: 0;
+  }
+  .footer-section.links ul,
+  .footer-section.contact p,
+  .social-icons {
+    justify-content: center;
+    display: flex; /* Para centrar iconos si es necesario */
+    flex-wrap: wrap; /* Para iconos si son muchos */
+  }
+  .footer-section.links ul li {
+      text-align: center;
+  }
 }

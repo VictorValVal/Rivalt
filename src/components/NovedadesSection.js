@@ -1,18 +1,17 @@
 // components/NovedadesSection.js
 import React, { useState, useEffect } from "react";
-import { getFirestore, collection, query, orderBy, onSnapshot, updateDoc, doc, arrayUnion, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth"; // Importar getAuth
-import { app } from "../firebase";
-import { FaBell, FaSpinner, FaUserPlus, FaUserSlash, FaPlusSquare, FaClipboardList, FaTrashAlt } from "react-icons/fa";
+import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { app } from "../firebase"; // Ajusta ruta si es necesario
+import { FaBell, FaSpinner, FaUserPlus, FaUserSlash, FaPlusSquare, FaClipboardList, FaTrashAlt, FaSignOutAlt } from "react-icons/fa";
 
 const db = getFirestore(app);
-const auth = getAuth(); // Obtener la instancia de auth
+const auth = getAuth();
 
-function NovedadesSection({ torneoId, onUnreadStatusChange }) { // Se añade onUnreadStatusChange
+function NovedadesSection({ torneoId, onUnreadStatusChange }) {
   const [novedades, setNovedades] = useState([]);
   const [loadingNovedades, setLoadingNovedades] = useState(true);
   const [errorNovedades, setErrorNovedades] = useState("");
-  // const [hayNoLeidas, setHayNoLeidas] = useState(false); // Estado local opcional
 
   useEffect(() => {
     if (!torneoId) {
@@ -23,91 +22,105 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) { // Se añade onU
     }
     setLoadingNovedades(true);
     setErrorNovedades("");
+    console.log(`[NovedadesSection.js] Suscribiéndose a novedades para torneoId: ${torneoId}`);
 
-    const currentUser = auth.currentUser; // Obtener usuario actual
+    const currentUser = auth.currentUser;
+    console.log("[NovedadesSection.js] useEffect - currentUser:", currentUser ? currentUser.uid : "null", "TorneoID:", torneoId);
 
     const novedadesRef = collection(db, `torneos/${torneoId}/novedades`);
     const q = query(novedadesRef, orderBy("timestamp", "desc"));
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const nuevasNovedades = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      console.log(`[NovedadesSection.js] Novedades CRUDAS recibidas (${nuevasNovedades.length}):`, JSON.stringify(nuevasNovedades.map(n => ({id: n.id, tipo: n.tipo, msg: n.mensaje?.substring(0,30), ts: n.timestamp?.seconds, dataExtra: n.dataExtra})), null, 2) );
       setNovedades(nuevasNovedades);
 
-      // --- LÓGICA PARA DETERMINAR NO LEÍDAS ---
       let algunaNoLeida = false;
-      if (currentUser) { // Solo proceder si hay un usuario logueado
-        // Ejemplo: considerar no leída si 'leidaPor' no contiene el UID del usuario actual
-        // O si el timestamp de la novedad es posterior a un 'ultimaVisitaNovedades_[torneoId]' en localStorage
+      if (currentUser) {
         const ultimaVisitaKey = `ultimaVisitaNovedades_${torneoId}_${currentUser.uid}`;
-        const ultimaVisitaTimestamp = localStorage.getItem(ultimaVisitaKey);
+        const ultimaVisitaTimestampString = localStorage.getItem(ultimaVisitaKey);
+        const ultimaVisitaTimestamp = ultimaVisitaTimestampString ? parseInt(ultimaVisitaTimestampString, 10) : null;
+        console.log(`[NovedadesSection.js] Para user ${currentUser.uid} en torneo ${torneoId} - Ultima Visita TS (localStorage):`, ultimaVisitaTimestamp);
 
         algunaNoLeida = nuevasNovedades.some(novedad => {
-          if (!novedad.timestamp) return false; // Si no tiene timestamp, no podemos compararla
-
-          // Opción 1: Usar un campo 'leidaPor' (array de UIDs)
-          // return !(novedad.leidaPor && novedad.leidaPor.includes(currentUser.uid));
-
-          // Opción 2: Usar localStorage para 'ultimaVisitaTimestamp'
-           if (!ultimaVisitaTimestamp) return true; // Si nunca visitó, todas son no leídas
-           return novedad.timestamp.toMillis() > parseInt(ultimaVisitaTimestamp);
+          if (!novedad.timestamp || !novedad.timestamp.toMillis) {
+            console.warn(`[NovedadesSection.js] Novedad ${novedad.id} (Tipo: ${novedad.tipo}) sin timestamp válido. Mensaje: ${novedad.mensaje}`);
+            return false;
+          }
+          const novedadMillis = novedad.timestamp.toMillis();
+          if (!ultimaVisitaTimestamp) {
+            console.log(`[NovedadesSection.js] Novedad ${novedad.id} (${novedad.tipo}, TS: ${novedadMillis}) es NO LEÍDA (sin visita previa).`);
+            return true;
+          }
+          const esNoLeida = novedadMillis > ultimaVisitaTimestamp;
+          if (esNoLeida) {
+            console.log(`[NovedadesSection.js] Novedad ${novedad.id} (${novedad.tipo}, TS: ${novedadMillis}) es NO LEÍDA (comparada con ${ultimaVisitaTimestamp}).`);
+          }
+          return esNoLeida;
         });
+      } else {
+        console.log("[NovedadesSection.js] No hay currentUser, no se puede determinar 'no leídas'.");
       }
-      // setHayNoLeidas(algunaNoLeida); // Actualiza estado local si lo necesitas
-
+      console.log(`[NovedadesSection.js] ¿Alguna novedad no leída para ${currentUser ? currentUser.uid : 'anon'}? ${algunaNoLeida}`);
+      
       if (onUnreadStatusChange) {
-        onUnreadStatusChange(algunaNoLeida); // Llama al callback del padre
+        onUnreadStatusChange(algunaNoLeida);
       }
-      // --- FIN LÓGICA NO LEÍDAS ---
-
       setLoadingNovedades(false);
     }, (err) => {
-      console.error("Error al obtener novedades:", err);
+      console.error("[NovedadesSection.js] Error al obtener novedades:", err);
       setErrorNovedades("Error al cargar las novedades.");
       setLoadingNovedades(false);
       if (onUnreadStatusChange) onUnreadStatusChange(false);
     });
 
-    return () => unsubscribe();
-  }, [torneoId, onUnreadStatusChange]); // Añadir onUnreadStatusChange
-
-  // Función para marcar una novedad como leída (EJEMPLO con campo 'leidaPor')
-  // Debes decidir cuándo y cómo llamar a esta función (ej. al hacer scroll, al hacer clic en una novedad, etc.)
-  const marcarComoLeida = async (novedadId) => {
-    const currentUser = auth.currentUser;
-    if (!currentUser || !novedadId) return;
-
-    try {
-      const novedadRef = doc(db, `torneos/${torneoId}/novedades`, novedadId);
-      // Usar arrayUnion para añadir el UID del usuario al array 'leidaPor'
-      // Asegúrate de que el campo 'leidaPor' exista o sea creado si es la primera vez.
-      await updateDoc(novedadRef, {
-        leidaPor: arrayUnion(currentUser.uid)
-      });
-      console.log(`Novedad ${novedadId} marcada como leída por ${currentUser.uid}`);
-    } catch (error) {
-      console.error("Error al marcar novedad como leída:", error);
-    }
-  };
+    return () => {
+      console.log(`[NovedadesSection.js] Desuscribiéndose de novedades para torneoId: ${torneoId}`);
+      unsubscribe();
+    };
+  }, [torneoId, onUnreadStatusChange]);
 
 
   const formatNovedadTimestamp = (timestamp) => {
-    if (!timestamp || !timestamp.seconds) return "Fecha desconocida";
-    return new Date(timestamp.seconds * 1000).toLocaleString("es-ES", {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
+    if (!timestamp || typeof timestamp.seconds !== 'number') { // Verificación más robusta
+      console.warn(`[NovedadesSection.js] Timestamp inválido o sin propiedad .seconds numérica:`, timestamp);
+      return "Fecha pendiente...";
+    }
+    try {
+        return new Date(timestamp.seconds * 1000).toLocaleString("es-ES", {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    } catch (e) {
+        console.error("[NovedadesSection.js] Error formateando timestamp:", timestamp, e);
+        return "Fecha inválida";
+    }
   };
 
   const getNovedadIcon = (tipo) => {
+    // console.log(`[NovedadesSection.js] getNovedadIcon llamado con tipo: ${tipo}`); // Log para ver qué tipos se procesan
     switch (tipo) {
-      case 'user_join': return <FaUserPlus style={{ color: '#2ecc71' }} title="Nuevo participante" />;
-      case 'user_leave': return <FaUserSlash style={{ color: '#e74c3c' }} title="Participante salió/eliminado" />;
-      case 'user_eliminated': return <FaTrashAlt style={{ color: '#c0392b' }} title="Participante eliminado" />;
-      case 'match_add': return <FaPlusSquare style={{ color: '#3498db' }} title="Nuevo partido" />;
-      case 'match_result': return <FaClipboardList style={{ color: '#9b59b6' }} title="Resultado de partido" />;
-      case 'match_schedule_update': return <FaBell style={{ color: '#f1c40f' }} title="Partido actualizado" />;
-      case 'match_delete': return <FaTrashAlt style={{ color: '#e74c3c' }} title="Partido eliminado" />;
-      default: return <FaBell style={{ color: '#f39c12' }} title="Novedad general" />;
+      case 'user_join':
+        return <FaUserPlus style={{ color: '#2ecc71' }} title="Nuevo participante" />;
+      case 'user_leave':
+        return <FaUserSlash style={{ color: '#e74c3c' }} title="Participante salió/eliminado por creador" />;
+      case 'user_self_leave':
+        return <FaSignOutAlt style={{ color: '#e67e22' }} title="Participante abandonó" />;
+      case 'user_eliminated':
+        return <FaTrashAlt style={{ color: '#c0392b' }} title="Participante eliminado del torneo" />;
+      case 'match_add':
+        return <FaPlusSquare style={{ color: '#3498db' }} title="Nuevo partido" />;
+      case 'match_result':
+        return <FaClipboardList style={{ color: '#9b59b6' }} title="Resultado de partido" />;
+      case 'match_schedule_update':
+        return <FaBell style={{ color: '#f1c40f' }} title="Partido actualizado" />;
+      case 'match_delete':
+        return <FaTrashAlt style={{ color: '#e74c3c' }} title="Partido eliminado" />;
+      case 'tournament_deleted':
+        return <FaTrashAlt style={{ color: '#7f8c8d' }} title="Torneo eliminado" />;
+      default:
+        console.warn(`[NovedadesSection.js] Tipo de novedad desconocido en getNovedadIcon: "${tipo}"`);
+        return <FaBell style={{ color: '#f39c12' }} title={`Novedad: ${tipo || 'general'}`} />;
     }
   };
 
@@ -125,17 +138,31 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) { // Se añade onU
         <p className="no-novedades">No hay novedades recientes.</p>
       ) : (
         <ul className="novedades-list">
-          {novedades.map(novedad => (
-            <li key={novedad.id} className="novedad-item" /* onClick={() => marcarComoLeida(novedad.id)} */ >
-              <span className="novedad-icon">
-                {getNovedadIcon(novedad.tipo)}
-              </span>
-              <div className="novedad-content">
-                <p className="novedad-mensaje">{novedad.mensaje}</p>
-                <span className="novedad-timestamp">{formatNovedadTimestamp(novedad.timestamp)}</span>
-              </div>
-            </li>
-          ))}
+          {novedades.map(novedad => {
+            // Log detallado de cada novedad antes de intentar renderizarla
+            console.log("[NovedadesSection.js] Renderizando novedad:", { 
+              id: novedad.id, 
+              tipo: novedad.tipo, 
+              mensaje: novedad.mensaje,
+              timestamp_obj: novedad.timestamp, // Loguea el objeto timestamp completo
+              dataExtra: novedad.dataExtra // Loguea dataExtra por si hay algo relevante
+            });
+            
+            // Comprobación adicional por si el mensaje es undefined o null
+            const mensajeRenderizar = typeof novedad.mensaje === 'string' ? novedad.mensaje : "Mensaje no disponible";
+
+            return (
+              <li key={novedad.id} className="novedad-item">
+                <span className="novedad-icon">
+                  {getNovedadIcon(novedad.tipo)}
+                </span>
+                <div className="novedad-content">
+                  <p className="novedad-mensaje">{mensajeRenderizar}</p>
+                  <span className="novedad-timestamp">{formatNovedadTimestamp(novedad.timestamp)}</span>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

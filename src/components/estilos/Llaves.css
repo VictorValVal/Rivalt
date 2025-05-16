@@ -121,7 +121,7 @@
 }
 
 /* Estilos para el equipo ganador */
-.winner-team .team-name {
+.winner-team .team-name { 
   font-weight: bold;
   color: #FFFFFF; /* Texto blanco para el equipo ganador */
 }

@@ -1,51 +1,36 @@
 /* ==================================================
-   MAIN PAGE ESTILOS
+   MAIN PAGE ESTILOS (CON SECCIÓN INFO MEJORADA Y BORDE ANIMADO)
    ================================================== */
 
-/* --- Asegurar que la página pueda hacer scroll --- */
 html, body {
-    overflow-x: hidden; /* Evita scroll horizontal no deseado */
-    /* No debe haber overflow-y: hidden aquí para permitir scroll vertical */
+    overflow-x: hidden;
 }
 
-/* --- Contenedor Principal y Fondo --- */
 .main-page-container {
-    /* ... tus otros estilos ... */
-    position: relative; /* Clave para el posicionamiento absoluto de las pelotas */
-    overflow: hidden; /* Para que las pelotas no generen scroll si empiezan/terminan fuera */
+    position: relative;
+    overflow: hidden; /* Asegúrate que el contenedor principal no muestre overflow inesperado */
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
-/* Estilos para las pelotas voladoras (ahora divs conteniendo iconos) */
 .flying-ball {
   position: absolute;
-  top: 0; /* La posición real se controla con transform: translate() */
+  top: 0;
   left: 0;
-  filter: blur(1.2px); /* Ligero desenfoque, ajústalo a tu gusto */
-  z-index: 5; /* Ajusta según sea necesario (encima de formas de fondo, debajo de modales) */
-  pointer-events: none; /* Para que no interfieran con clics */
-  will-change: transform; /* Optimización para el navegador */
-  opacity: 0.8; /* Ligeramente translúcidas */
-  display: flex; /* Para centrar el icono dentro del div si es necesario */
+  filter: blur(1.2px);
+  z-index: 5;
+  pointer-events: none;
+  will-change: transform;
+  opacity: 0.8;
+  display: flex;
   align-items: center;
   justify-content: center;
-  /* El color del icono se establece inline desde BALL_TYPES */
-  /* El tamaño (width/height) del div y el fontSize del icono se establecen inline */
 }
 
-/* Si el icono SVG dentro del div necesita ajustes específicos (opcional) */
 .flying-ball svg {
-  display: block; /* Evita espacios extra */
-  /* El tamaño del SVG se hereda del fontSize del div padre (.flying-ball)
-     o del estilo inline del componente IconComponent,
-     así que width/height 100% aquí podría no ser necesario
-     o incluso conflictivo si el icono tiene un aspect ratio fijo.
-     Prueba sin esto primero.
-  */
-  /* width: 100%; */
-  /* height: 100%; */
+  display: block;
 }
 
-/* --- Banner Superior --- */
 .main-banner {
     display: flex;
     justify-content: space-between;
@@ -89,9 +74,8 @@ html, body {
     border-color: #777;
 }
 
-/* --- Contenido Principal Centrado --- */
+/* --- Contenido Principal --- */
 .main-content {
-    /* flex-grow: 1;  Lo quitamos temporalmente para controlar mejor la altura con min-height */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -99,11 +83,7 @@ html, body {
     position: relative;
     z-index: 10;
     box-sizing: border-box;
-    /* ¡IMPORTANTE! Asegurar que esta sección tenga suficiente altura
-       para empujar la 'info-section' fuera de la vista inicial. */
-    min-height: 90vh; /* O un valor que sepas que es mayor que la altura visible inicial menos tu header.
-                         Ejemplo: si tu header sticky es de 60px, podrías usar calc(100vh - 60px).
-                         90vh es un valor grande para asegurar que funciona. Ajusta según sea necesario. */
+    min-height: 90vh;
 }
 
 .content-grid {
@@ -207,161 +187,458 @@ html, body {
     height: 80vh;
     top: -35vh;
     left: -30vw;
-    background: radial-gradient(circle, rgb(255, 110, 20) 0%, rgb(255, 110, 20) 70%);
+    background: radial-gradient(circle, rgb(255, 110, 20) 0%, rgba(255, 110, 20, 0.1) 70%);
     border-radius: 50%;
-    opacity: 0.9;
+    filter: blur(75px);
     transform: translate(0px, 0px) scale(1);
 }
 
 .shape2 {
     width: 350px;
     height: 175px;
-    bottom: 40%;
-    right: 0%;
+    bottom: 10%;
+    right: -10%;
     border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    background-color: rgb(255, 110, 20);
-    filter: blur(70px);
-    transform: translate(0px, 0px) rotate(0deg);
+    background-color: rgba(255, 110, 20, 0.2);
+    filter: blur(90px);
+    transform: translate(0px, 0px) rotate(20deg);
     transition-duration: 0.8s;
 }
 
-/* --- ESTILOS para la Sección de Información --- */
+/* --- ESTILOS MEJORADOS para la Sección de Información --- */
 .info-section {
-    background: linear-gradient(135deg, #1e1e1e 0%, #1a1a1a 100%);
+    background: linear-gradient(150deg, #1a1a1a 0%, #161616 100%);
     color: #e0e0e0;
-    padding: 5rem 2rem;
+    padding: 6rem 2rem;
     text-align: center;
-    border-top: 2px solid #FF6D14;
-    /* margin-top: 5rem;  Lo ajustamos o quitamos si .main-content ya la empuja lo suficiente */
     position: relative;
     overflow: hidden;
     z-index: 5;
 
-    /* --- ESTADO INICIAL (OCULTO) --- */
     opacity: 0;
     transform: translateY(80px) scale(0.95);
     filter: blur(5px);
     transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
                 transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
                 filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                visibility 0s linear 0.7s; /* Para la transición de visibility */
+                visibility 0s linear 0.7s;
     visibility: hidden;
 }
 
-/* --- ESTADO VISIBLE (CUANDO SE AÑADE LA CLASE .visible) --- */
+.info-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0; /* Animación de izquierda a derecha */
+    height: 3px;
+    width: 0;
+    background-color: #FF6D14;
+    transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    transition-delay: 0.4s; /* Retraso para que comience después de que la sección sea visible */
+    z-index: 6;
+}
+
 .info-section.visible {
     opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0px);
     visibility: visible;
-    transition-delay: 0s; /* Resetea el delay para la entrada */
+    transition-delay: 0s; /* Sin retraso para la visibilidad de la sección */
 }
+
+.info-section.visible::before {
+    width: 100%;
+}
+
 
 .info-section h2 {
     color: #FFFFFF;
-    font-size: 2.5rem;
+    font-size: 2.6rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
     letter-spacing: 1px;
+    position: relative;
+    z-index: 10;
 }
 
 .info-section p {
-    font-size: 1.15rem;
-    line-height: 1.8;
-    max-width: 750px;
-    margin: 0 auto 3rem auto;
-    color: #b0b0b0;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto 3.5rem auto;
+    color: #ffffff; /* Cambio para mayor contraste */
+    position: relative;
+    z-index: 10;
 }
 
 .info-features {
     display: flex;
     justify-content: center;
-    gap: 2.5rem;
+    gap: 2rem;
     flex-wrap: wrap;
     margin-top: 2rem;
+    position: relative;
+    z-index: 10;
 }
 
 .info-features div {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 1.5rem 2rem;
-    border-radius: 10px;
+    background-color: rgba(42, 42, 42, 0.7);
+    padding: 1.8rem 2.2rem;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 500;
     color: #d0d0d0;
-    border: 1px solid rgba(255, 109, 20, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    border: 1px solid rgba(255, 109, 20, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.8rem;
-    min-width: 200px;
-    text-align: left;
+    gap: 1rem;
+    min-width: 220px;
+    text-align: center;
+    backdrop-filter: blur(3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .info-features div:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    transform: translateY(-10px) scale(1.04);
     background-color: rgba(255, 109, 20, 0.1);
-    border-color: rgba(255, 109, 20, 0.7);
+    border-color: rgba(255, 109, 20, 0.5);
+    box-shadow: 0 12px 30px rgba(255, 109, 20, 0.2), 0 0 15px rgba(255, 109, 20, 0.1);
+    color: #ffffff;
+}
+.info-features div:hover svg,
+.info-features div:hover i { /* Aplicar también a iconos <i> si los usas */
+    color: #ffffff; /* Cambia el color del icono al hacer hover */
+    transform: scale(1.1);
 }
 
-.info-features svg, 
-.info-features i {
+
+.info-features svg,
+.info-features i { /* Estilo general para SVG o <i> si los usas */
     color: #FF6D14;
-    font-size: 1.5rem;
-    margin-right: 8px;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
+
+/* --- Formas Naranjas Difuminadas (Ajustadas para visibilidad) --- */
+.info-shape {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 109, 20, 0.28); /* Aumentada la opacidad */
+    filter: blur(85px); /* Aumentado el desenfoque */
+    z-index: 1; /* Detrás del contenido pero visible */
+    pointer-events: none;
+    animation: subtle-float 8s ease-in-out infinite alternate;
+}
+
+.info-shape-1 {
+    width: 400px;
+    height: 400px;
+    top: -150px;
+    left: -100px;
+    animation-delay: -2s;
+}
+
+.info-shape-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    right: -80px;
+    animation-delay: 0s;
+}
+
+.info-shape-3 {
+    width: 200px;
+    height: 200px;
+    top: 40%;
+    right: 10%;
+    animation-duration: 10s;
+    animation-delay: -5s;
+}
+
+@keyframes subtle-float {
+    0% { transform: translateY(0px) translateX(0px) scale(1); }
+    50% { transform: translateY(-15px) translateX(10px) scale(1.05); }
+    100% { transform: translateY(0px) translateX(0px) scale(1); }
+}
+
+
+/* ================================================== */
+/* === ESTILOS PARA LA NUEVA SECCIÓN DE PROMOCIÓN MÓVIL === */
+/* ================================================== */
+.mobile-promo-section {
+    background-color: #181818; /* Un fondo ligeramente diferente para distinguirla visualmente si se desea */
+    color: #e0e0e0;
+    padding: 6rem 2rem; /* Aumentado el padding vertical */
+    position: relative;
+    overflow: hidden;
+    z-index: 6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+
+    opacity: 0;
+    transform: translateY(80px) scale(0.95);
+    filter: blur(5px);
+    transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+                transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+                filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+                background-color 0.7s ease, /* Transición suave del color de fondo si cambia */
+                visibility 0s linear 0.7s;
+    visibility: hidden;
+}
+
+/* NUEVO: Línea superior animada para mobile-promo-section */
+.mobile-promo-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0; /* Comienza desde la derecha */
+    height: 3px;
+    width: 0; /* Comienza con ancho 0 */
+    background-color: #FF6D14;
+    transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    transition-delay: 0.4s; /* Retraso similar a info-section */
+    z-index: 7; /* Por encima del contenido de la sección pero debajo de elementos superpuestos globales */
+}
+
+.mobile-promo-section.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+.mobile-promo-section.visible::before {
+    width: 100%; /* Anima el ancho al 100% */
+}
+
+.mobile-promo-content {
+    display: flex;
+    align-items: center;
+    gap: 3rem; /* Espacio entre imagen y texto */
+    max-width: 1000px; /* Ancho máximo del contenido */
+    width: 100%;
+    position: relative;
+    z-index: 10; /* Asegura que el contenido esté sobre las shapes y la línea */
+}
+
+.mobile-promo-image-container {
+    flex: 0 0 45%;
+    max-width: 380px;
+    opacity: 0;
+    transform: translateX(-30px); /* Animación de entrada para la imagen */
+    transition: opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s;
+}
+
+.mobile-promo-section.visible .mobile-promo-image-container {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.mobile-promo-image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px; /* Opcional: bordes redondeados para la imagen */
+}
+
+.mobile-promo-text-container {
+    flex: 1;
+    text-align: left;
+    opacity: 0;
+    transform: translateX(30px); /* Animación de entrada para el texto */
+    transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
+}
+.mobile-promo-section.visible .mobile-promo-text-container {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.mobile-promo-text-container h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.mobile-promo-text-container p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #ffffff; /* Mejor contraste */
+    margin-bottom: 1.5rem; /* Espacio antes del botón si lo hubiera */
+}
+
+/* Estilos para el botón de promoción móvil (si decides añadir uno) */
+.mobile-promo-text-container .form-button.promo-button {
+    padding: 12px 30px;
+    font-size: 1rem;
+    margin-top: 1rem;
+    background-color: #FF6D14;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+}
+
+.mobile-promo-text-container .form-button.promo-button:hover {
+    background-color: #E05A0B;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+
+/* NUEVO: Formas de fondo para la sección móvil */
+.mobile-promo-shape {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 109, 20, 0.22); /* Opacidad ligeramente diferente para distinguirlas */
+    filter: blur(80px); /* Desenfoque similar */
+    z-index: 1; /* Detrás del contenido de la sección */
+    pointer-events: none;
+    animation: subtle-float-alt 9s ease-in-out infinite alternate; /* Animación ligeramente diferente */
+}
+
+.mobile-promo-shape-1 {
+    width: 350px;
+    height: 350px;
+    top: -120px; /* Posiciones ajustadas */
+    right: -90px;
+    animation-delay: -1s;
+}
+
+.mobile-promo-shape-2 {
+    width: 280px;
+    height: 280px;
+    bottom: -90px;
+    left: -70px;
+    animation-delay: -3s;
+}
+
+/* Opcional: una tercera forma si se desea más densidad */
+.mobile-promo-shape-3 {
+    width: 180px;
+    height: 180px;
+    top: 50%;
+    left: 15%;
+    transform: translateY(-50%);
+    animation-duration: 11s; /* Duración diferente */
+    animation-delay: -4s;
+    background-color: rgba(255, 109, 20, 0.18); /* Aún más sutil */
+}
+
+
+@keyframes subtle-float-alt { /* Animación ligeramente variada para las nuevas shapes */
+    0% { transform: translateY(0px) translateX(0px) scale(1); }
+    50% { transform: translateY(10px) translateX(-15px) scale(1.03); }
+    100% { transform: translateY(0px) translateX(0px) scale(1); }
+}
+
 
 /* --- Footer Styles --- */
 .main-footer {
-    padding: 2rem 2rem; /* Más padding para asegurar espacio */
+    padding: 2rem 2rem;
     background-color: #0a0a0a;
     text-align: center;
     font-size: 0.9rem;
     color: #888;
     border-top: 1px solid #222;
-    margin-top: 5rem; /* Asegura espacio entre info-section y footer */
-    flex-shrink: 0; /* Evita que el footer se encoja */
-    z-index: 5;
+    margin-top: 0; /* Asegurar que no haya margen superior que cause espacios */
+    flex-shrink: 0; /* Para layouts flex, evita que se encoja */
+    z-index: 5; /* Por si acaso, para mantenerlo debajo de elementos flotantes */
+    position: relative; /* Para asegurar el z-index */
 }
 
 
-/* --- Responsividad (Resumida - asegúrate de tener todas tus media queries completas) --- */
+/* --- Responsividad --- */
 @media (max-width: 992px) {
-    .main-content {
-        padding: 4rem 1.5rem; /* Ajustar padding si es necesario */
-        min-height: 85vh; /* Ajustar min-height para tablets si es necesario */
+    .info-section { padding: 5rem 1.5rem; }
+    .info-section h2 { font-size: 2.3rem; }
+    .info-features div { min-width: 200px; padding: 1.5rem; }
+    .info-shape-1 { width: 300px; height: 300px; top: -100px; left: -80px; }
+    .info-shape-2 { width: 250px; height: 250px; bottom: -80px; right: -50px; }
+    .info-shape-3 { display: none; } /* Ocultar la tercera forma de info en pantallas medianas */
+
+    .mobile-promo-section { padding: 5rem 1.5rem; }
+    .mobile-promo-text-container h2 { font-size: 2.2rem; }
+    .mobile-promo-image-container {
+        max-width: 320px; /* Ajustar si es necesario */
     }
-    .text-content h1 { font-size: 2.2rem; }
-    .info-section { padding: 4rem 1.5rem; }
-    .info-section h2 { font-size: 2.2rem; }
+    .mobile-promo-shape-1 { width: 300px; height: 300px; top: -100px; right: -70px;}
+    .mobile-promo-shape-2 { width: 220px; height: 220px; bottom: -70px; left: -50px;}
+    .mobile-promo-shape-3 { display: none; }
 }
 
 @media (max-width: 768px) {
-    .main-content {
-        padding: 3rem 1rem;
-        min-height: 80vh; /* Ajustar min-height para móviles */
-    }
-    .content-grid { flex-direction: column; gap: 2rem; }
-    .text-content { align-items: center; }
+     .content-grid {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+     }
+     .text-content {
+        align-items: center;
+     }
     .text-content h1 { font-size: 2rem; }
-    .info-section { padding: 3rem 1rem; margin-top: 3rem; } /* Reducir margin-top si .main-content es suficientemente alto */
+    .info-section { padding: 4rem 1rem; }
     .info-section h2 { font-size: 2rem; }
-    .info-features { flex-direction: column; gap: 1rem; }
-    .info-features div { width: 90%; max-width: 350px; text-align: center; }
+    .info-section p { font-size: 1rem; }
+    .info-features { flex-direction: column; gap: 1.5rem; align-items: center; }
+    .info-features div { width: 90%; max-width: 350px; }
+    .info-shape-1 { width: 250px; height: 250px; top: -80px; left: -50px; filter: blur(70px); background-color: rgba(255, 109, 20, 0.3); }
+    .info-shape-2 { width: 200px; height: 200px; bottom: -50px; right: -40px; filter: blur(70px); background-color: rgba(255, 109, 20, 0.3); }
+
+    .mobile-promo-section { padding: 4rem 1rem; }
+    .mobile-promo-content {
+        flex-direction: column; /* Stack vertical en móviles */
+        text-align: center; /* Centrar texto */
+        gap: 2.5rem; /* Espacio entre elementos */
+    }
+    .mobile-promo-image-container {
+        max-width: 280px; /* Ajustar tamaño de imagen para móviles */
+        margin: 0 auto; /* Centrar imagen */
+        /* Las animaciones de entrada ya no necesitan transform X al estar centrados */
+        transform: translateX(0); 
+        opacity: 1; /* Asegurar visibilidad si las transiciones se basaban en .visible */
+    }
+    .mobile-promo-text-container {
+        transform: translateX(0);
+        opacity: 1; /* Igual para el texto */
+        text-align: center;
+    }
+    .mobile-promo-text-container h2 { font-size: 2rem; }
+    .mobile-promo-text-container p { font-size: 1rem; max-width: 500px; margin-left: auto; margin-right: auto;}
+    .mobile-promo-shape-1 { width: 250px; height: 250px; top: -80px; right: -60px;}
+    .mobile-promo-shape-2 { width: 180px; height: 180px; bottom: -60px; left: -40px;}
 }
 
 @media (max-width: 480px) {
-    .main-content {
-        padding: 2.5rem 1rem;
-        min-height: 75vh; /* Ajustar min-height */
-    }
     .text-content h1 { font-size: 1.8rem; }
-    .info-section { padding: 2.5rem 1rem; margin-top: 2rem; }
+    .info-section { padding: 3rem 1rem; }
     .info-section h2 { font-size: 1.8rem; }
-    .info-features div { width: 100%; }
+    .info-features div { width: 100%; padding: 1.5rem 1rem; }
+    .info-shape-1 { width: 200px; height: 200px; top: -50px; left: -40px; filter: blur(60px); background-color: rgba(255, 109, 20, 0.35); }
+    .info-shape-2 { display: none; } /* Ocultar la segunda forma de info en pantallas muy pequeñas */
+
+    .mobile-promo-section { padding: 3rem 1rem; }
+    .mobile-promo-image-container {
+         max-width: 240px; /* Imagen aún más pequeña */
+    }
+    .mobile-promo-text-container h2 { font-size: 1.8rem; }
+    .mobile-promo-shape-1 { width: 200px; height: 200px; top: -60px; right: -40px;}
+    .mobile-promo-shape-2 { display: none; } /* Ocultar la segunda forma de móvil */
+
 }
 
-/* --- Estilos Globales de Botones (ya los tenías, solo por completitud) --- */
+
+/* --- Estilos Globales de Botones (reutilizados) --- */
 .form-button {
     padding: 10px 20px;
     border: none;
@@ -395,12 +672,9 @@ html, body {
     color: #ccc;
     border-color: #777;
     transform: translateY(-1px);
-}   
-.main-page-container {
-    position: relative;
-    overflow: hidden; 
 }
 
+/* Glow container styles */
 .localized-glow-container {
     position: fixed;
     top: 0;
@@ -408,15 +682,14 @@ html, body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 997; 
+    z-index: 997; /* Asegurar que esté debajo de otros elementos UI importantes si es necesario */
 }
 
-/* Nueva clase para los segmentos de resplandor */
 .screen-edge-glow-segment {
     position: fixed;
-    background-color: rgba(255, 109, 20, 0.25); /* Opacidad base más baja */
-    box-shadow: 0 0 4px 0px rgba(255, 109, 20, 0.2); /* Desenfoque y extensión mínimos, opacidad de sombra más baja */
-    border-radius: 1px; /* Bordes casi cuadrados */
+    background-color: rgba(255, 109, 20, 0.25);
+    box-shadow: 0 0 4px 0px rgba(255, 109, 20, 0.2); /* Sombra más sutil */
+    border-radius: 1px;
     pointer-events: none;
-    z-index: 998;
-  }
+    z-index: 998; /* Consistente con el contenedor */
+}

@@ -152,7 +152,7 @@ function Login() {
       {/* Formas de fondo */}
       <div ref={shape1Ref} className="animated-shape shape1-login"></div>
       <div ref={shape2Ref} className="animated-shape shape2-login"></div>
-
+      <div className="sports-figure-background"></div>
       <div className="login-container">
         <h2>{isLogin ? "Iniciar Sesión" : "Crear Cuenta"}</h2>
         <form onSubmit={handleSubmit} className="login-form" noValidate>

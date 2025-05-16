@@ -1,186 +1,287 @@
-/* ==================================================
-   CLASIFICACION & MODAL ESTILOS
-   ================================================== */
+/* components/estilos/Clasificacion.css */
 
-/* Contenedor principal (mínimo estilo, deja que Tabla/Llaves definan el resto) */
+/* Contenedor principal */
 .clasificacion-container {
-    padding: 0; /* Sin padding extra aquí, se maneja en el bloque */
-    color: #E0E0E0;
+  padding: 0; 
+  color: #E0E0E0;
+  position: relative; 
+  /* Ajusta el padding-bottom si es necesario para dejar espacio a los botones
+     cuando NO son fixed (en desktop) o cuando el contenido es muy corto.
+     Si en móvil los botones son fixed, este padding-bottom debe ser suficiente
+     para que el último elemento del contenido no quede oculto detrás de los botones fixed. */
+  padding-bottom: 80px; 
+}
+
+/* --- Estilos para ReactModal (sin cambios) --- */
+/* ... (mantén tus estilos de ReactModal como estaban) ... */
+.ReactModal__Overlay {
+  background-color: rgba(18, 18, 18, 0.85) !important;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 250ms ease-in-out;
+}
+.ReactModal__Overlay--after-open{ opacity: 1; }
+.ReactModal__Overlay--before-close{ opacity: 0; }
+.ReactModal__Content {
+  background: #252525 !important; 
+  color: #E0E0E0 !important;
+  padding: 2.5rem !important;
+  border-radius: 8px !important;
+  border: 1px solid #444 !important;
+  max-width: 550px; 
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7) !important;
+  position: relative !important; 
+  top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+  inset: auto !important;
+  outline: none; 
+  transform: scale(0.95);
+  transition: transform 250ms ease-in-out;
+}
+.ReactModal__Content--after-open { transform: scale(1); }
+.ReactModal__Content--before-close { transform: scale(0.95); }
+.ReactModal__Content h3 {
+  color: #FFFFFF; text-align: center; margin-top: 0; margin-bottom: 2rem; 
+  font-weight: 600; font-size: 1.5rem; border-bottom: 1px solid #FF6D14; padding-bottom: 0.8rem;
+}
+.ReactModal__Content .form-group { margin-bottom: 1.3rem; }
+.ReactModal__Content label { display: block; margin-bottom: 0.6rem; font-size: 0.9rem; color: #AAAAAA; font-weight: 500; }
+.ReactModal__Content .form-input, 
+.ReactModal__Content input[type="date"], .ReactModal__Content input[type="time"], 
+.ReactModal__Content input[type="number"], .ReactModal__Content input[type="text"][disabled], 
+.ReactModal__Content select {
+   background-color: #1e1e1e; border: 1px solid #555; color: #E0E0E0; padding: 12px 15px; 
+   border-radius: 6px; font-size: 1rem; width: 100%; box-sizing: border-box; 
+   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.ReactModal__Content input[type="text"][disabled] { background-color: #333; cursor: not-allowed; opacity: 0.7; }
+.ReactModal__Content .form-input:focus, .ReactModal__Content input:focus, .ReactModal__Content select:focus {
+   outline: none; border-color: #FF6D14; box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
+}
+.ReactModal__Content .modal-actions {
+    display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2.5rem; 
+    padding-top: 1.5rem; border-top: 1px solid #444; 
+}
+.ReactModal__Content .form-button, .ReactModal__Content button[type="submit"], .ReactModal__Content button[type="button"] {
+  padding: 10px 25px; border: none; border-radius: 6px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  text-align: center; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.ReactModal__Content .form-button.primary, .ReactModal__Content button[type="submit"] {
+   background-color: #FF6D14; color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+.ReactModal__Content .form-button.secondary, .ReactModal__Content button[type="button"] {
+   background-color: #555; color: #ccc; font-weight: 500; text-transform: none;
+}
+.ReactModal__Content .form-button.primary:hover:not(:disabled), .ReactModal__Content button[type="submit"]:hover:not(:disabled) {
+  background-color: #E05A0B; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+.ReactModal__Content .form-button.secondary:hover:not(:disabled), .ReactModal__Content button[type="button"]:hover:not(:disabled) {
+  background-color: #666; color: #fff;
+}
+.ReactModal__Content.info-modal p { margin: 0.8rem 0; font-size: 1rem; color: #ccc; line-height: 1.5; }
+.ReactModal__Content.info-modal p strong { color: #FF6D14; font-weight: 600; margin-right: 8px; }
+.ReactModal__Content.info-modal hr { border: 0; border-top: 1px solid #444; margin: 1.5rem 0; }
+.ReactModal__Content.info-modal small { font-size: 0.8rem; color: #888; display: block; }
+
+
+/* --- ESTILOS PARA BOTONES DE ACCIÓN --- */
+.clasificacion-actions-container {
+  /* Por defecto (desktop), se posicionan absolutamente respecto a .clasificacion-container */
+  position: absolute; 
+  bottom: 1px;      
+  right: 1px;       
+  display: flex;
+  gap: 10px;         
+  z-index: 10;       
+}
+
+.view-mode-button,
+.download-button {
+  background-color: #3a3a3a;
+  color: #e0e0e0;
+  border: 1px solid #555;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+.view-mode-button:hover,
+.download-button:hover {
+  background-color: #FF6D14; 
+  color: #ffffff;
+  border-color: #FF6D14;
+  transform: scale(1.05);
+}
+
+/* --- ESTILOS PARA MODO VISTA (PANTALLA COMPLETA) --- */
+.clasificacion-view-mode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0c0c0c; /* Un negro un poco más profundo para la vista completa */
+  z-index: 2000; 
+  display: flex;
+  flex-direction: column; 
+  justify-content: flex-start; 
+  align-items: center;
+  padding: 0; /* Sin padding en el contenedor principal de vista completa */
+  box-sizing: border-box;
+  overflow: hidden; 
+}
+
+.clasificacion-view-mode-content {
+  width: 100%;
+  height: calc(100% - 60px); /* Dejar 60px para controles abajo */
+  overflow: auto; 
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
+  padding: 20px; /* Padding interno para el contenido, para que no pegue a los bordes */
+  box-sizing: border-box;
+}
+
+.clasificacion-view-mode-content .llaves-container,
+.clasificacion-view-mode-content .tabla-wrapper-for-view-mode {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  width: 100%; 
+  height: 100%; 
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column; /* Para que el contenido interno se expanda verticalmente */
+  justify-content: flex-start; /* Alinear arriba */
+  align-items: center; /* Centrar horizontalmente */
+}
+.clasificacion-view-mode-content .llaves-container {
+  min-height: auto; 
+}
+
+/* Tabla en modo vista */
+.clasificacion-view-mode-content .tabla-wrapper-for-view-mode {
+    overflow-x: auto; /* Permitir scroll horizontal si la tabla es muy ancha */
+}
+.clasificacion-view-mode-content .standings-table {
+    width: 100%; /* Que la tabla intente ocupar el 100% de su wrapper */
+    /* max-width: none; Eliminar max-width para que se expanda */
+    margin: 0; /* Sin margen para que se ajuste al wrapper */
+    font-size: clamp(0.8rem, 1.5vw, 1.1rem); /* Fuente responsiva */
+}
+.clasificacion-view-mode-content .standings-table th,
+.clasificacion-view-mode-content .standings-table td {
+    padding: clamp(6px, 1vw, 12px) clamp(8px, 1.2vw, 18px); /* Padding responsivo */
+}
+.clasificacion-view-mode-content .standings-table thead th {
+    background-color: #1c1c1c; /* Fondo de cabecera más oscuro */
+    position: sticky; /* Cabecera pegajosa */
+    top: 0;
+    z-index: 1;
+}
+
+/* Llaves en modo vista */
+.clasificacion-view-mode-content .llaves-container {
+    /* El SVG de react-brackets es más difícil de hacer responsivo.
+       A menudo, la mejor manera es permitir el scroll o usar transformaciones. */
+    overflow: scroll; /* Permitir scroll en todas direcciones para las llaves */
+    align-items: flex-start; /* Para que el inicio del bracket esté visible */
+    justify-content: flex-start;
+}
+.clasificacion-view-mode-content .llaves-container .bracket-svg-container > svg {
+    /* Intentar que el SVG sea lo suficientemente grande para necesitar scroll
+       en lugar de intentar encajarlo todo a la fuerza y que se vea pequeño.
+       Quitar width: 100% puede ayudar si la librería pone un width fijo. */
+    /* width: auto !important; */
+    /* height: auto !important; */
+    min-width: 800px; /* Un ancho mínimo para que el bracket tenga espacio */
+    min-height: 600px; /* Un alto mínimo */
+    transform: scale(1); 
+    transform-origin: top left; /* Origen de la transformación en la esquina superior izquierda */
+}
+
+
+/* Controles en modo vista (botones de salir y descargar) */
+.clasificacion-view-mode-controls {
+  position: fixed; 
+  bottom: 15px; /* Un poco menos de espacio desde abajo */
+  right: 15px;  /* Un poco menos de espacio desde la derecha */
+  display: flex;
+  gap: 12px;    /* Un poco más de espacio entre botones */
+  z-index: 2001; 
+}
+.clasificacion-view-mode-controls .view-mode-button,
+.clasificacion-view-mode-controls .download-button {
+  padding: 10px 16px; /* Ajustar padding */
+  font-size: 1.2rem; 
+  background-color: rgba(30, 30, 30, 0.85); /* Fondo ligeramente más oscuro y opaco */
+  border: 1px solid rgba(60, 60, 60, 0.9);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3); /* Sombra sutil */
+}
+.clasificacion-view-mode-controls .view-mode-button:hover,
+.clasificacion-view-mode-controls .download-button:hover {
+  background-color: rgba(255, 109, 20, 0.9); 
+  border-color: rgba(255, 109, 20, 1);
+}
+
+
+/* --- MEDIA QUERY PARA MÓVILES --- */
+@media (max-width: 768px) {
+  .clasificacion-container {
+    /* En móvil, el padding-bottom debe ser suficiente para los botones FIJOS
+       si el contenido es el último elemento scrolleable de la PÁGINA.
+       Si .clasificacion-container es en sí mismo un contenedor scrolleable,
+       entonces este padding es para evitar que el último item se oculte. */
+    padding-bottom: 75px; 
   }
-  
-  /* --- Estilos para ReactModal --- */
-  
-  .ReactModal__Overlay {
-    background-color: rgba(18, 18, 18, 0.85) !important;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 250ms ease-in-out;
+
+  .clasificacion-actions-container {
+    position: fixed; /* Cambiar a fixed para móviles */
+    bottom: 30px;    /* Ajustar posición para móviles */
+    right: 30px;
+    padding: 5px;    /* Opcional: un pequeño padding al contenedor de botones */
+    background-color: rgba(20, 20, 20, 0.5); /* Fondo semitransparente opcional */
+    border-radius: 8px; /* Bordes redondeados opcional */
   }
-  
-  .ReactModal__Overlay--after-open{
-    opacity: 1;
+
+  .clasificacion-actions-container .view-mode-button,
+  .clasificacion-actions-container .download-button {
+    padding: 10px 12px; /* Botones un poco más compactos en móvil */
+    font-size: 1.1rem; 
   }
-  
-  .ReactModal__Overlay--before-close{
-    opacity: 0;
+
+  /* Ajustes para el modo vista en móvil */
+  .clasificacion-view-mode-content {
+    padding: 10px; /* Menos padding en los bordes */
+    height: calc(100% - 50px); /* Menos espacio para controles si son más pequeños */
   }
-  
-  .ReactModal__Content {
-    background: #252525 !important; /* Fondo modal ligeramente más claro */
-    color: #E0E0E0 !important;
-    padding: 2.5rem !important;
-    border-radius: 8px !important;
-    border: 1px solid #444 !important;
-    max-width: 550px; /* Ancho máximo */
-    width: 90%;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7) !important;
-    position: relative !important; /* Reset position */
-    top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
-    inset: auto !important;
-    outline: none; /* Quitar borde de foco */
-    transform: scale(0.95);
-    transition: transform 250ms ease-in-out;
+  .clasificacion-view-mode-controls {
+    bottom: 10px;
+    right: 10px;
+    gap: 10px;
   }
-  
-  .ReactModal__Content--after-open {
-      transform: scale(1);
+  .clasificacion-view-mode-controls .view-mode-button,
+  .clasificacion-view-mode-controls .download-button {
+    padding: 8px 12px;
+    font-size: 1.1rem;
   }
-  
-  .ReactModal__Content--before-close {
-      transform: scale(0.95);
+
+  .clasificacion-view-mode-content .standings-table {
+    font-size: 0.75rem; /* Fuente más pequeña para la tabla en móvil */
   }
-  
-  
-  /* Estilos dentro del Modal */
-  .ReactModal__Content h3 {
-    color: #FFFFFF;
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 2rem; /* Más espacio */
-    font-weight: 600;
-    font-size: 1.5rem;
-    border-bottom: 1px solid #FF6D14; /* Línea separadora */
-    padding-bottom: 0.8rem;
+  .clasificacion-view-mode-content .standings-table th,
+  .clasificacion-view-mode-content .standings-table td {
+      padding: 6px 8px; 
   }
-  
-  /* Reutilizar clases de formulario existentes */
-  .ReactModal__Content .form-group {
-    margin-bottom: 1.3rem;
-  }
-  
-  .ReactModal__Content label {
-    display: block;
-    margin-bottom: 0.6rem;
-    font-size: 0.9rem;
-    color: #AAAAAA;
-    font-weight: 500;
-  }
-  
-  /* Reutilizar .form-input para inputs y selects dentro del modal */
-  .ReactModal__Content .form-input, /* Clase global si existe */
-  .ReactModal__Content input[type="date"],
-  .ReactModal__Content input[type="time"],
-  .ReactModal__Content input[type="number"],
-  .ReactModal__Content input[type="text"][disabled], /* Estilo para inputs disabled */
-  .ReactModal__Content select {
-     background-color: #1e1e1e; /* Fondo más oscuro */
-     border: 1px solid #555; /* Borde más visible */
-     color: #E0E0E0;
-     padding: 12px 15px; /* Mismo padding */
-     border-radius: 6px;
-     font-size: 1rem;
-     width: 100%;
-     box-sizing: border-box;
-     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  .ReactModal__Content input[type="text"][disabled] {
-      background-color: #333;
-      cursor: not-allowed;
-      opacity: 0.7;
-  }
-  
-  .ReactModal__Content .form-input:focus,
-  .ReactModal__Content input:focus,
-  .ReactModal__Content select:focus {
-     outline: none;
-     border-color: #FF6D14;
-     box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
-  }
-  
-  /* Botones dentro del modal */
-  .ReactModal__Content .modal-actions {
-      display: flex;
-      justify-content: flex-end; /* Alinear botones a la derecha */
-      gap: 1rem;
-      margin-top: 2.5rem; /* Más espacio antes de botones */
-      padding-top: 1.5rem;
-      border-top: 1px solid #444; /* Línea separadora */
-  }
-  
-  /* Reutilizar .form-button y modificadores */
-  .ReactModal__Content .form-button,
-  .ReactModal__Content button[type="submit"],
-  .ReactModal__Content button[type="button"] {
-    /* Estilos base heredados o definidos aquí si no existen */
-    padding: 10px 25px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .ReactModal__Content .form-button.primary, /* Para Guardar */
-  .ReactModal__Content button[type="submit"] {
-     background-color: #FF6D14;
-     color: white;
-     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-  .ReactModal__Content .form-button.secondary, /* Para Cancelar */
-  .ReactModal__Content button[type="button"] {
-     background-color: #555;
-     color: #ccc;
-     font-weight: 500;
-     text-transform: none;
-  }
-  
-  .ReactModal__Content .form-button.primary:hover:not(:disabled),
-  .ReactModal__Content button[type="submit"]:hover:not(:disabled) {
-    background-color: #E05A0B;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  }
-  .ReactModal__Content .form-button.secondary:hover:not(:disabled),
-  .ReactModal__Content button[type="button"]:hover:not(:disabled) {
-    background-color: #666;
-    color: #fff;
-  }
-  
-  /* Estilos específicos para modal de información */
-  .ReactModal__Content.info-modal p {
-      margin: 0.8rem 0;
-      font-size: 1rem;
-      color: #ccc;
-      line-height: 1.5;
-  }
-  .ReactModal__Content.info-modal p strong {
-      color: #FF6D14;
-      font-weight: 600;
-      margin-right: 8px;
-  }
-  .ReactModal__Content.info-modal hr {
-      border: 0;
-      border-top: 1px solid #444;
-      margin: 1.5rem 0;
-  }
-  .ReactModal__Content.info-modal small {
-      font-size: 0.8rem;
-      color: #888;
-      display: block;
-  }
+   /* En móvil, es muy probable que las columnas "hide-on-mobile" estén ocultas.
+      Si no lo están, la tabla será demasiado ancha. */
+}

@@ -87,3 +87,8 @@
   text-align: center;
   font-size: 0.9em;
 }
+@media (max-width: 600px) { /* Ajusta el ancho según tus necesidades */
+    .hide-on-mobile {
+        display: none;
+    }
+}
