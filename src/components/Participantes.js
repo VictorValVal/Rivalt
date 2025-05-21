@@ -9,15 +9,12 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
-  // collection, // No se usa directamente aquí si agregarNovedadConDebug lo maneja
-  // addDoc, // No se usa directamente aquí
-  // serverTimestamp // No se usa directamente aquí
 } from "firebase/firestore";
 import { app } from "../firebase";
 import EquipoForm from "./EquipoForm";
-import { FaEllipsisV, FaUser, FaTrash, FaUserPlus, FaUsers, FaSpinner } from "react-icons/fa";
+import { FaEllipsisV, FaUser, FaTrash, FaUserPlus, FaSpinner, FaUserCircle } from "react-icons/fa"; // <--- ADDED FaUserCircle for default avatar
 import "./estilos/Participantes.css";
-import { agregarNovedadConDebug } from "./utils/NovedadesUtils"; // Asegúrate que la ruta sea correcta
+import { agregarNovedadConDebug } from "./utils/NovedadesUtils";
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -33,13 +30,15 @@ function Participantes() {
   const [mostrarEquipoForm, setMostrarEquipoForm] = useState(false);
   const [menuParticipante, setMenuParticipante] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // NEW STATE: To store details (photoURL, displayName) for individual participants
+  const [individualParticipantDetails, setIndividualParticipantDetails] = useState({});
 
   useEffect(() => {
     setLoading(true);
     setError(null);
     let isMounted = true;
 
-    const fetchTorneo = async () => {
+    const fetchTorneoAndParticipantDetails = async () => {
       if (!torneoId) {
         if (isMounted) {
           setError("No se proporcionó ID de torneo.");
@@ -52,7 +51,42 @@ function Participantes() {
         const torneoDoc = await getDoc(torneoRef);
         if (isMounted) {
           if (torneoDoc.exists()) {
-            setTorneo({ id: torneoDoc.id, ...torneoDoc.data() });
+            const currentTorneoData = { id: torneoDoc.id, ...torneoDoc.data() };
+            setTorneo(currentTorneoData); // Set torneo first
+
+            // --- NEW LOGIC: Fetch individual participant details if mode is individual ---
+            if (currentTorneoData.modo === "individual" && Array.isArray(currentTorneoData.participantes)) {
+              // Filter UIDs that are strings (individual participants) and not already in state
+              const UIDsToFetch = currentTorneoData.participantes.filter(uid =>
+                typeof uid === 'string' && !individualParticipantDetails[uid]
+              );
+              if (UIDsToFetch.length > 0) {
+                const newDetailsPromises = UIDsToFetch.map(async (uid) => {
+                  try {
+                    const userDocRef = doc(db, "usuarios", uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                      return {
+                        [uid]: {
+                          displayName: userDocSnap.data().nombre || userDocSnap.data().email || `Usuario (${uid.substring(0, 6)}...)`,
+                          photoURL: userDocSnap.data().photoURL || null,
+                          email: userDocSnap.data().email || null
+                        }
+                      };
+                    } else {
+                      return { [uid]: { displayName: `Usuario (${uid.substring(0, 6)}...)`, photoURL: null, email: null } };
+                    }
+                  } catch (detailErr) {
+                    console.error(`Error fetching details for user ${uid}:`, detailErr);
+                    return { [uid]: { displayName: `Usuario (${uid.substring(0, 6)}...) (Error)`, photoURL: null, email: null } };
+                  }
+                });
+                const resolvedDetails = await Promise.all(newDetailsPromises);
+                const newDetailsMap = resolvedDetails.reduce((acc, current) => ({ ...acc, ...current }), {});
+                setIndividualParticipantDetails(prev => ({ ...prev, ...newDetailsMap }));
+              }
+            }
+            // --- END NEW LOGIC ---
           } else {
             console.log("No se encontró el torneo con ID:", torneoId);
             setError("El torneo no existe o fue eliminado.");
@@ -60,7 +94,7 @@ function Participantes() {
           }
         }
       } catch (err) {
-        console.error("Error fetching tournament:", err);
+        console.error("Error fetching tournament or participant details:", err);
         if (isMounted) {
           setError(`Error al cargar el torneo: ${err.message}`);
           setTorneo(null);
@@ -82,7 +116,7 @@ function Participantes() {
       }
     });
 
-    fetchTorneo().finally(() => {
+    fetchTorneoAndParticipantDetails().finally(() => {
       fetchAttempted = true;
       if (isMounted && authAttempted) {
         setLoading(false);
@@ -93,7 +127,7 @@ function Participantes() {
       isMounted = false;
       unsubscribeAuth();
     };
-  }, [torneoId]);
+  }, [torneoId, individualParticipantDetails]); // individualParticipantDetails dependency helps re-fetch new UIDs that might appear
 
 
   const esCreador = useMemo(() => {
@@ -130,20 +164,19 @@ function Participantes() {
       return;
     }
     if (isSubmitting) return;
-  
+
     setIsSubmitting(true);
     setError(null);
     const torneoRef = doc(db, "torneos", torneoId);
-  
+
     console.log("[Participantes.js] handleInscripcionDirecta - Usuario actual:", user ? user.uid : "null");
-    const nombreUsuario = user.displayName || user.email || `Usuario (${user.uid.substring(0,6)}...)`;
-  
+    const nombreUsuario = user.displayName || user.email || `Usuario (${user.uid.substring(0, 6)}...)`;
+
     try {
       await updateDoc(torneoRef, {
         participantes: arrayUnion(user.uid),
       });
-  
-      // Asegúrate de que esta función se llame correctamente
+
       await agregarNovedadConDebug(
         torneoId,
         `${nombreUsuario} se ha unido al torneo.`,
@@ -151,7 +184,7 @@ function Participantes() {
         { userId: user.uid, userName: nombreUsuario },
         "Participantes.js (InscripcionDirecta)"
       );
-  
+
       const updatedTorneoDoc = await getDoc(torneoRef);
       if (updatedTorneoDoc.exists()) {
         setTorneo({ id: updatedTorneoDoc.id, ...updatedTorneoDoc.data() });
@@ -166,7 +199,7 @@ function Participantes() {
 
   const handleMostrarFormEquipo = () => {
     if (torneo?.modo === "equipo") {
-        setMostrarEquipoForm(true);
+      setMostrarEquipoForm(true);
     }
   };
 
@@ -185,12 +218,12 @@ function Participantes() {
 
     const datosEquipo = {
       nombre: nombreEquipo.trim(),
-      capitan: user.uid, 
-      miembros: miembrosEquipo, 
+      capitan: user.uid,
+      miembros: miembrosEquipo,
     };
 
     console.log("[Participantes.js] handleInscripcionEquipoSubmit - Usuario (Capitán) actual:", user ? user.uid : "null");
-    const capitanNombre = user.displayName || user.email || `Cap. (${user.uid.substring(0,6)}...)`;
+    const capitanNombre = user.displayName || user.email || `Cap. (${user.uid.substring(0, 6)}...)`;
     console.log("[Participantes.js] handleInscripcionEquipoSubmit - Nombre capitán para novedad:", capitanNombre);
 
     try {
@@ -198,21 +231,19 @@ function Participantes() {
         participantes: arrayUnion(datosEquipo),
       });
 
-      // Notificación para el equipo que se une (capitán)
       await agregarNovedadConDebug(
         torneoId,
         `El equipo "${datosEquipo.nombre}" (Capitán: ${capitanNombre}) se ha unido al torneo.`,
-        'user_join', // Podría ser 'team_join' si se prefiere diferenciar
+        'team_join',
         { equipoNombre: datosEquipo.nombre, capitanId: user.uid, capitanNombre: capitanNombre, esEquipo: true },
         "Participantes.js (InscripcionEquipo)"
       );
 
-      // **INICIO DE MODIFICACIÓN: Notificaciones para miembros individuales del equipo**
       if (miembrosEquipo && miembrosEquipo.length > 0) {
         for (const miembroId of miembrosEquipo) {
-          if (miembroId === user.uid) continue; // Saltar al capitán, ya notificado con el equipo
+          if (miembroId === user.uid) continue;
 
-          let miembroNombre = `Miembro (${miembroId.substring(0, 6)}...)`; // Nombre por defecto
+          let miembroNombre = `Miembro (${miembroId.substring(0, 6)}...)`;
           try {
             const miembroDocRef = doc(db, "usuarios", miembroId);
             const miembroDocSnap = await getDoc(miembroDocRef);
@@ -226,19 +257,18 @@ function Participantes() {
           await agregarNovedadConDebug(
             torneoId,
             `${miembroNombre} se ha unido al torneo como parte del equipo "${datosEquipo.nombre}".`,
-            'user_join', // Usamos 'user_join', el mensaje lo diferencia
-            { 
-              userId: miembroId, 
-              userName: miembroNombre, 
-              equipoNombre: datosEquipo.nombre, 
-              capitanId: user.uid, // Opcional: para contexto
-              esMiembroDeEquipo: true 
+            'user_join',
+            {
+              userId: miembroId,
+              userName: miembroNombre,
+              equipoNombre: datosEquipo.nombre,
+              capitanId: user.uid,
+              esMiembroDeEquipo: true
             },
             "Participantes.js (InscripcionMiembroEquipo)"
           );
         }
       }
-      // **FIN DE MODIFICACIÓN**
 
       const updatedTorneoDoc = await getDoc(torneoRef);
       if (updatedTorneoDoc.exists()) {
@@ -260,10 +290,8 @@ function Participantes() {
     const esObjEquipo = typeof participante === "object" && participante !== null && participante.capitan;
 
     if (esObjEquipo) {
-      // Para equipos, el ID del participante en la URL es el UID del capitán
       navigate(`/torneo/${torneoId}/participante/equipo/${participante.capitan}`, { state: { equipoData: participante, nombreTorneo: torneo?.titulo } });
     } else if (typeof participante === 'string') {
-      // Para individuales, el ID es el UID del usuario
       navigate(`/torneo/${torneoId}/participante/usuario/${participante}`, { state: { nombreTorneo: torneo?.titulo } });
     }
   };
@@ -272,9 +300,14 @@ function Participantes() {
     if (!esCreador || !torneo) return;
 
     const esObjEquipo = typeof participanteParaEliminar === 'object' && participanteParaEliminar !== null;
-    const nombreConfirmacion = esObjEquipo
-        ? participanteParaEliminar.nombre || `Equipo (Cap: ${participanteParaEliminar.capitan?.substring(0,6)}...)`
-        : `Jugador (${String(participanteParaEliminar).substring(0,6)}...)`;
+    let nombreConfirmacion = "Participante";
+
+    if (esObjEquipo) {
+      nombreConfirmacion = participanteParaEliminar.nombre || `Equipo (Cap: ${participanteParaEliminar.capitan?.substring(0, 6)}...)`;
+    } else if (typeof participanteParaEliminar === 'string') {
+      const details = individualParticipantDetails[participanteParaEliminar];
+      nombreConfirmacion = details?.displayName || `Jugador (ID: ${participanteParaEliminar.substring(0, 6)}...)`;
+    }
 
     if (!window.confirm(`¿Seguro que quieres eliminar a "${nombreConfirmacion}" del torneo?`)) {
       return;
@@ -288,36 +321,16 @@ function Participantes() {
         participantes: arrayRemove(participanteParaEliminar),
       });
 
-      const tipoNovedad = 'user_leave'; // Para eliminación por creador
-      const dataExtraNovedad = esObjEquipo
-        ? { equipoNombre: participanteParaEliminar.nombre, capitanId: participanteParaEliminar.capitan, eliminadoPorCreador: true }
-        : { userId: participanteParaEliminar, eliminadoPorCreador: true }; // `participanteParaEliminar` es el UID aquí
+      const tipoNovedad = 'user_leave';
+      let nombreParaNovedad = nombreConfirmacion;
 
-      // Obtener nombre del usuario/equipo para la novedad
-      let nombreParaNovedad = "Participante";
-      if (esObjEquipo) {
-          nombreParaNovedad = participanteParaEliminar.nombre || `Equipo (Cap. ${participanteParaEliminar.capitan?.substring(0,6)})`;
-      } else {
-          // Si es individual, necesitaríamos buscar su nombre si solo tenemos UID.
-          // Por ahora, se usa el nombreConfirmacion que ya tiene esta lógica.
-          nombreParaNovedad = nombreConfirmacion;
-      }
-      
-      // Añadir el nombre del usuario/equipo a dataExtraNovedad si no está
-      if (esObjEquipo && !dataExtraNovedad.equipoNombre) dataExtraNovedad.equipoNombre = nombreParaNovedad;
-      if (!esObjEquipo && !dataExtraNovedad.userName) {
-         // Para individuales, necesitamos el nombre del usuario si es posible
-         // Esto requeriría buscar el nombre en la DB o pasarlo.
-         // Por ahora, usamos el nombreConfirmacion que ya lo tiene formateado.
-         dataExtraNovedad.userName = nombreParaNovedad;
-      }
-
-
-      await agregarNovedadConDebug( // USO DE LA FUNCIÓN MEJORADA
+      await agregarNovedadConDebug(
         torneoId,
         `${nombreParaNovedad} ha sido eliminado del torneo por el creador.`,
         tipoNovedad,
-        dataExtraNovedad,
+        esObjEquipo
+          ? { equipoNombre: participanteParaEliminar.nombre, capitanId: participanteParaEliminar.capitan, eliminadoPorCreador: true }
+          : { userId: participanteParaEliminar, userName: nombreParaNovedad, eliminadoPorCreador: true },
         "Participantes.js (EliminarParticipante)"
       );
 
@@ -325,16 +338,19 @@ function Participantes() {
       if (updatedTorneoDoc.exists()) {
         setTorneo({ id: updatedTorneoDoc.id, ...updatedTorneoDoc.data() });
       } else {
-        setTorneo(null); // El torneo podría haber sido eliminado concurrentemente
+        setTorneo(null);
       }
       setMenuParticipante(null);
     } catch (err) {
       console.error("Error al eliminar participante:", err);
       setError(`Error al eliminar: ${err.message}`);
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
+  const esEspectador = useMemo(() => {
+    return Array.isArray(torneo?.espectadores) && user?.uid && torneo.espectadores.includes(user.uid);
+  }, [torneo, user]);
 
   const toggleMenuParticipante = (index) => {
     setMenuParticipante(menuParticipante === index ? null : index);
@@ -342,10 +358,10 @@ function Participantes() {
 
   if (loading) {
     return (
-        <div className="componente-participantes loading">
-            <FaSpinner className="spinner-icon" />
-            Cargando participantes...
-        </div>
+      <div className="componente-participantes loading">
+        <FaSpinner className="spinner-icon" />
+        Cargando participantes...
+      </div>
     );
   }
 
@@ -359,12 +375,12 @@ function Participantes() {
 
   let errorDisplay = null;
   if (error && torneo) {
-      errorDisplay = <p className="form-error-message" style={{marginBottom: '1rem'}}>{error}</p>;
+    errorDisplay = <p className="form-error-message" style={{ marginBottom: '1rem' }}>{error}</p>;
   }
 
 
-  let botonInscripcionPrincipal;
-  if (user && puedeUsuarioActualInscribirse) {
+  let botonInscripcionPrincipal = null;
+  if (user && puedeUsuarioActualInscribirse && !esEspectador) {
     if (torneo.modo === "individual") {
       botonInscripcionPrincipal = (
         <button
@@ -372,7 +388,7 @@ function Participantes() {
           className="button primary"
           disabled={isSubmitting}
         >
-          {isSubmitting ? <><FaSpinner className="spinner-icon-button"/> Inscribiendo...</> : <><FaUserPlus /> Participar Ahora</>}
+          {isSubmitting ? <><FaSpinner className="spinner-icon-button" /> Inscribiendo...</> : <><FaUserPlus /> Participar Ahora</>}
         </button>
       );
     } else if (torneo.modo === "equipo") {
@@ -382,7 +398,7 @@ function Participantes() {
           className="button primary"
           disabled={isSubmitting || mostrarEquipoForm}
         >
-          {isSubmitting ? <><FaSpinner className="spinner-icon-button"/> Procesando...</> : <><FaUsers /> Inscribir mi Equipo</>}
+          {isSubmitting ? <><FaSpinner className="spinner-icon-button" /> Procesando...</> : <><FaUser /> Inscribir mi Equipo</>}
         </button>
       );
     }
@@ -402,7 +418,7 @@ function Participantes() {
       {mostrarEquipoForm && torneo.modo === "equipo" && (
         <EquipoForm
           onSubmit={handleInscripcionEquipoSubmit}
-          onCancel={() => { setMostrarEquipoForm(false); setError("");}}
+          onCancel={() => { setMostrarEquipoForm(false); setError(""); }}
           maxMiembros={torneo.maxMiembrosPorEquipo || 10}
         />
       )}
@@ -416,23 +432,39 @@ function Participantes() {
             const esObjEquipo = typeof participante === "object" && participante !== null && participante.capitan;
             let nombreMostrar = "Desconocido";
             let idParaMenuYAcciones = null;
+            let participantPhoto = null; // Variable for photo URL
+            let participantInitial = "?"; // Variable for default avatar initial (first letter of name/email)
 
             if (esObjEquipo) {
-                nombreMostrar = participante.nombre || `Equipo (Cap: ${participante.capitan?.substring(0,6)}...)`;
-                idParaMenuYAcciones = participante.capitan; // El capitán es el "dueño" del equipo para acciones
-            } else if (typeof participante === 'string') {
-                // Para individuales, el UID es la clave
-                // Intentar buscar nombre del participante para mostrarlo si está en el estado 'participantes' del torneo (ya debería tenerlo si se formatea bien al cargar)
-                // O, si 'participante' es un UID, buscar en una lista de usuarios cargados (más complejo)
-                nombreMostrar = `Jugador (ID: ${participante.substring(0, 6)}...)`; // Placeholder si no hay nombre
-                // Si tienes los nombres de los usuarios individuales cargados en algún sitio, úsalos aquí.
-                // Ejemplo (necesitarías tener 'nombresUsuarios' como un Map<UID, Nombre>):
-                // nombreMostrar = nombresUsuarios.get(participante) || `Jugador (ID: ${participante.substring(0, 6)}...)`;
-                idParaMenuYAcciones = participante;
+              nombreMostrar = participante.nombre || `Equipo (Cap: ${participante.capitan?.substring(0, 6)}...)`;
+              idParaMenuYAcciones = participante.capitan;
+            } else if (typeof participante === 'string') { // It's an individual participant UID
+              idParaMenuYAcciones = participante;
+              const details = individualParticipantDetails[participante];
+              if (details) {
+                nombreMostrar = details.displayName;
+                participantPhoto = details.photoURL || details.photoURL; // <-- Cambia aquí
+                participantInitial = details.displayName
+                  ? details.displayName.charAt(0).toUpperCase()
+                  : (details.email ? details.email.charAt(0).toUpperCase() : "?");
+              } else {
+                nombreMostrar = `Cargando... (${participante.substring(0, 6)}...)`;
+                // Use UID's first char as a temporary initial if no details yet
+                participantInitial = participante.charAt(0).toUpperCase();
+              }
             }
 
             return (
               <li key={index} className={`participante-item ${esObjEquipo ? 'item-equipo' : 'item-individual'}`}>
+                {torneo.modo === "individual" && !esObjEquipo && ( // Show avatar only for individual mode participants
+                  <div className="participante-avatar-container">
+                    {typeof participantPhoto === "string" && participantPhoto.trim().length > 0 ? (
+                      <img src={participantPhoto} alt={`Avatar de ${nombreMostrar}`} className="participante-avatar-img" />
+                    ) : (
+                      <div className="participante-avatar-default">{participantInitial}</div>
+                    )}
+                  </div>
+                )}
                 <span className="nombre-participante">{nombreMostrar}</span>
                 {(esCreador || (user && user.uid === idParaMenuYAcciones)) && (
                   <div className="opciones-participante">
@@ -447,16 +479,16 @@ function Participantes() {
                     {menuParticipante === index && (
                       <div className="menu-desplegable">
                         <button
-                            className="menu-item"
-                            onClick={() => {
-                                handleVerDetalles(participante);
-                                setMenuParticipante(null);
-                            }}
-                            title="Ver perfil o detalles"
+                          className="menu-item"
+                          onClick={() => {
+                            handleVerDetalles(participante);
+                            setMenuParticipante(null);
+                          }}
+                          title="Ver perfil o detalles"
                         >
-                            <FaUser /> Ver Detalles
+                          <FaUser /> Ver Detalles
                         </button>
-                        {esCreador && user.uid !== idParaMenuYAcciones && ( // Creador puede eliminar a otros
+                        {esCreador && user.uid !== idParaMenuYAcciones && (
                           <button
                             className="menu-item eliminar"
                             onClick={() => handleEliminarParticipante(participante)}
@@ -465,10 +497,6 @@ function Participantes() {
                             <FaTrash /> Eliminar
                           </button>
                         )}
-                        {/* Lógica para "Abandonar Torneo" para el propio participante (si no es creador)
-                            Esto podría ir aquí o en la sección de Información como ya está.
-                            Si se pone aquí, asegurarse que 'participante' es el objeto correcto.
-                        */}
                       </div>
                     )}
                   </div>

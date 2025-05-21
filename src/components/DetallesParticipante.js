@@ -14,6 +14,7 @@ function DetallesParticipante() {
   const navigate = useNavigate();
 
   const [data, setData] = useState(null);
+  const [torneoMode, setTorneoMode] = useState(null); // <--- NEW: State to store tournament mode
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [estadisticasUsuario, setEstadisticasUsuario] = useState({ torneosJugados: 0 });
@@ -36,13 +37,15 @@ function DetallesParticipante() {
       setData(null);
       setMiembrosEquipo([]);
 
-      if (location.state?.nombreTorneo) {
-        setNombreTorneoActual(location.state.nombreTorneo);
-      } else if (torneoId) {
+      // Fetch tournament data first to get mode
+      let currentTorneoMode = null;
+      if (torneoId) {
         const torneoRef = doc(db, "torneos", torneoId);
         const torneoSnap = await getDoc(torneoRef);
         if (torneoSnap.exists()) {
           setNombreTorneoActual(torneoSnap.data().titulo);
+          currentTorneoMode = torneoSnap.data().modo; // <--- Get mode
+          setTorneoMode(currentTorneoMode); // <--- Set mode state
         }
       }
 
@@ -52,7 +55,7 @@ function DetallesParticipante() {
           const usuarioSnap = await getDoc(usuarioRef);
           if (usuarioSnap.exists()) {
             const usuarioData = usuarioSnap.data();
-            setData({ ...usuarioData, id: usuarioSnap.id, tipo: "usuario" });
+            setData({ ...usuarioData, id: usuarioSnap.id, tipo: "usuario" }); // <--- Ensure photoURL is included if present
 
             const torneosQuery = query(
               collection(db, "torneos"),
@@ -80,7 +83,7 @@ function DetallesParticipante() {
                             miembroInfo.nombre = userSnap.data().nombre || miembroIdentificador;
                             miembroInfo.email = userSnap.data().email || "";
                         } else {
-                             miembroInfo.nombre = `Usuario (${miembroIdentificador.substring(0,6)}...)`;
+                             miembroInfo.nombre = miembroIdentificador;
                         }
                     } catch (e) {
                         console.warn("Error buscando miembro por UID:", miembroIdentificador, e);
@@ -138,8 +141,11 @@ function DetallesParticipante() {
     }
   }, [participanteId, tipo, torneoId, location.state]);
 
-  const getInicial = (nombre) => {
-    if (!nombre || typeof nombre !== 'string') return "?";
+  const getInicial = (nombre, email) => { // <--- UPDATED: Pass email for initial
+    if (!nombre || typeof nombre !== 'string') {
+        if (email && typeof email === 'string') return email.charAt(0).toUpperCase();
+        return "?";
+    }
     return nombre.charAt(0).toUpperCase();
   };
   
@@ -200,9 +206,17 @@ function DetallesParticipante() {
 
       {data.tipo === "usuario" && (
         <div className="dp-card dp-usuario-card">
-          <div className="dp-avatar-container">
-            <div className="dp-avatar">{getInicial(data.nombre)}</div>
-          </div>
+          {torneoMode === "individual" && ( // <--- NEW: Conditional display for individual mode
+            <div className="dp-avatar-container">
+              {data.photoURL ? ( // <--- Check if photoURL exists
+                <img src={data.photoURL} alt={`Avatar de ${data.nombre || 'participante'}`} className="dp-avatar dp-avatar-img" />
+              ) : (
+                <div className="dp-avatar dp-avatar-default"> {/* Default avatar style */}
+                  {getInicial(data.nombre, data.email)} {/* Pass email for initial if name is missing */}
+                </div>
+              )}
+            </div>
+          )}
           <div className="dp-info-grupo">
             <h2 className="dp-nombre">{data.nombre || "Nombre no disponible"} {data.apellidos || ""}</h2>
           </div>

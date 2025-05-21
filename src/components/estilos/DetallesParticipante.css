@@ -81,18 +81,26 @@
 }
 
 .dp-avatar {
-    width: 100px;
-    height: 100px;
+    width: 80px; /* <--- UPDATED: Smaller width */
+    height: 80px; /* <--- UPDATED: Smaller height */
     border-radius: 50%;
     background-color: #FF6D14;
     color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
+    font-size: 2.5rem; /* <--- UPDATED: Smaller font size for initial */
     font-weight: bold;
     border: 3px solid #2a2a2a;
+    overflow: hidden;
 }
+
+
+
+.dp-avatar-default {
+    background-color: #3a3a3a;
+}
+
 
 .dp-nombre {
     text-align: center;
@@ -219,9 +227,9 @@
         font-size: 1.5rem;
     }
     .dp-avatar {
-        width: 80px;
-        height: 80px;
-        font-size: 2.5rem;
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
     }
     .dp-nombre, .dp-nombre-equipo {
         font-size: 1.3rem;

@@ -1,7 +1,7 @@
 // src/components/Calendario.js
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import "../components/estilos/Calendario.css";
+import "../components/estilos/Calendario.css"; // Ensure this CSS is the consolidated version below
 import {
     getFirestore,
     collection,
@@ -9,27 +9,26 @@ import {
     addDoc,
     onSnapshot,
     deleteDoc,
-    getDoc as firestoreGetDoc, // Renombrado para evitar conflicto con getDoc de React
+    getDoc as firestoreGetDoc, // Renombrado para evitar conflicto
     updateDoc,
     // serverTimestamp // No se usa directamente aquí si agregarNovedadConDebug lo maneja
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { app } from "../firebase";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import { agregarNovedadConDebug } from "./utils/NovedadesUtils"; // Asegúrate que la ruta sea correcta
+import { agregarNovedadConDebug } from "./utils/NovedadesUtils";
 
 
 const db = getFirestore(app);
 const auth = getAuth(app);
 
 // generateBracketStructure (si la usas aquí, mantenla o impórtala)
-// Si no se usa aquí, se puede quitar. Parece que se usa en Clasificacion.js
+// Parece que se usa para la lógica de `eliminatedParticipants`
 const generateBracketStructure = (numParticipants) => {
     if (!numParticipants || numParticipants < 2 || !Number.isInteger(Math.log2(numParticipants))) {
-        console.warn("Calendario: Invalid number of participants for single elimination bracket generation. Must be a power of 2 (>= 2).");
+        console.warn("[Calendario.js] Invalid number of participants for single elimination bracket generation. Must be a power of 2 (>= 2).");
         return [];
     }
-    // ... (resto de la función generateBracketStructure como la tenías)
     const matches = [];
     let currentMatchId = 1;
     let matchesInRound = numParticipants / 2;
@@ -41,11 +40,11 @@ const generateBracketStructure = (numParticipants) => {
             const matchId = currentMatchId + j;
             const nextMatchId = (matchesInRound > 1) ? nextRoundMatchIdStart + Math.floor(j / 2) : null;
             matches.push({
-                id: matchId, // ID numérico para la lógica de llaves
+                id: matchId,
                 name: `Partido ${matchId}`,
                 nextMatchId: nextMatchId,
                 tournamentRoundText: `Ronda ${round}`,
-                participants: [ // En Calendario, esto podría no ser necesario si solo muestra partidos de Firestore
+                participants: [
                     { id: null, name: "Por determinar" },
                     { id: null, name: "Por determinar" },
                 ],
@@ -70,9 +69,8 @@ function Calendario() {
     const [torneoInfo, setTorneoInfo] = useState(null);
     const [user, setUser] = useState(null);
     const [participantesParaSeleccion, setParticipantesParaSeleccion] = useState([]);
-    // const [bracketMatchIdInput, setBracketMatchIdInput] = useState(''); // Necesario si el form se usa para modo torneo
     const [eliminatedParticipants, setEliminatedParticipants] = useState(new Set());
-    const [numParticipantesBracket, setNumParticipantesBracket] = useState(0); // Para lógica de torneo
+    const [numParticipantesBracket, setNumParticipantesBracket] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
 
@@ -85,7 +83,7 @@ function Calendario() {
         const fetchTorneoInfo = async () => {
             console.log(`[Calendario.js] Iniciando fetchTorneoInfo para torneoId: ${torneoId}`);
             const torneoDocRef = doc(db, "torneos", torneoId);
-            const torneoSnapshot = await firestoreGetDoc(torneoDocRef); // Usar alias
+            const torneoSnapshot = await firestoreGetDoc(torneoDocRef);
             if (torneoSnapshot.exists()) {
                 const data = torneoSnapshot.data();
                 console.log("[Calendario.js] Torneo encontrado:", data);
@@ -100,29 +98,26 @@ function Calendario() {
                         console.warn(`[Calendario.js] Número de equipos inválido o no es potencia de 2 (${num}) para eliminatoria.`);
                     }
                 } else {
-                    setNumParticipantesBracket(0); // No es modo torneo o numEquipos no es válido para bracket
+                    setNumParticipantesBracket(0);
                 }
 
                 const participantesRaw = data.participantes || [];
                 const seleccionables = participantesRaw.map((p) => {
-                    if (typeof p === "object" && p !== null) { // Equipos
-                        const id = p.id || p.capitan; // Usar id del equipo si existe, sino el del capitán
+                    if (typeof p === "object" && p !== null) {
+                        const id = p.id || p.capitan;
                         const displayNombre = p.nombre || `Equipo (Cap: ${p.capitan?.substring(0, 6)}...)`;
                         return { id: String(id), displayNombre, esEquipo: true };
-                    } else if (typeof p === 'string' && p) { // Individuales (UIDs)
-                        // Idealmente, aquí se buscaría el nombre del usuario en la colección 'usuarios'
-                        // Para simplificar, usamos un placeholder.
-                        // Esta lógica debería mejorarse si quieres mostrar nombres reales de individuales.
+                    } else if (typeof p === 'string' && p) {
                         return { id: String(p), displayNombre: `Jugador (${String(p).substring(0,6)}...)`, esEquipo: false };
                     }
                     return null;
-                }).filter(p => p && p.id); // Filtrar nulos y asegurar que tengan ID
+                }).filter(p => p && p.id);
                 setParticipantesParaSeleccion(seleccionables);
                 console.log("[Calendario.js] Participantes para selección:", seleccionables);
 
             } else {
                 console.error("[Calendario.js] No se encontró el torneo con ID:", torneoId);
-                setTorneoInfo(null); // Limpiar si no se encuentra
+                setTorneoInfo(null);
                 setParticipantesParaSeleccion([]);
             }
         };
@@ -132,7 +127,7 @@ function Calendario() {
         const partidosCollection = collection(db, `torneos/${torneoId}/calendario`);
         const unsubscribePartidos = onSnapshot(partidosCollection, (snapshot) => {
             const nuevosPartidos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-            nuevosPartidos.sort((a, b) => { // Ordenar por fecha y hora
+            nuevosPartidos.sort((a, b) => {
                 const dateA = new Date(`${a.fecha}T${a.hora || "00:00:00"}`);
                 const dateB = new Date(`${b.fecha}T${b.hora || "00:00:00"}`);
                 return dateA - dateB;
@@ -141,7 +136,7 @@ function Calendario() {
             console.log("[Calendario.js] Partidos actualizados:", nuevosPartidos);
         }, (error) => {
              console.error("[Calendario.js] Error escuchando partidos:", error);
-             setPartidos([]); // Limpiar en caso de error
+             setPartidos([]);
         });
 
         return () => {
@@ -152,9 +147,6 @@ function Calendario() {
 
 
     const initialBracketStructureCalendario = useMemo(() => {
-        // Esta función solo es relevante si Calendario.js también necesita la estructura de llaves
-        // para alguna lógica, por ejemplo, para determinar eliminados.
-        // Si Clasificacion.js es el único que usa Llaves.js, esto podría no ser necesario aquí.
         if (torneoInfo?.tipo === "torneo" && numParticipantesBracket > 0) {
             return generateBracketStructure(numParticipantesBracket);
         }
@@ -163,7 +155,6 @@ function Calendario() {
 
 
     useEffect(() => {
-        // Lógica para determinar participantes eliminados (principalmente para modo torneo)
         if (torneoInfo?.tipo === "torneo" && initialBracketStructureCalendario.length > 0 && partidos.length > 0) {
             const eliminated = new Set();
             const rawPartidosByBracketId = partidos.reduce((acc, partido) => {
@@ -184,7 +175,7 @@ function Calendario() {
                         if (score1 > score2) loserId = partidoFirestore.visitanteId;
                         else if (score2 > score1) loserId = partidoFirestore.localId;
 
-                        if (loserId && matchDeLlave.nextMatchId !== null) { // Solo eliminar si no es la final
+                        if (loserId && matchDeLlave.nextMatchId !== null) {
                             eliminated.add(String(loserId));
                         }
                     }
@@ -193,7 +184,7 @@ function Calendario() {
             setEliminatedParticipants(eliminated);
             console.log("[Calendario.js] Participantes eliminados (modo torneo):", Array.from(eliminated));
         } else {
-            setEliminatedParticipants(new Set()); // Limpiar si no es modo torneo o no hay datos
+            setEliminatedParticipants(new Set());
         }
     }, [partidos, torneoInfo?.tipo, numParticipantesBracket, initialBracketStructureCalendario]);
 
@@ -208,7 +199,6 @@ function Calendario() {
         setHoraPartido("");
         setEquipoLocalId("");
         setEquipoVisitanteId("");
-        // setBracketMatchIdInput(''); // No se usa en el form de Calendario para liga
     };
 
     const handleAgregarPartido = async (e) => {
@@ -233,9 +223,6 @@ function Calendario() {
             return;
         }
 
-        // En modo liga, no se suele verificar 'eliminatedParticipants' de la misma forma que en torneo.
-        // Se podría añadir una verificación si un equipo ya jugó todos sus partidos, pero es más complejo.
-
         try {
             const partidoData = {
                 fecha: fechaPartido,
@@ -245,12 +232,12 @@ function Calendario() {
                 localId: equipoLocalId,
                 visitanteId: equipoVisitanteId,
                 resultado: null,
-                // No se necesita bracketMatchId para modo liga aquí
+                // No se añade bracketMatchId para partidos de liga creados desde el calendario
             };
             const docRef = await addDoc(collection(db, `torneos/${torneoId}/calendario`), partidoData);
             console.log("[Calendario.js] Partido de liga agregado con ID:", docRef.id);
 
-            await agregarNovedadConDebug( // USO DE LA FUNCIÓN MEJORADA
+            await agregarNovedadConDebug(
                 torneoId,
                 `Nuevo partido (Liga) programado: ${localSeleccionado.displayNombre} vs ${visitanteSeleccionado.displayNombre} el ${fechaPartido} a las ${horaPartido}.`,
                 'match_add',
@@ -268,7 +255,7 @@ function Calendario() {
     };
 
     const handleEliminarPartido = async (partidoId, localNombre, visitanteNombre) => {
-        if (!window.confirm(`¿Estás seguro de que quieres eliminar el partido "${localNombre} vs ${visitanteNombre}"? Esto puede afectar la clasificación.`)) {
+        if (!window.confirm(`¿Estás seguro de que quieres eliminar el partido "${localNombre} vs ${visitanteNombre}"? Esto puede afectar la clasificación y las llaves si es un partido de torneo.`)) {
             return;
         }
         setIsSubmitting(true);
@@ -278,7 +265,7 @@ function Calendario() {
             await deleteDoc(partidoDocRef);
             console.log(`[Calendario.js] Partido ${partidoId} eliminado.`);
 
-            await agregarNovedadConDebug( // USO DE LA FUNCIÓN MEJORADA
+            await agregarNovedadConDebug(
                 torneoId,
                 `El partido ${localNombre} vs ${visitanteNombre} ha sido eliminado.`,
                 'match_delete',
@@ -298,7 +285,7 @@ function Calendario() {
         const nuevoResultado = prompt(`Introduce el resultado para ${partido.local} vs ${partido.visitante}${resultadoActual} (ej: 3-2, o "cancelar" para no cambiar, o vacío para borrar):`);
 
         if (nuevoResultado === null || nuevoResultado.toLowerCase() === "cancelar") {
-            return; // Usuario canceló
+            return;
         }
 
         if (!/^\d+-\d+$/.test(nuevoResultado) && nuevoResultado !== "") {
@@ -320,7 +307,7 @@ function Calendario() {
             const bracketMatchIdInfo = partido.bracketMatchId ? ` (Llave: ${partido.bracketMatchId})` : "";
 
 
-            await agregarNovedadConDebug( // USO DE LA FUNCIÓN MEJORADA
+            await agregarNovedadConDebug(
                 torneoId,
                 `${mensajeNovedad}${bracketMatchIdInfo}`,
                 'match_result',
@@ -328,6 +315,11 @@ function Calendario() {
                 "Calendario.js (ActualizarResultado)"
             );
         } catch (error) {
+            console.error("[Calendario.js] Error al actualizar resultado:", error);
+            alert("Error al actualizar el resultado.");
+        // src/components/Calendario.js
+// ... (imports and code from the previous response) ...
+
             console.error("[Calendario.js] Error al actualizar resultado:", error);
             alert("Error al actualizar el resultado del partido.");
         } finally {
@@ -345,13 +337,15 @@ function Calendario() {
                         <FaPlus /> Añadir Partido (Liga)
                     </button>
                 )}
-                 {esCreador && !mostrarFormulario && torneoInfo?.tipo === "torneo" && (
-                    <p style={{textAlign: 'center', color: '#aaa', width: '100%', padding: '1rem 0'}}>
-                        Los partidos de eliminatoria se gestionan y visualizan desde la sección "Clasificación / Llaves".
+                 {/* MODIFIED MESSAGE: Informs users that bracket matches are visible but managed elsewhere */}
+                 {torneoInfo?.tipo === "torneo" && (
+                    <p style={{textAlign: 'center', color: '#aaa', width: '100%', padding: '1rem 0', fontStyle: 'italic'}}>
+                        Los partidos de eliminatoria (llaves) se gestionan desde la sección "Clasificación / Llaves", pero se listan aquí para una vista completa.
                     </p>
                 )}
             </div>
 
+            {/* Form to add matches is still only for "liga" type tournaments */}
             {mostrarFormulario && esCreador && torneoInfo?.tipo !== "torneo" && (
                 <div className="calendario-form">
                     <h3>Añadir Nuevo Partido (Liga)</h3>
@@ -390,35 +384,43 @@ function Calendario() {
                 </div>
             )}
 
-            {partidos.length === 0 && torneoInfo?.tipo !== "torneo" && (
-                <p>No hay partidos programados para este torneo de liga.</p>
+            {partidos.length === 0 && ( // Simplified condition to show if no matches regardless of type
+                <p>No hay partidos programados para este torneo.</p>
             )}
-            {/* No mostrar la lista de partidos si es modo torneo, ya que se ven en Llaves */}
-            {partidos.length > 0 && torneoInfo?.tipo !== "torneo" && (
+
+            {/* MODIFIED CONDITION: Now shows partidos grid if partidos.length > 0, regardless of torneoInfo.tipo */}
+            {partidos.length > 0 && (
                  <div className="calendario-partidos-grid">
                     {partidos.map((partido) => (
                         <div key={partido.id} className="calendario-partido-card">
                            <div className="botones-accion-card">
-                                {esCreador && (
+                                {esCreador && ( // Action buttons are still for the creator
                                     <>
                                         <button onClick={() => handleActualizarResultado(partido)} className="boton-resultado-partido" title="Añadir/Editar resultado" aria-label="Añadir o editar resultado" disabled={isSubmitting}>
                                             <FaEdit />
                                         </button>
+                                        {/* Only allow deleting non-bracket matches from calendar view, or be very careful */}
+                                        {/* For now, let's assume deleting from calendar is okay, but it will affect brackets if it's a bracket match */}
                                         <button onClick={() => handleEliminarPartido(partido.id, partido.local, partido.visitante)} className="boton-eliminar-partido" title="Eliminar partido" aria-label="Eliminar partido" disabled={isSubmitting}>
                                             <FaTrash />
                                         </button>
                                     </>
                                 )}
                             </div>
-                            {/* No mostramos bracketMatchId aquí ya que es para liga */}
+                            {/* Optional: Display bracket match ID if it exists */}
+                            {partido.bracketMatchId && (
+                                <div className="partido-block bracket-info">
+                                    <strong>Llave N°:</strong> <p>{partido.bracketMatchId}</p>
+                                </div>
+                            )}
                             <div className="partido-block fecha-hora">
                                 <strong>Fecha:</strong> <p>{partido.fecha || "Por definir"}</p>
                                 <strong>Hora:</strong> <p>{partido.hora || "Por definir"}</p>
                             </div>
                             <div className="partido-block equipos">
-                                <span className="equipo-local">{partido.local}</span>
+                                <span className="equipo-local">{partido.local || "Por determinar"}</span>
                                 <span className="partido-vs">vs</span>
-                                <span className="equipo-visitante">{partido.visitante}</span>
+                                <span className="equipo-visitante">{partido.visitante || "Por determinar"}</span>
                             </div>
                             {partido.resultado ? (
                                 <div className="partido-block resultado">
@@ -433,9 +435,16 @@ function Calendario() {
                     ))}
                 </div>
             )}
-            {/* La lista de eliminados solo tiene sentido en modo torneo, no aquí */}
+            {/* The eliminated list might still be relevant for "torneo" type, kept as is */}
+            {torneoInfo?.tipo === "torneo" && eliminatedParticipants.size > 0 && (
+                <div className="eliminated-list">
+                    <strong>Participantes Eliminados (en Rondas Anteriores):</strong>
+                    <p>{Array.from(eliminatedParticipants).map(id => participantesParaSeleccion.find(p => p.id === id)?.displayNombre || id).join(", ")}</p>
+                </div>
+            )}
         </div>
     );
 }
 
 export default Calendario;
+        

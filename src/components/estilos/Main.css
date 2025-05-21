@@ -693,3 +693,14 @@ html, body {
     pointer-events: none;
     z-index: 998; /* Consistente con el contenedor */
 }
+
+/* Media Query para pantallas pequeñas (ej. menos de 768px de ancho) */
+@media (max-width: 767.98px) {
+  .flying-ball {
+    display: none; /* Oculta las pelotas voladoras */
+  }
+
+  .localized-glow-container { /* Oculta el contenedor de los brillos */
+    display: none;
+  }
+}

@@ -259,18 +259,6 @@ main {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Sombra reducida */
 }
 
-/* Asegúrate de que los estilos anteriores para .main-buttons no interfieran */
-/* Si .main-buttons ya tenía estilos, puede que necesites ajustarlos */
-.main-buttons {
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: flex;
-  gap: 1rem; /* Aumentamos un poco el espacio entre botones */
-  padding: 1rem; /* Mantenemos el padding */
-  z-index: 1001; /* Asegura que estén por encima de las tarjetas si es necesario */
-  margin-top: 4%;
-}
 
 
 

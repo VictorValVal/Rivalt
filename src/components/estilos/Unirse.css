@@ -1,140 +1,322 @@
-/* ==================================================
-   UNIRSE TORNEO FORMULARIO ESTILOS (MODIFICADO)
-   ================================================== */
+/* components/estilos/Unirse.css (MODIFICADO) */
 
-/* Contenedor para centrar en la página */
-.unirse-torneo-page-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: calc(90vh - 4rem);
-    padding: 3rem 1rem;
-    box-sizing: border-box;
-    background-color: #121212; /* Fondo principal oscuro */
-}
-
-/* Contenedor principal del formulario */
-.unirse-torneo-container {
-    width: 100%;
-    max-width: 480px;
-    background-color: #1e1e1e; /* Fondo contenedor */
-    padding: 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    color: #E0E0E0;
+.form-container-unirse { /* Renamed from .unirse-torneo-page-container */
     display: flex;
     flex-direction: column;
-    gap: 2rem; /* Más espacio entre elementos principales */
-    border: 1px solid #333;
+    align-items: center;
+    min-height: calc(100vh - 65px); /* Adjust if header height is different */
+    padding: 3rem 1rem; /* Increased vertical padding */
+    box-sizing: border-box;
+    background: linear-gradient(170deg, #101010 0%, #181818 100%); /* Subtle gradient background */
+    color: #E0E0E0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistent font */
+    position: relative; /* For potential pseudo-elements or future animated shapes */
+    overflow-x: hidden;
 }
 
-.unirse-torneo-container h1 {
+/* Optional: Animated background shapes (if you want to replicate from Main/Login) */
+/* Add .animated-shape .shape1-unirse, .shape2-unirse styles here if desired */
+
+/* .unirse-torneo-main-title was not used in Unirse.js, removed from CSS */
+
+.form-box-unirse { /* Renamed from .unirse-torneo-card */
+    width: 100%;
+    max-width: 580px; /* Slightly wider card */
+    background-color: rgba(30, 30, 30, 0.85); /* Darker, slightly transparent base for a subtle frosted glass effect */
+    backdrop-filter: blur(10px) saturate(150%); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    padding: 2.8rem 3rem; /* More padding */
+    border-radius: 12px; /* More rounded */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), /* Adjusted shadow for a slightly softer, more diffused look like Nuevo.css */
+                inset  0 1px 1px rgba(255, 255, 255, 0.05); /* Inner highlight for depth */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem; /* Generous gap */
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Transition for hover (optional) */
+}
+
+/* Optional hover effect for the card */
+/* .form-box-unirse:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+} */
+
+.form-box-unirse .form-title { /* Selector updated */
+    font-size: 2rem;
+    font-weight: 600;
     color: #FFFFFF;
     text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1.9rem;
-    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 
-/* Para el div que contiene input y botón inicial */
-.unirse-torneo-container .form-step {
+.form-box-unirse .form-description { /* Selector updated */
+    font-size: 1.05rem; /* Slightly larger */
+    color: #B0B0B0; /* Lighter grey for better readability */
+    text-align: center;
+    margin-bottom: 1.8rem;
+    line-height: 1.7;
+}
+
+.form-field {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Espacio entre input y botón */
+    gap: 0.7rem;
+    width: 100%;
+    position: relative; /* For potential icon placement within input */
+}
+
+.form-label {
+    font-size: 0.95rem;
+    color: #C0C0C0;
+    font-weight: 500;
+}
+
+.form-input {
+    background-color: rgba(42, 42, 42, 0.7); /* Slightly more transparent input */
+    border: 1px solid #555555; /* Darker border, less prominent */
+    color: #E0E0E0;
+    padding: 14px 18px; /* More padding */
+    border-radius: 8px; /* More rounded inputs */
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.form-input::placeholder {
+    color: #888888;
+}
+
+.form-input:focus {
+    outline: none;
+    background-color: rgba(45, 45, 45, 0.9);
+    border-color: #FF6D14; /* Accent color */
+    box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.25), /* Softer focus glow */
+                0 0 15px rgba(255, 109, 20, 0.2); /* Wider, subtle glow */
+}
+
+/* --- General Button Styles (kept for other buttons) --- */
+.form-button {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    line-height: 1.2;
+}
+
+.form-button.primary {
+    background: linear-gradient(145deg, #FF6D14, #E05A0B);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.form-button.primary:hover:not(:disabled) {
+    background: linear-gradient(145deg, #E05A0B, #FF6D14);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 3px 7px rgba(0,0,0,0.3);
+}
+.form-button.primary:active:not(:disabled) {
+    transform: translateY(0px) scale(1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.form-button.secondary {
+    background-color: rgba(70, 70, 70, 0.5);
+    color: #C0C0C0;
+    border: 1px solid rgba(120, 120, 120, 0.5);
+    font-weight: 500;
+    text-transform: none;
+}
+
+.form-button.secondary:hover:not(:disabled) {
+    background-color: rgba(85, 85, 85, 0.7);
+    border-color: rgba(150, 150, 150, 0.7);
+    color: #FFFFFF;
+    transform: translateY(-2px);
+}
+
+.form-button:disabled {
+    background: #404040 !important;
+    color: #777777 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none !important;
+    transform: none !important;
+    border-color: #404040 !important;
+}
+
+/* --- NEW Unified Button Style for Participant/Spectator --- */
+.form-button.mode-choice-button {
+    background: linear-gradient(145deg, #FF6D14, #E05A0B); /* Consistent with primary button gradient */
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column; /* Stack icon and text vertically */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    padding: 20px 15px; /* Adjust padding for bigger buttons with icon + text */
+    height: 120px; /* Fixed height for square-ish appearance */
+    width: 150px; /* Fixed width for square-ish appearance */
+    font-size: 1rem; /* Base font size for the text */
+    text-transform: none; /* Do not uppercase the small text */
+    letter-spacing: normal; /* Normal letter spacing for the small text */
+    gap: 8px; /* Gap between icon and text */
+}
+
+.form-button.mode-choice-button:hover:not(:disabled) {
+    background: linear-gradient(145deg, #E05A0B, #FF6D14);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 3px 7px rgba(0,0,0,0.3);
+}
+
+/* Style for the small text label inside the mode choice buttons */
+.form-button.mode-choice-button .button-text-label {
+    font-size: 0.9em; /* Smaller text for the label */
+    font-weight: 500;
+    margin-top: 5px; /* Small gap above text, in addition to flex gap */
+    color: #f0f0f0; /* Slightly lighter text for contrast */
+}
+
+/* Styles for the react-icons SVG element within the button */
+.form-button.mode-choice-button svg {
+    color: #FFFFFF; /* Ensure icon color is white */
+    /* Size is handled by the 'size' prop on FaUser/FaEye directly */
+}
+
+/* --- Phase: Elegir Modo --- */
+.elegir-modo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.8rem;
     width: 100%;
 }
 
-/* --- REUTILIZAR ESTILOS DE INPUT Y BOTÓN DEFINIDOS EN Login.css/Nuevo.css --- */
-/* Asegúrate de que .form-input y .form-button.primary tengan los estilos definidos */
-/* Las clases ya se usan en Unirse.js, así que heredarán los estilos si están globales o importados */
+.botones-modo {
+    display: flex;
+    flex-direction: column; /* Buttons stack vertically on small screens */
+    gap: 1.2rem; /* Space between choice buttons */
+    width: 100%;
+    max-width: 400px;
+    justify-content: center; /* Center buttons when in a row */
+}
 
-/* Mensaje de error (Consistente con Login.css) */
+
+/* Messages */
+.info-message, .warning-message, .form-error-message, .form-success-message {
+    width: 100%;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 0.8rem;
+    line-height: 1.6;
+    border-left-width: 4px;
+    border-top: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+}
+
+.info-message {
+    background-color: rgba(76, 175, 80, 0.08);
+    color: #a5d6a7;
+    border-color: rgba(76, 175, 80, 0.4);
+    border-left-color: #4CAF50;
+}
+.warning-message {
+    background-color: rgba(255, 152, 0, 0.08);
+    color: #ffcc80;
+    border-color: rgba(255, 152, 0, 0.4);
+    border-left-color: #FF9800;
+}
+
 .form-error-message {
-    color: #ff9a9a;
-    background-color: rgba(255, 80, 80, 0.15);
-    border: 1px solid rgba(255, 80, 80, 0.4);
-    padding: 12px;
-    border-radius: 6px;
-    text-align: center;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
+    color: #ef9a9a;
+    background-color: rgba(239, 83, 80, 0.08);
+    border-color: rgba(239, 83, 80, 0.4);
+    border-left-color: #EF5350;
     font-weight: 500;
 }
 
-/* Estilos para la sección del formulario de equipo */
+.form-success-message {
+    color: #a5d6a7;
+    background-color: rgba(76, 175, 80, 0.08);
+    border-color: rgba(76, 175, 80, 0.4);
+    border-left-color: #4CAF50;
+    font-weight: 500;
+}
+
+/* Equipo Form Section */
 .equipo-form-section {
-    border-top: 1px solid #555; /* Línea separadora más visible */
-    padding-top: 2.5rem; /* Más espacio sobre la sección */
-    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2.5rem;
+    margin-top: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Espacio dentro de la sección */
+    gap: 1.8rem;
 }
 
-.equipo-form-section h2 {
+.equipo-form-section .form-title {
+    font-size: 1.7rem;
     color: #f0f0f0;
-    text-align: center;
-    font-size: 1.6rem;
-    font-weight: 500;
+    margin-bottom: 0.3rem;
 }
-.equipo-form-section p {
-    color: #aaa;
-    text-align: center;
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
+.equipo-form-section .form-description {
+    font-size: 1rem;
+    color: #a0a0a0;
+    margin-bottom: 1.2rem;
 }
 
-/* --- ESTILOS PARA EquipoForm --- */
-/* Asumiendo que EquipoForm usa clases como .equipo-form-container, .equipo-form-group, etc. */
-/* Deberás añadir estas clases en EquipoForm.js */
-
-.equipo-form-container { /* Contenedor dentro de la sección */
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+/* Responsive adjustments */
+@media (min-width: 600px) {
+    .botones-modo {
+        flex-direction: row; /* Buttons align horizontally on larger screens */
+        gap: 2rem; /* Increased gap for horizontal layout */
+    }
 }
 
-.equipo-form-group { /* Para cada input (nombre equipo, miembro) */
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-/* Reutilizar .form-input para los inputs de EquipoForm */
-.equipo-form-container .form-input {
-    /* Hereda estilos */
-}
-
-/* Botones dentro de EquipoForm */
-.equipo-form-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    justify-content: center; /* O flex-end */
-}
-
-/* Reutilizar .form-button para botones de EquipoForm */
-.equipo-form-actions .form-button {
-    /* Hereda estilos */
-}
-.equipo-form-actions .form-button.primary {
-    /* Hereda estilos */
-}
-.equipo-form-actions .form-button.secondary {
-    /* Hereda estilos (si usas un botón de cancelar) */
-}
-
-/* Botón específico para añadir miembro si es necesario */
-.add-member-button {
-    /* Estilos si quieres que sea diferente */
-    align-self: flex-start; /* Ejemplo */
-    padding: 8px 15px;
-    font-size: 0.9rem;
-    background-color: #444;
-    color: #ccc;
-    /* ... */
-}
-.add-member-button:hover {
-    background-color: #555;
-    color: #fff;
+@media (max-width: 480px) {
+    .form-container-unirse {
+        padding: 2rem 0.8rem;
+    }
+    .form-box-unirse {
+        padding: 2rem 1.5rem;
+         backdrop-filter: blur(5px) saturate(120%);
+        -webkit-backdrop-filter: blur(5px) saturate(120%);
+    }
+    .form-box-unirse .form-title {
+        font-size: 1.7rem;
+    }
+    .form-box-unirse .form-description {
+        font-size: 0.95rem;
+    }
+    .form-button {
+        padding: 12px 22px;
+        letter-spacing: 0.5px;
+    }
+    .form-input {
+        padding: 12px 15px;
+    }
+    /* Adjust size for mobile if needed */
+    .form-button.mode-choice-button {
+        height: 100px;
+        width: 130px;
+        padding: 15px 10px;
+    }
+    .form-button.mode-choice-button svg {
+        font-size: 30px; /* Smaller icon on mobile */
+    }
+    .form-button.mode-choice-button .button-text-label {
+        font-size: 0.8em;
+    }
 }

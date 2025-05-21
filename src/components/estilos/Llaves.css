@@ -1,173 +1,363 @@
+/* Llaves.css */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
 /* Estilos generales para el contenedor de las llaves */
 .llaves-container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  background-color: #121212;
-  color: #FFFFFF;
-  padding: 20px;
-  min-height: 100vh;
-  box-sizing: border-box;
+  /* flex-direction: column; Opcional, si necesitas apilar elementos verticalmente antes de centrarlos */
+  justify-content: center; /* Centra el contenido (Bracket/mensaje) verticalmente */
+  align-items: center;   /* Centra el contenido (Bracket/mensaje) horizontalmente */
+  background-color: #121212; /* */
+  color: #FFFFFF; /* */
+  padding: 20px; /* */
+  /* Ajuste de altura: en lugar de min-height: 100vh, ocupa el 100% del padre (que es main con 90vh) */
+  height: 100%;
+  box-sizing: border-box; /* */
+  font-family: 'Lexend', sans-serif; /* */
+  overflow: auto; /* Añade scrollbars DENTRO de este contenedor si el bracket es muy grande */
 }
 
 /* Títulos de Ronda */
 .round-title {
-  color: #FF6D14;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 15px;
+  color: #FF6D14 !important; /* */
+  font-weight: bold !important; /* */
+  text-align: center !important; /* */
+  margin-bottom: 20px !important; /* */
+  font-size: 1.4em !important; /* */
 }
 
-/* Estilos para cada enfrentamiento (Seed) */
+/* Estilos para cada enfrentamiento (SeedItem) */
 .SeedItem {
-  position: relative; /* Necesario para el posicionamiento absoluto de .seed-actions */
-  background-color: #2a2a2a;
-  border: 1px solid #FF6D14;
-  border-radius: 8px;
-  padding: 10px; /* Padding general del SeedItem */
-  margin-bottom: 10px;
-  color: #FFFFFF;
-  transition: transform 0.2s ease-in-out;
+  background-color: #1e1e1e !important; /* */
+  color: #FFFFFF !important; /* */
+  border: 1px solid #FF6D14 !important; /* */
+  border-radius: 8px !important; /* */
+  padding: 12px !important; /* */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important; /* */
+  text-align: left !important; /* */
+  position: relative !important; /* */
+  margin-bottom: 15px !important; /* */
+  width: 100% !important; /* */
+  box-sizing: border-box !important; /* */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important; /* */
 }
 
 .SeedItem:hover {
-  transform: scale(1.02);
+  transform: scale(1.02) !important; /* */
+  box-shadow: 0 4px 10px rgba(255, 109, 20, 0.3) !important; /* */
 }
 
 /* Contenedor de la información de los equipos (nombre y resultado) */
 .teams-display-container {
-  /* Este padding-right crea el espacio necesario para los botones de acción */
-  /* Ajusta este valor según el tamaño y número de tus botones */
-  padding-right: 85px; /* Espacio para ~2 botones pequeños */
+  padding-right: 75px;  /* */
+  background-color: #121212; /* Este fondo es igual al del .llaves-container. Considera si es necesario o si quieres un contraste. */ /* */
+  border-radius: 10px; /* */
+  /* Añadido para mejor estructura interna si los SeedTeam deben estar más contenidos */
+  padding-left: 10px; /* Ejemplo, ajusta si es necesario */
+  padding-top: 5px;   /* Ejemplo, ajusta si es necesario */
+  padding-bottom: 5px;/* Ejemplo, ajusta si es necesario */
 }
 
 /* Estilos para los equipos dentro de un enfrentamiento */
 .SeedTeam {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* Eliminamos padding horizontal aquí, ya que .teams-display-container y .SeedItem lo manejan */
-  padding: 8px 0px; 
-  border-bottom: 1px solid #444444;
+  display: flex; /* */
+  justify-content: space-between; /* */
+  align-items: center; /* */
+  padding: 8px 0px; /* Reducido ligeramente el padding vertical para un look más compacto */ /* */
+  border-bottom: 1px solid #333333; /* */
 }
 
 .SeedTeam:last-child {
-  border-bottom: none;
+  border-bottom: none; /* */
 }
 
 .team-name {
-  font-weight: 500;
-  margin-right: 5px; /* Pequeño espacio por si el nombre es largo y se acerca al score */
-  /* Opcional: para truncar nombres largos */
-  /* overflow: hidden; */
-  /* text-overflow: ellipsis; */
-  /* white-space: nowrap; */
+  font-weight: 500; /* */
+  font-size: 0.95em; /* */
+  margin-right: 8px; /* */
+  flex-grow: 1; /* */
+  overflow: hidden; /* */
+  text-overflow: ellipsis; /* */
+  white-space: nowrap; /* */
+  color: #FFFFFF; /* */
 }
 
 .score {
-  font-weight: bold;
-  color: #FF6D14;
-  margin-left: 8px; /* Espacio entre el nombre del equipo y el marcador */
-  white-space: nowrap; /* Evita que el marcador se parta en dos líneas */
+  font-weight: bold; /* */
+  color: #FFFFFF; /* */
+  font-size: 0.95em; /* */
+  margin-left: 8px; /* */
+  white-space: nowrap; /* */
 }
 
 /* Estilos para el equipo ganador */
-/* El fondo se aplica inline en el JS con rgba(255, 109, 20, 0.15) */
 .winner-team .team-name {
-  font-weight: bold; 
-  /* No es necesario cambiar el color del texto si el fondo ya lo resalta */
+  font-weight: bold !important; /* */
+  color: #FF6D14 !important; /* */
+}
+.winner-team .score {
+  color: #FF6D14 !important; /* */
 }
 
-/* Ajustes para los botones de acción */
+/* Botones de acción dentro de cada Seed/Partido */
 .seed-actions {
-  display: flex;
-  /* flex-direction: column; */ /* Descomenta si prefieres botones apilados verticalmente */
-  /* align-items: flex-end; */ /* Si se apilan verticalmente y quieres alinearlos a la derecha */
-  gap: 6px; /* Espacio entre botones, reducido un poco */
-  position: absolute;
-  top: 50%;
-  right: 10px; /* Posicionados dentro del padding derecho de SeedItem */
-  transform: translateY(-50%);
-  z-index: 1; /* Para asegurar que estén por encima de otros elementos si es necesario */
-}
-/* Cambiar el color de fondo y bordes de las celdas de las llaves */
-.SeedItem {
-  position: relative;
-  background-color: #FF6D14; /* Fondo naranja Rivalt */
-  border: 1px solid #FF6D14; /* Borde naranja Rivalt */
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 10px;
-  color: #FFFFFF; /* Texto blanco para contraste */
-  transition: transform 0.2s ease-in-out;
-}
-
-.SeedItem:hover {
-  transform: scale(1.02);
-  background-color: #e05a03; /* Naranja más oscuro al pasar el mouse */
-}
-
-/* Estilos para los equipos dentro de un enfrentamiento */
-.SeedTeam {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0px;
-  border-bottom: 1px solid #FFFFFF; /* Línea divisoria blanca */
-}
-
-.SeedTeam:last-child {
-  border-bottom: none;
-}
-
-/* Estilos para el equipo ganador */
-.winner-team .team-name { 
-  font-weight: bold;
-  color: #FFFFFF; /* Texto blanco para el equipo ganador */
+  display: flex; /* */
+  flex-direction: row; /* */
+  gap: 8px; /* */
+  position: absolute; /* */
+  top: 50%; /* */
+  right: 10px; /* */
+  transform: translateY(-50%); /* */
+  z-index: 1; /* */
 }
 
 .modify-button,
 .add-result-button {
-  background-color: #FF6D14;
-  color: #121212; /* Texto oscuro para contraste */
-  padding: 5px 8px; /* Botones un poco más compactos */
-  font-size: 0.75em; /* Tamaño de fuente un poco más pequeño */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1; /* Asegura que el texto/icono dentro del botón no añada altura extra */
+  background-color: #FF6D14; /* */
+  color: #FFFFFF; /* */
+  padding: 6px 10px; /* */
+  font-size: 0.8em; /* */
+  border: none; /* */
+  border-radius: 5px; /* */
+  cursor: pointer; /* */
+  transition: background-color 0.3s ease, transform 0.1s ease; /* */
+  display: flex; /* */
+  align-items: center; /* */
+  justify-content: center; /* */
+  line-height: 1; /* */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* */
 }
 
 .modify-button:hover,
 .add-result-button:hover {
-  background-color: #e05a03; /* Naranja un poco más oscuro */
+  background-color: #E05A0B; /* */
+  transform: scale(1.05); /* */
 }
 
-/* Estilos para los iconos dentro de los botones */
 .modify-button svg,
 .add-result-button svg {
-  /* El tamaño del icono se hereda o puede ser ajustado aquí si es necesario */
-  /* Ejemplo: font-size: 1.2em; */
+  font-size: 1.1em; /* */
 }
 
-/* Líneas del bracket (inspecciona el SVG generado si esto no funciona) */
-svg path {
-  stroke: #FF6D14 !important;
-  stroke-width: 2px !important;
-}
-/* Si el componente Bracket usa una clase específica para el contenedor SVG */
-.bracket-svg-container svg path { 
-  stroke: #FF6D14 !important;
+/* Líneas del bracket */
+.bracket-svg-container svg path, /* Si hay un contenedor con esta clase */
+div[class*="bracket"] svg path, /* Si la clase del contenedor de bracket es dinámica pero contiene "bracket" */
+.llaves-container svg path { /* Como último recurso si el SVG está directamente en .llaves-container y no hay otros SVGs */
+  stroke: #FF6D14 !important; /* ESTA LÍNEA ESTABLECE EL COLOR NARANJA */
   stroke-width: 2px !important;
 }
 
 /* Mensajes de estado */
-.llaves-container p {
-  color: #FFFFFF;
-  text-align: center;
+.llaves-container > p {
+  color: #FFFFFF; /* */
+  text-align: center; /* */
+  width: 100%; /* */
+  font-size: 1.1em; /* */
+  padding: 30px 0; /* */
+  /* Si el mensaje se muestra cuando el Bracket no está, y el Bracket es el que se centra,
+     el mensaje también se centrará por las propiedades flex del .llaves-container */
+}
+
+/* --- Media Queries para Responsividad --- */
+
+@media (max-width: 768px) {
+  .llaves-container {
+    padding: 10px; /* */
+    /* Si el bracket es muy ancho y causa scroll horizontal en móvil,
+       podrías necesitar ajustar el 'width' o 'zoom' del bracket aquí
+       o permitir scroll horizontal SÓLO en el bracket. */
+  }
+  
+
+  
+.Seed { /* Selector para el contenedor de cada partido (la "celda") */
+    /* Aquí estableces el min-width que deseas para las celdas en móvil.
+       Por ejemplo, si quieres que nunca sean más estrechas de 180px: */
+    min-width: 0px !important; /* ¡Ajusta este valor según tus necesidades! */
+
+    /* Si también necesitas controlar el width o max-width para complementar el min-width: */
+    /* width: 90% !important; */ /* Por ejemplo, que ocupen el 90% del espacio disponible, pero no menos que el min-width */
+    /* max-width: 250px !important; */ /* Por ejemplo, que no superen un cierto ancho máximo en móvil */
+
+    /* Recuerda que el !important es a menudo necesario para sobreescribir
+       los estilos de la biblioteca (styled-components). */
+  }
+  .round-title {
+    font-size: 1.2em !important; /* */
+    margin-bottom: 15px !important; /* */
+  }
+
+  .SeedItem {
+    padding: 10px !important; /* */
+    margin-bottom: 10px !important; /* */
+  }
+
+  .teams-display-container {
+    padding-right: 50px; /* */
+    padding-left: 8px; /* Ajuste para móvil */
+  }
+
+  .team-name, .score {
+    font-size: 0.85em; /* */
+  }
+
+  .seed-actions {
+    right: 8px; /* */
+    gap: 5px; /* */
+  }
+
+  .modify-button,
+  .add-result-button {
+    padding: 5px 7px; /* */
+    font-size: 0.75em; /* */
+  }
+  .modify-button svg,
+  .add-result-button svg {
+    font-size: 1em; /* */
+  }
+}
+
+@media (max-width: 480px) {
+  .round-title {
+    font-size: 1.1em !important; /* */
+  }
+
+  .team-name, .score {
+    font-size: 0.8em; /* */
+  }
+
+  .modify-button,
+  .add-result-button {
+    width: 30px; /* */
+    height: 30px; /* */
+    padding: 0; /* */
+  }
+  .modify-button svg,
+  .add-result-button svg {
+    font-size: 0.9em; /* */
+  }
+
+  .teams-display-container {
+    padding-right: 40px; /* */
+    padding-left: 5px; /* Ajuste para móvil muy pequeño */
+  }
+}
+/* Llaves.css - Añadir al final */
+.llaves-container.view-mode {
+  overflow: visible !important;
+  padding: 10px !important;
+  justify-content: flex-start !important;
+  transform: scale(0.95);
+  transform-origin: top left;
+}
+
+.llaves-container.view-mode .round-title {
+  font-size: 1.1em !important;
+  margin-bottom: 10px !important;
+}
+
+.llaves-container.view-mode .SeedItem {
+  margin-bottom: 8px !important;
+  padding: 8px !important;
+}
+
+.llaves-container.view-mode .teams-display-container {
+  padding-right: 60px !important;
+}
+
+.llaves-container.view-mode .team-name,
+.llaves-container.view-mode .score {
+  font-size: 0.85em !important;
+}
+
+.llaves-container.view-mode .bracket {
+  gap: 15px !important; /* Reduce espacio entre rondas */
+}
+/* Asegúrate de que el wrapper del bracket permita scroll horizontal en móvil si es necesario */
+/* y que no esté en modo fullscreen */
+.llaves-container:not(.llaves-en-fullscreen-activo) .bracket-content-wrapper {
+  overflow-x: auto; /* Permite deslizar horizontalmente las rondas */
+  overflow-y: hidden; /* Evita scroll vertical innecesario para el wrapper */
+  /* width: 100%; ya debería estar por defecto o por .llaves-container flex */
+  /* height: 100%; ya debería estar por defecto o por .llaves-container flex */
+  /* display:flex; align-items:stretch; podría ser útil si Bracket no toma altura */
+}
+
+
+/* --- ESTILOS PARA NAVEGACIÓN DE RONDAS EN MÓVIL --- */
+.mobile-round-navigation {
+  display: none; /* Oculto por defecto */
+  position: fixed; /* O absolute si .llaves-container es el viewport relativo deseado */
+  bottom: 0;
+  left: 0;
   width: 100%;
+  background-color: rgba(34, 34, 34, 0.95); /* #222222 con opacidad */
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1020; /* Por encima del contenido del bracket, debajo de modales/fullscreen global */
+  border-top: 1px solid #FF6D14;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+}
+
+.mobile-round-navigation button {
+  background-color: #FF6D14;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mobile-round-navigation button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.mobile-round-navigation button:not(:disabled):hover {
+  background-color: #E05A0B;
+}
+
+.mobile-round-navigation .current-round-indicator {
+  color: #FFFFFF;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+/* Media query para mostrar los botones de navegación solo en móvil */
+@media (max-width: 768px) { /* Usa el mismo breakpoint que en tu JS para isMobileView */
+  .llaves-container .mobile-round-navigation { /* Asegura que se muestre si está dentro de .llaves-container */
+                                               /* Si lo moviste fuera, solo .mobile-round-navigation */
+    display: flex;
+  }
+
+  /* Ajusta el padding del .llaves-container o .bracket-content-wrapper
+     para dejar espacio a la barra de navegación si es fixed y superpuesta */
+  .llaves-container:not(.llaves-en-fullscreen-activo) {
+    /* Si la barra de navegación es fixed bottom, añade padding-bottom */
+    /* padding-bottom: 70px; */ /* Altura aproximada de la barra de navegación + algo de margen */
+  }
+  /* O si la barra no es fixed y está en el flujo, no se necesita padding extra */
+}
+
+
+/* ... (resto de tus estilos y media queries, incluyendo las de fullscreen) ... */
+/* Ejemplo: si el botón de fullscreen también es fixed o absolute, asegúrate que no colisione */
+.fullscreen-toggle-button {
+  /* ... tus estilos ... */
+  /* Podrías necesitar ajustar top/bottom si la barra de navegación móvil está presente */
+}
+
+/* En modo fullscreen, podrías querer ocultar la navegación de rondas móvil
+   si el bracket ya se ve completo y no hay scroll */
+.llaves-container.llaves-en-fullscreen-activo .mobile-round-navigation {
+  display: none !important;
 }

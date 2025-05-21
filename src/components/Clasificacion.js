@@ -1,26 +1,26 @@
-import React, { useEffect, useState, useMemo, useCallback, useRef } from "react"; // Added useRef
+// src/components/Clasificacion.js
+import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import {
   serverTimestamp,
   getFirestore,
   doc,
-  getDoc,
+  getDoc, 
   collection,
   onSnapshot,
   addDoc,
   updateDoc,
 } from "firebase/firestore";
-import { app } from "../firebase"; 
+import { app } from "../firebase";
 import Llaves from "./Llaves";
 import Tabla from "./Tabla";
 import ReactModal from "react-modal";
 import "./estilos/Clasificacion.css";
-import { FaEye, FaDownload } from "react-icons/fa"; // Import icons
-// IMPORTANT: You'll need to install html2canvas: npm install html2canvas
- import html2canvas from 'html2canvas'; // Uncomment after installing
+import { FaEye, FaDownload } from "react-icons/fa";
+import html2canvas from 'html2canvas';
 
 const db = getFirestore(app);
-ReactModal.setAppElement("#root"); 
+ReactModal.setAppElement("#root");
 
 const agregarNovedad = async (torneoId, mensaje, tipo, dataExtra = {}) => {
   try {
@@ -31,9 +31,9 @@ const agregarNovedad = async (torneoId, mensaje, tipo, dataExtra = {}) => {
       timestamp: serverTimestamp(),
       ...dataExtra,
     });
-    console.log("Novedad agregada:", mensaje);
+    console.log("[Clasificacion.js] Novedad agregada:", mensaje);
   } catch (error) {
-    console.error("Error al agregar novedad desde Clasificacion.js:", error);
+    console.error("[Clasificacion.js] Error al agregar novedad:", error);
   }
 };
 
@@ -50,6 +50,7 @@ const initialFormData = {
 function Clasificacion() {
   const { id: torneoId } = useParams();
 
+  const [torneoInfo, setTorneoInfo] = useState(null);
   const [tipoTorneo, setTipoTorneo] = useState(null);
   const [numParticipantes, setNumParticipantes] = useState(0);
   const [participantes, setParticipantes] = useState([]);
@@ -66,65 +67,101 @@ function Clasificacion() {
   const [localScore, setLocalScore] = useState("");
   const [visitanteScore, setVisitanteScore] = useState("");
 
-  // --- NEW: State for View Mode and ref for content to download ---
   const [isViewMode, setIsViewMode] = useState(false);
-  const contentRef = useRef(null); // Ref to capture the table or bracket
+  const contentRef = useRef(null);
+  useEffect(() => {
+  async function fetchNombresParticipantes() {
+    if (!torneoInfo || !Array.isArray(torneoInfo.participantes)) return;
+
+    const participantesRaw = torneoInfo.participantes;
+    const participantesFormateados = await Promise.all(participantesRaw.map(async p => {
+      if (typeof p === 'object' && p !== null) {
+        const idVal = p.id || p.capitan;
+        const nameVal = p.nombre || (idVal ? `Equipo (${String(idVal).substring(0, 6)}...)` : 'Equipo Desc.');
+        if (idVal) {
+          return { id: String(idVal), nombre: String(nameVal) };
+        }
+      } else if (typeof p === 'string' && p) {
+        // Buscar el nombre real en Firestore
+        try {
+          const userDoc = await getDoc(doc(db, "usuarios", p));
+          if (userDoc.exists()) {
+            const nombreReal = userDoc.data().nombre || userDoc.data().email || `Jugador (${String(p).substring(0, 6)}...)`;
+            return { id: String(p), nombre: nombreReal };
+          }
+        } catch (e) {
+          // Si falla, usa el fallback
+        }
+        return { id: String(p), nombre: `Jugador (${String(p).substring(0, 6)}...)` };
+      }
+      return null;
+    }));
+
+    setParticipantes(participantesFormateados.filter(p => p && p.id && p.nombre));
+  }
+
+  fetchNombresParticipantes();
+}, [torneoInfo]);
 
   useEffect(() => {
     setLoading(true);
     const torneoRef = doc(db, "torneos", torneoId);
-    getDoc(torneoRef)
-      .then((docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setTipoTorneo(data.tipo);
-          const participantesRaw = data.participantes || [];
-          const participantesFormateados = participantesRaw
-            .map((p) => {
-              if (typeof p === 'object' && p !== null) {
-                 const idVal = p.id ?? p.capitan; 
-                 const nameVal = p.nombre ?? (idVal ? `Equipo (${String(idVal).substring(0, 6)}...)` : null);
-                 if (idVal && nameVal) {
-                     return { id: String(idVal), nombre: String(nameVal) };
-                 }
-              } else if (typeof p === 'string' && p) {
-                const participanteData = participantes.find(part => part.id === String(p));
-                return { id: String(p), nombre: participanteData?.nombre || `Jugador (${String(p).substring(0,6)}...)` };
-              }
-              return null;
-            })
-            .filter(p => p && p.id); 
-          setParticipantes(participantesFormateados);
 
-          const num = Number(data.numEquipos) || 0;
-          if (data.tipo === "torneo" && num > 0 && Number.isInteger(Math.log2(num))) {
-            setNumParticipantes(num);
-          } else {
-            setNumParticipantes(0);
-            if (data.tipo === "torneo") console.error("Clasificacion: Número de participantes inválido para eliminatoria.");
-          }
+    const unsubscribeTorneo = onSnapshot(torneoRef, (docSnap) => {
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            setTorneoInfo(data);
+            setTipoTorneo(data.tipo);
+
+            const participantesRaw = data.participantes || [];
+            const participantesFormateados = participantesRaw.map(p => {
+                if (typeof p === 'object' && p !== null) {
+                    const idVal = p.id || p.capitan;
+                    const nameVal = p.nombre || (idVal ? `Equipo (${String(idVal).substring(0, 6)}...)` : 'Equipo Desc.');
+                    if (idVal) {
+                        return { id: String(idVal), nombre: String(nameVal) };
+                    }
+                } else if (typeof p === 'string' && p) {
+                    return { id: String(p), nombre: `Jugador (${String(p).substring(0, 6)}...)` };
+                }
+                return null;
+            }).filter(p => p && p.id && p.nombre);
+
+            setParticipantes(participantesFormateados);
+
+            const num = Number(data.numEquipos) || 0;
+            if (data.tipo === "torneo") {
+                if (num > 0 && Number.isInteger(Math.log2(num))) {
+                    setNumParticipantes(num);
+                } else {
+                    setNumParticipantes(0);
+                }
+            } else {
+                setNumParticipantes(0);
+            }
         } else {
-          console.error("Clasificacion: Torneo no encontrado con ID:", torneoId);
-          setTipoTorneo(null); setNumParticipantes(0);
+            console.error("[Clasificacion.js] Torneo no encontrado con ID:", torneoId);
+            setTorneoInfo(null); setTipoTorneo(null); setParticipantes([]); setNumParticipantes(0);
         }
-      })
-      .catch((error) => {
-        console.error("Clasificacion: Error fetching tournament:", error);
-        setTipoTorneo(null); setNumParticipantes(0);
-      })
-      .finally(() => setLoading(false));
-  }, [torneoId]); // Added 'participantes' to dependency array
+        setLoading(false);
+    }, (error) => {
+        console.error("[Clasificacion.js] Error fetching tournament snapshot:", error);
+        setLoading(false);
+    });
+    return () => unsubscribeTorneo();
+  }, [torneoId]);
 
   useEffect(() => {
     if (!torneoId) return;
     const partidosRef = collection(db, `torneos/${torneoId}/calendario`);
-    const unsubscribe = onSnapshot(partidosRef, (snapshot) => {
-      setRawPartidos(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    const unsubscribePartidos = onSnapshot(partidosRef, (snapshot) => {
+      const fetchedPartidos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setRawPartidos(fetchedPartidos);
     }, (error) => {
-      console.error("Clasificacion: Error fetching partidos:", error);
+      console.error("[Clasificacion.js] Error fetching partidos snapshot:", error);
       setRawPartidos([]);
     });
-    return () => unsubscribe(); 
+    return () => unsubscribePartidos();
   }, [torneoId]);
 
   const eliminatedTeamIds = useMemo(() => {
@@ -138,25 +175,22 @@ function Clasificacion() {
         }
       }
     });
-    return losers; 
+    return losers;
   }, [rawPartidos]);
 
-  const participantIdsInGame = useMemo(() => {
-     const ids = new Set();
-     rawPartidos.forEach(p => {
-         if (p.localId) ids.add(String(p.localId));
-         if (p.visitanteId) ids.add(String(p.visitanteId));
-     });
-     return ids;
-  }, [rawPartidos]);
+  // availableParticipantsForNewMatch is used by the dropdowns for Round 1
+  const availableParticipantsForDropdown = useMemo(() => {
+    // For Round 1 seeding, we generally want all participants,
+    // unless some are explicitly marked as 'inactive' or similar (not handled here)
+    // `eliminatedTeamIds` might be relevant if re-seeding a round after some matches.
+    return participantes.filter(p => !eliminatedTeamIds.has(p.id));
+  }, [participantes, eliminatedTeamIds]);
 
-  const availableParticipantsForNewMatch = useMemo(() => {
-    return participantes.filter(p =>
-         !eliminatedTeamIds.has(p.id) && !participantIdsInGame.has(p.id)
-    );
-  }, [participantes, eliminatedTeamIds, participantIdsInGame]);
 
-  const openModal = useCallback((modalName) => setModalStates(prev => ({ ...prev, [modalName]: true })), []);
+  const openModal = useCallback((modalName) => {
+    setModalStates(prev => ({ ...prev, [modalName]: true }));
+  }, []);
+
   const closeModal = useCallback((modalName) => {
     setModalStates(prev => ({ ...prev, [modalName]: false }));
     if (modalName === 'matchForm') {
@@ -177,314 +211,285 @@ function Clasificacion() {
   }, []);
 
   const handleSelectChange = useCallback((e, teamType) => {
-    const { value } = e.target;
+    const { value } = e.target; // value is the participant's ID
     const selectedParticipant = participantes.find((p) => String(p.id) === String(value));
     setFormData((prev) => ({
       ...prev,
-      [`${teamType}Id`]: value,
-      [`${teamType}`]: selectedParticipant ? selectedParticipant.nombre : "",
+      [`${teamType}Id`]: value, // Set the ID
+      [`${teamType}`]: selectedParticipant ? selectedParticipant.nombre : "", // Set the name
     }));
-  }, [participantes]);
+  }, [participantes]); // Depends on the main 'participantes' list
+
 
   const handleMatchSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.localId || !formData.visitanteId || !formData.fecha || !formData.hora || !selectedMatchSeed?.id) {
-      alert("Datos incompletos para guardar el partido.");
-      return;
-    }
+  e.preventDefault();
 
-    const localTeam = participantes.find(p => String(p.id) === String(formData.localId));
-    const visitanteTeam = participantes.find(p => String(p.id) === String(formData.visitanteId));
+  if (!selectedMatchSeed?.id) {
+    alert("Error: No se ha seleccionado una casilla de llave (bracketMatchId perdido).");
+    return;
+  }
+  if (!formData.fecha || !formData.hora) {
+    alert("La fecha y la hora son obligatorias.");
+    return;
+  }
 
-    if (!localTeam || !visitanteTeam) {
-       alert("Error: No se encontraron los detalles completos de los equipos seleccionados.");
-       return;
-    }
+  const isRound1 = selectedMatchSeed?.tournamentRoundText === "Ronda 1";
+  const teamsNotSetInFormForNewMatch = !formData.localId || !formData.visitanteId;
+  const allowTeamSelectionForRound1 = isRound1 && !formData.existingPartidoId && teamsNotSetInFormForNewMatch;
 
-    const matchData = {
-      fecha: formData.fecha,
-      hora: formData.hora,
-      localId: formData.localId,
-      visitanteId: formData.visitanteId,
-      local: localTeam.nombre,
-      visitante: visitanteTeam.nombre,
-      bracketMatchId: String(selectedMatchSeed.id),
-    };
+  if (allowTeamSelectionForRound1 && (!formData.localId || !formData.visitanteId)) {
+    alert("Por favor, selecciona ambos equipos para este partido de Ronda 1.");
+    return;
+  }
+  if (formData.localId && formData.visitanteId && formData.localId === formData.visitanteId) {
+    alert("El equipo local y visitante no pueden ser el mismo.");
+    return;
+  }
 
-    try {
-      let partidoIdCreado;
-      if (formData.existingPartidoId) {
-        const partidoRef = doc(db, `torneos/${torneoId}/calendario`, formData.existingPartidoId);
-        await updateDoc(partidoRef, {
-            fecha: matchData.fecha,
-            hora: matchData.hora,
-        });
-        partidoIdCreado = formData.existingPartidoId;
-        console.log("Partido modificado:", formData.existingPartidoId);
-        await agregarNovedad(
-          torneoId,
-          `El partido ${matchData.local} vs ${matchData.visitante} (Llave: ${matchData.bracketMatchId}) ha sido actualizado a ${matchData.fecha} ${matchData.hora}.`,
-          'match_schedule_update',
-          { 
-            partidoId: partidoIdCreado, 
-            local: matchData.local, 
-            visitante: matchData.visitante, 
-            fecha: matchData.fecha, 
-            hora: matchData.hora,
-            bracketMatchId: matchData.bracketMatchId
-          }
-        );
+  let localTeamName = formData.local;
+  let visitanteTeamName = formData.visitante;
+  let localTeamId = formData.localId;
+  let visitanteTeamId = formData.visitanteId;
+
+  if (formData.localId && !formData.local) {
+    const tempLocal = participantes.find(p => String(p.id) === String(formData.localId));
+    if (tempLocal) localTeamName = tempLocal.nombre;
+  }
+  if (formData.visitanteId && !formData.visitante) {
+    const tempVisitante = participantes.find(p => String(p.id) === String(formData.visitanteId));
+    if (tempVisitante) visitanteTeamName = tempVisitante.nombre;
+  }
+
+  const matchData = {
+    fecha: formData.fecha,
+    hora: formData.hora,
+    localId: localTeamId || null,
+    visitanteId: visitanteTeamId || null,
+    local: localTeamName || "Por determinar",
+    visitante: visitanteTeamName || "Por determinar",
+    bracketMatchId: String(selectedMatchSeed.id),
+  };
+
+  let actionType = ""; // <-- Mueve la declaración aquí
+  let partidoIdParaNovedad = formData.existingPartidoId;
+
+  try {
+    if (formData.existingPartidoId) {
+      actionType = "modificar";
+      const partidoRef = doc(db, `torneos/${torneoId}/calendario`, formData.existingPartidoId);
+      await updateDoc(partidoRef, matchData);
+    } else {
+      actionType = "crear";
+      const existingMatchForBracket = rawPartidos.find(p => String(p.bracketMatchId) === String(selectedMatchSeed.id));
+      if (existingMatchForBracket) {
+        partidoIdParaNovedad = existingMatchForBracket.id;
+        const partidoRef = doc(db, `torneos/${torneoId}/calendario`, existingMatchForBracket.id);
+        await updateDoc(partidoRef, matchData);
       } else {
         const newDocRef = await addDoc(collection(db, `torneos/${torneoId}/calendario`), {
-           ...matchData,
-           resultado: null,
-           createdAt: serverTimestamp()
+          ...matchData,
+          resultado: null,
+          createdAt: serverTimestamp()
         });
-        partidoIdCreado = newDocRef.id;
-        console.log("Partido creado para bracketMatchId:", selectedMatchSeed.id, "con ID de Firestore:", partidoIdCreado);
-        
-        await agregarNovedad(
-          torneoId,
-          `Nuevo partido programado desde llaves: ${matchData.local} vs ${matchData.visitante} para el ${matchData.fecha} a las ${matchData.hora} (Llave: ${matchData.bracketMatchId}).`,
-          'match_add',
-          { 
-            partidoId: partidoIdCreado, 
-            local: matchData.local, 
-            visitante: matchData.visitante, 
-            fecha: matchData.fecha, 
-            hora: matchData.hora,
-            bracketMatchId: matchData.bracketMatchId
-          }
-        );
+        partidoIdParaNovedad = newDocRef.id;
       }
-      closeModal('matchForm');
-    } catch (error) {
-      console.error("Error saving match:", error);
-      alert(`Error al ${formData.existingPartidoId ? 'modificar' : 'crear'} el partido.`);
     }
-  };
+    await agregarNovedad(
+      torneoId,
+      `Partido (Llave: ${matchData.bracketMatchId}) entre ${matchData.local} y ${matchData.visitante} ${actionType === 'crear' ? 'programado para' : 'actualizado a'} ${matchData.fecha} ${matchData.hora}.`,
+      actionType === 'crear' ? 'match_add' : 'match_schedule_update',
+      {
+        partidoId: partidoIdParaNovedad,
+        local: matchData.local,
+        visitante: matchData.visitante,
+        fecha: matchData.fecha,
+        hora: matchData.hora,
+        bracketMatchId: matchData.bracketMatchId
+      }
+    );
+    closeModal('matchForm');
+  } catch (error) {
+    console.error(`[Clasificacion.js] Error al ${actionType} el partido:`, error);
+    alert(`Error al ${actionType} el partido.`);
+  }
+};
 
-  const handleResultSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedResultPartido?.id || localScore === "" || visitanteScore === "") {
-      alert("Datos incompletos para guardar el resultado.");
-      return;
-    }
-    const score1 = parseInt(localScore, 10);
-    const score2 = parseInt(visitanteScore, 10);
+  // handleResultSubmit, handleBracketClick, handleModifyClick, handleAddResultClick,
+  // toggleViewMode, handleDownloadImage remain largely the same as your last correct version.
+  // Ensure their logging and data handling are robust as in the previous iteration.
+  // For brevity, I'll skip re-pasting them if they were correct in the prior step,
+  // but ensure they use the corrected 'participantes' state where needed for name lookups if any.
 
-    if (isNaN(score1) || isNaN(score2) || score1 < 0 || score2 < 0) {
-      alert("Puntajes inválidos.");
-      return;
-    }
-
-    const resultadoFinal = `${score1}-${score2}`;
-
-    try {
-      const partidoRef = doc(db, `torneos/${torneoId}/calendario`, selectedResultPartido.id);
-      await updateDoc(partidoRef, { resultado: resultadoFinal });
-      console.log("Resultado guardado para partido:", selectedResultPartido.id);
-
-      await agregarNovedad(
-        torneoId,
-        `Resultado actualizado para ${selectedResultPartido.local} vs ${selectedResultPartido.visitante}: ${resultadoFinal}. (Llave: ${selectedResultPartido.bracketMatchId || 'N/A'})`,
-        'match_result',
-        { 
-          partidoId: selectedResultPartido.id, 
-          local: selectedResultPartido.local, 
-          visitante: selectedResultPartido.visitante, 
-          resultado: resultadoFinal,
-          bracketMatchId: selectedResultPartido.bracketMatchId
+    const handleResultSubmit = async (e) => {
+        e.preventDefault();
+        if (!selectedResultPartido?.id || localScore === "" || visitanteScore === "") {
+        alert("Datos incompletos para guardar el resultado. Introduce ambos puntajes.");
+        return;
         }
-      );
-      closeModal('resultForm');
-    } catch (error) {
-      console.error("Error saving result:", error);
-      alert("Error al guardar el resultado.");
-    }
-  };
+        const score1 = parseInt(localScore, 10);
+        const score2 = parseInt(visitanteScore, 10);
 
-  const handleBracketClick = useCallback((seed) => {
-    const partido = rawPartidos.find(p => String(p.bracketMatchId) === String(seed.id));
-    if (partido) {
-      setSelectedMatchSeed(partido); 
-      openModal('info');
-    } else {
-      const localTeam = seed.teams?.[0];
-      const visitanteTeam = seed.teams?.[1];
-  
-      setSelectedMatchSeed(seed); 
-      setFormData({
-        ...initialFormData,
-        localId: localTeam?.id || "", 
-        visitanteId: visitanteTeam?.id || "", 
-        local: localTeam?.name || "Por determinar", 
-        visitante: visitanteTeam?.name || "Por determinar", 
-      });
-      openModal('matchForm');
-    }
-  }, [rawPartidos, openModal]);
-
-  const handleModifyClick = useCallback((seed) => {
-    const partido = rawPartidos.find(p => String(p.bracketMatchId) === String(seed.id) && p.id === seed.partidoId);
-    if (partido) {
-      setSelectedMatchSeed(seed); 
-      setFormData({
-        fecha: partido.fecha === "Por definir" ? "" : partido.fecha || "",
-        hora: partido.hora === "Por definir" ? "" : partido.hora || "",
-        localId: partido.localId || "",
-        visitanteId: partido.visitanteId || "",
-        local: partido.local || "", 
-        visitante: partido.visitante || "", 
-        existingPartidoId: partido.id 
-      });
-      openModal('matchForm');
-    } else {
-      console.warn("Modify clicked but no corresponding partido found for seed:", seed);
-      const localTeamDetails = participantes.find(p => p.id === String(seed.teams[0]?.id));
-      const visitanteTeamDetails = participantes.find(p => p.id === String(seed.teams[1]?.id));
-
-      setSelectedMatchSeed(seed);
-      setFormData({
-          ...initialFormData,
-          localId: seed.teams[0]?.id || "",
-          visitanteId: seed.teams[1]?.id || "",
-          local: localTeamDetails?.nombre || seed.teams[0]?.name || "Por determinar",
-          visitante: visitanteTeamDetails?.nombre || seed.teams[1]?.name || "Por determinar",
-          existingPartidoId: null 
-      });
-      openModal('matchForm');
-    }
-  }, [rawPartidos, openModal, participantes]);
-
-  const handleAddResultClick = useCallback(async (seed) => {
-    let partido = rawPartidos.find(p => String(p.bracketMatchId) === String(seed.id));
-    let partidoIdToUse = partido?.id;
-
-    if (!partido && seed.teams[0]?.id && seed.teams[1]?.id) {
-      const localTeamDetails = participantes.find(p => String(p.id) === String(seed.teams[0].id));
-      const visitanteTeamDetails = participantes.find(p => String(p.id) === String(seed.teams[1].id));
-
-      if (localTeamDetails && visitanteTeamDetails) {
+        if (isNaN(score1) || isNaN(score2) || score1 < 0 || score2 < 0) {
+        alert("Puntajes inválidos. Deben ser números no negativos.");
+        return;
+        }
+        if (score1 === score2 && tipoTorneo === 'torneo') {
+            alert("En torneos de eliminatoria, los empates no suelen ser válidos para avanzar. Determina un ganador.");
+            return;
+        }
+        const resultadoFinal = `${score1}-${score2}`;
         try {
-          const newPartidoData = {
-            fecha: "Por definir", hora: "Por definir",
-            localId: localTeamDetails.id, visitanteId: visitanteTeamDetails.id,
-            bracketMatchId: String(seed.id), local: localTeamDetails.nombre,
-            visitante: visitanteTeamDetails.nombre, resultado: null,
-            createdAt: serverTimestamp(),
-          };
-          const newPartidoRef = await addDoc(collection(db, `torneos/${torneoId}/calendario`), newPartidoData);
-          partidoIdToUse = newPartidoRef.id;
-          partido = { id: partidoIdToUse, ...newPartidoData };
-          console.log("Implicitly created partido for result entry:", partidoIdToUse);
-          await agregarNovedad(
-            torneoId,
-            `Partido (Llave: ${newPartidoData.bracketMatchId}) entre ${newPartidoData.local} y ${newPartidoData.visitante} definido y listo para resultado.`,
-            'match_add', 
-            { 
-              partidoId: partidoIdToUse, 
-              local: newPartidoData.local, 
-              visitante: newPartidoData.visitante,
-              bracketMatchId: newPartidoData.bracketMatchId
-            }
-          );
+        const partidoRef = doc(db, `torneos/${torneoId}/calendario`, selectedResultPartido.id);
+        await updateDoc(partidoRef, { resultado: resultadoFinal });
+        await agregarNovedad(torneoId, `Resultado actualizado para ${selectedResultPartido.local} vs ${selectedResultPartido.visitante}: ${resultadoFinal}. (Llave: ${selectedResultPartido.bracketMatchId || 'N/A'})`, 'match_result', { partidoId: selectedResultPartido.id, local: selectedResultPartido.local, visitante: selectedResultPartido.visitante, resultado: resultadoFinal, bracketMatchId: selectedResultPartido.bracketMatchId });
+        closeModal('resultForm');
         } catch (error) {
-          console.error("Error implicitly creating partido for result:", error);
-          alert("Error al preparar automáticamente el partido para el resultado."); return;
+        console.error("[Clasificacion.js] Error saving result:", error);
+        alert("Error al guardar el resultado.");
         }
-      } else {
-        console.error("Cannot implicitly create partido for result: Team details not found for IDs:", seed.teams[0]?.id, seed.teams[1]?.id);
-        alert("Error: No se encontraron los detalles de los equipos que avanzaron para preparar el partido."); return;
-      }
-    }
+    };
 
-    if (partido && partidoIdToUse) {
-      const finalPartidoObject = { 
-          ...partido, 
-          id: partidoIdToUse, 
-          bracketMatchId: partido.bracketMatchId || String(seed.id) 
-      };
-      setSelectedResultPartido(finalPartidoObject);
-      if (finalPartidoObject.resultado && finalPartidoObject.resultado.includes('-')) {
-        const [s1, s2] = finalPartidoObject.resultado.split('-');
-        setLocalScore(s1); setVisitanteScore(s2);
-      } else {
-        setLocalScore(""); setVisitanteScore("");
-      }
-      openModal('resultForm');
-    } else {
-      console.error("Cannot open result modal, partido object missing or incomplete for seed:", seed);
-      alert("No se pudo preparar el partido para añadir resultado. Asegúrate de que los equipos estén definidos.");
-    }
-  }, [rawPartidos, participantes, torneoId, openModal]);
+    const handleBracketClick = useCallback((seedFromLlaves) => {
+        const firestorePartido = rawPartidos.find(p => String(p.bracketMatchId) === String(seedFromLlaves.id));
+        if (firestorePartido) {
+        const combinedInfo = { ...seedFromLlaves, ...firestorePartido, id: firestorePartido.id, bracketMatchId: firestorePartido.bracketMatchId || String(seedFromLlaves.id), };
+        setSelectedMatchSeed(combinedInfo);
+        openModal('info');
+        } else {
+        const localTeamInSeed = seedFromLlaves.teams?.[0];
+        const visitanteTeamInSeed = seedFromLlaves.teams?.[1];
+        setSelectedMatchSeed(seedFromLlaves);
+        setFormData({ ...initialFormData, localId: localTeamInSeed?.id || "", visitanteId: visitanteTeamInSeed?.id || "", local: localTeamInSeed?.name || "Por determinar", visitante: visitanteTeamInSeed?.name || "Por determinar", existingPartidoId: null });
+        openModal('matchForm');
+        }
+    }, [rawPartidos, openModal]);
 
-  // --- NEW: View Mode and Download Functions ---
-  const toggleViewMode = () => {
-    setIsViewMode(!isViewMode);
-  };
+    const handleModifyClick = useCallback((seedFromLlaves) => {
+        const partidoEnFirestore = rawPartidos.find(p => p.id === seedFromLlaves.partidoId && String(p.bracketMatchId) === String(seedFromLlaves.id));
+        if (partidoEnFirestore) {
+        setSelectedMatchSeed(seedFromLlaves);
+        setFormData({ fecha: partidoEnFirestore.fecha === "Por definir" ? "" : partidoEnFirestore.fecha || "", hora: partidoEnFirestore.hora === "Por definir" ? "" : partidoEnFirestore.hora || "", localId: partidoEnFirestore.localId || seedFromLlaves.teams?.[0]?.id || "", visitanteId: partidoEnFirestore.visitanteId || seedFromLlaves.teams?.[1]?.id || "", local: partidoEnFirestore.local || seedFromLlaves.teams?.[0]?.name || "Por determinar", visitante: partidoEnFirestore.visitante || seedFromLlaves.teams?.[1]?.name || "Por determinar", existingPartidoId: partidoEnFirestore.id });
+        openModal('matchForm');
+        } else {
+        console.warn("[Clasificacion.js] Modify clicked, but no definitive partido found. Seed:", seedFromLlaves);
+        const localTeamInSeed = seedFromLlaves.teams?.[0];
+        const visitanteTeamInSeed = seedFromLlaves.teams?.[1];
+        setSelectedMatchSeed(seedFromLlaves);
+        setFormData({ ...initialFormData, localId: localTeamInSeed?.id || "", visitanteId: visitanteTeamInSeed?.id || "", local: localTeamInSeed?.name || "Por determinar", visitante: visitanteTeamInSeed?.name || "Por determinar", existingPartidoId: null });
+        openModal('matchForm');
+        }
+    }, [rawPartidos, openModal]);
 
-  const handleDownloadImage = async () => {
-   
-     const elementToCapture = contentRef.current;
-     if (elementToCapture && typeof html2canvas === 'function') { // Check if html2canvas is loaded
-     try {
-         const canvas = await html2canvas(elementToCapture, {
-           backgroundColor: tipoTorneo === "torneo" ? '#121212' : '#1e1e1e', // Match your background
-          scale: 2, // Increase scale for better resolution
-           useCORS: true, // If you have external images/fonts
-         });
-         const image = canvas.toDataURL("image/png");
-         const link = document.createElement("a");
-         link.href = image;
-         link.download = tipoTorneo === "torneo" ? "llaves_torneo.png" : "tabla_clasificacion.png";
-         document.body.appendChild(link);
-         link.click();
-         document.body.removeChild(link);
-       } catch (error) {
-         console.error("Error al generar la imagen:", error);
-         alert("Hubo un error al generar la imagen para descargar.");
-       }
-     } else if (!elementToCapture) {
-       alert("No hay contenido para descargar.");
-     } else {
+    const handleAddResultClick = useCallback(async (seedFromLlaves) => {
+        let partidoParaResultado = rawPartidos.find(p => String(p.bracketMatchId) === String(seedFromLlaves.id));
+        let firestoreDocIdToUse = partidoParaResultado?.id;
 
-     }
-  };
+        if (!partidoParaResultado && seedFromLlaves.teams?.[0]?.id && seedFromLlaves.teams?.[1]?.id) {
+        const localTeamName = seedFromLlaves.teams[0].name;
+        const visitanteTeamName = seedFromLlaves.teams[1].name;
+        if (localTeamName && visitanteTeamName && localTeamName !== "Por determinar" && visitanteTeamName !== "Por determinar") {
+            try {
+            const newPartidoData = { fecha: "Por definir", hora: "Por definir", localId: String(seedFromLlaves.teams[0].id), visitanteId: String(seedFromLlaves.teams[1].id), local: localTeamName, visitante: visitanteTeamName, bracketMatchId: String(seedFromLlaves.id), resultado: null, createdAt: serverTimestamp(), };
+            const newPartidoRef = await addDoc(collection(db, `torneos/${torneoId}/calendario`), newPartidoData);
+            firestoreDocIdToUse = newPartidoRef.id;
+            partidoParaResultado = { id: firestoreDocIdToUse, ...newPartidoData };
+            await agregarNovedad(torneoId, `Partido (Llave: ${newPartidoData.bracketMatchId}) entre ${newPartidoData.local} y ${newPartidoData.visitante} definido automáticamente y listo para resultado.`, 'match_auto_add', { partidoId: firestoreDocIdToUse, local: newPartidoData.local, visitante: newPartidoData.visitante, bracketMatchId: newPartidoData.bracketMatchId });
+            } catch (error) { console.error("[Clasificacion.js] Error implicitly creating partido for result:", error); alert("Error al preparar automáticamente el partido para el resultado."); return; }
+        } else { alert("Error: Los equipos para este partido de la llave aún no están completamente definidos ('Por determinar')."); return; }
+        } else if (!partidoParaResultado) { alert("Define los participantes y el horario de este partido en la llave antes de añadir un resultado."); return; }
 
+        if (partidoParaResultado && firestoreDocIdToUse) {
+        const finalPartidoObjectForModal = { ...seedFromLlaves, ...partidoParaResultado, id: firestoreDocIdToUse, bracketMatchId: partidoParaResultado.bracketMatchId || String(seedFromLlaves.id) };
+        setSelectedResultPartido(finalPartidoObjectForModal);
+        if (finalPartidoObjectForModal.resultado && finalPartidoObjectForModal.resultado.includes('-')) { const [s1, s2] = finalPartidoObjectForModal.resultado.split('-'); setLocalScore(s1); setVisitanteScore(s2); } else { setLocalScore(""); setVisitanteScore(""); }
+        openModal('resultForm');
+        } else { alert("No se pudo preparar el partido para añadir resultado."); }
+    }, [rawPartidos, torneoId, openModal, agregarNovedad]);
 
-  if (loading) return <div>Cargando información del torneo...</div>;
+    const toggleViewMode = () => setIsViewMode(!isViewMode);
 
-  // --- NEW: Conditional rendering for View Mode ---
+    const handleDownloadImage = async () => {
+        const elementToCapture = contentRef.current;
+        if (elementToCapture && typeof html2canvas === 'function') {
+        try {
+            const canvasBackgroundColor = tipoTorneo === "torneo" ? '#0c0c0c' : (isViewMode ? '#0c0c0c' : '#121212');
+            const canvas = await html2canvas(elementToCapture, { backgroundColor: canvasBackgroundColor, scale: 2, useCORS: true, });
+            const image = canvas.toDataURL("image/png", 1.0);
+            const link = document.createElement("a");
+            link.href = image;
+            link.download = tipoTorneo === "torneo" ? "llaves_torneo.png" : "tabla_clasificacion.png";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) { console.error("[Clasificacion.js] Error al generar la imagen:", error); alert("Hubo un error al generar la imagen."); }
+        } else if (!elementToCapture) { alert("No hay contenido para descargar."); }
+        else if (typeof html2canvas !== 'function') { alert("Librería html2canvas no cargada."); }
+    };
+
+  if (loading) return <div style={{ padding: '20px', textAlign: 'center', color: '#e0e0e0', fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>Cargando información del torneo...</div>;
+
   if (isViewMode) {
+    // ... View Mode JSX (remains the same)
+    const viewModeBackground = tipoTorneo === "torneo" ? '#0c0c0c' : '#0c0c0c';
     return (
-      <div className="clasificacion-view-mode">
-        <div ref={contentRef} className="clasificacion-view-mode-content">
+      <div className="clasificacion-view-mode" style={{ 
+  backgroundColor: viewModeBackground,
+  position: 'fixed', 
+  top: 0, 
+  left: 0, 
+  right: 0, 
+  bottom: 0,
+  overflow: 'hidden'
+}}>
+  <div ref={contentRef} className="clasificacion-view-mode-content" style={{
+    transform: 'scale(0.9)', // Ajusta este valor según necesidad
+    transformOrigin: 'top center',
+    width: '100%',
+    height: '100%',
+    padding: '20px',
+    boxSizing: 'border-box'
+  }}>
           {tipoTorneo === "torneo" && numParticipantes > 0 && (
             <Llaves
               numParticipantes={numParticipantes}
               rawPartidos={rawPartidos}
-              onMatchClick={() => {}} // No interactive in view mode
+              onMatchClick={() => {}}
               onModify={() => {}}
               onAddResult={() => {}}
+              isViewMode={true}
             />
           )}
           {tipoTorneo === "liga" && (
-            <Tabla rawPartidos={rawPartidos} participantes={participantes} />
+             <div className="tabla-wrapper-for-view-mode">
+                <Tabla rawPartidos={rawPartidos} participantes={participantes} isViewMode={true} />
+             </div>
           )}
         </div>
         <div className="clasificacion-view-mode-controls">
           <button onClick={toggleViewMode} className="view-mode-button" title="Salir de pantalla completa">
-            <FaEye />
+            <FaEye style={{ transform: 'scaleX(-1)' }} />
+          </button>
+          <button onClick={handleDownloadImage} className="download-button" title="Descargar imagen">
+            <FaDownload />
           </button>
         </div>
       </div>
     );
   }
 
+  // Determine conditions for the matchForm modal content
+  const isRound1 = selectedMatchSeed?.tournamentRoundText === "Ronda 1";
+  // Teams are considered "not set" if their IDs are missing from current formData
+  // (formData is populated from seed.teams when matchForm opens for a new match,
+  // or from Firestore partido when modifying).
+  const teamsNotSetInForm = !formData.localId || !formData.visitanteId;
+  // Allow team selection if it's Round 1, it's for a new Firestore entry, AND teams aren't already fully set in the form
+  const allowTeamSelectionForRound1 = isRound1 && !formData.existingPartidoId && teamsNotSetInForm;
+
+
   return (
     <div className="clasificacion-container">
-      <div ref={contentRef}> {/* Add ref here for download */}
+      <div ref={contentRef}>
         {tipoTorneo === "torneo" && numParticipantes > 0 && (
           <Llaves
             numParticipantes={numParticipantes}
@@ -494,12 +499,12 @@ function Clasificacion() {
             onAddResult={handleAddResultClick}
           />
         )}
-
-        {tipoTorneo === "liga" && <Tabla rawPartidos={rawPartidos} participantes={participantes}/>}
+        {tipoTorneo === "liga" && (
+            <Tabla rawPartidos={rawPartidos} participantes={participantes} />
+        )}
       </div>
-      
-      {/* --- NEW: Action Buttons Container --- */}
-      {(tipoTorneo === "torneo" && numParticipantes > 0) || tipoTorneo === "liga" ? (
+
+      {((tipoTorneo === "torneo" && numParticipantes > 0) || tipoTorneo === "liga") && !loading && (
         <div className="clasificacion-actions-container">
           <button onClick={toggleViewMode} className="view-mode-button" title="Ver en pantalla completa">
             <FaEye />
@@ -508,58 +513,158 @@ function Clasificacion() {
             <FaDownload />
           </button>
         </div>
-      ) : null}
+      )}
 
+      <ReactModal
+        isOpen={modalStates.matchForm}
+        onRequestClose={() => closeModal('matchForm')}
+        contentLabel="Definir o Modificar Partido de Llave"
+      >
+        <h3>{formData.existingPartidoId ? "Modificar Partido" : "Definir Partido"} (Llave: {selectedMatchSeed?.id || 'N/A'})</h3>
+        <form onSubmit={handleMatchSubmit}>
+            {allowTeamSelectionForRound1 ? (
+                <>
+                    <div className="form-group">
+                        <label htmlFor="localIdSelect">Local:</label>
+                        <select
+                            id="localIdSelect"
+                            name="localId"
+                            value={formData.localId}
+                            onChange={(e) => handleSelectChange(e, 'local')}
+                            required
+                            className="form-input"
+                        >
+                            <option value="">Seleccionar Equipo/Jugador</option>
+                            {availableParticipantsForDropdown.map(p => (
+                                <option key={`local-${p.id}`} value={p.id} disabled={p.id === formData.visitanteId}>
+                                    {p.nombre}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="visitanteIdSelect">Visitante:</label>
+                        <select
+                            id="visitanteIdSelect"
+                            name="visitanteId"
+                            value={formData.visitanteId}
+                            onChange={(e) => handleSelectChange(e, 'visitante')}
+                            required
+                            className="form-input"
+                        >
+                            <option value="">Seleccionar Equipo/Jugador</option>
+                            {availableParticipantsForDropdown.map(p => (
+                                <option key={`visitante-${p.id}`} value={p.id} disabled={p.id === formData.localId}>
+                                    {p.nombre}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="form-group">
+                        <label>Local:</label>
+                        <input type="text" value={formData.local || "Por determinar"} disabled className="form-input"/>
+                    </div>
+                    <div className="form-group">
+                        <label>Visitante:</label>
+                        <input type="text" value={formData.visitante || "Por determinar"} disabled className="form-input"/>
+                    </div>
+                </>
+            )}
 
-      {/* Modals (unchanged) */}
-      <ReactModal isOpen={modalStates.matchForm} onRequestClose={() => closeModal('matchForm')} contentLabel="Crear o Modificar Partido">
-        {/* ... form content ... */}
+            {/* Conditional Message */}
+            {!allowTeamSelectionForRound1 && !formData.existingPartidoId && (formData.local === "Por determinar" || formData.visitante === "Por determinar") && (
+                 <p style={{fontSize: '0.9em', color: '#ffc107', marginBottom: '1rem', textAlign: 'center'}}>
+                    Los equipos se asignarán automáticamente cuando avancen en las llaves.
+                    Este formulario define fecha y hora.
+                 </p>
+            )}
+            {allowTeamSelectionForRound1 && (
+                 <p style={{fontSize: '0.9em', color: '#abdda4', marginBottom: '1rem', textAlign: 'center'}}>
+                    Por favor, selecciona los equipos para este partido de Ronda 1.
+                 </p>
+            )}
+
+             <div className="form-group">
+                <label htmlFor="fecha">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" value={formData.fecha} onChange={handleFormChange} required className="form-input"/>
+            </div>
+            <div className="form-group">
+                <label htmlFor="hora">Hora:</label>
+                <input type="time" id="hora" name="hora" value={formData.hora} onChange={handleFormChange} required className="form-input"/>
+            </div>
+            <div className="modal-actions">
+                <button type="submit" className="form-button primary">{formData.existingPartidoId ? "Actualizar Partido" : "Guardar Partido"}</button>
+                <button type="button" onClick={() => closeModal('matchForm')} className="form-button secondary">Cancelar</button>
+            </div>
+        </form>
       </ReactModal>
 
-      <ReactModal isOpen={modalStates.resultForm} onRequestClose={() => closeModal('resultForm')} contentLabel="Añadir Resultado">
-        {/* ... form content ... */}
+      {/* resultForm Modal (remains the same) */}
+      <ReactModal
+          isOpen={modalStates.resultForm}
+          onRequestClose={() => closeModal('resultForm')}
+          contentLabel="Añadir/Modificar Resultado del Partido"
+      >
+        <h3>Resultado: {selectedResultPartido?.local || "?"} vs {selectedResultPartido?.visitante || "?"}</h3>
+        <p style={{textAlign: 'center', fontSize:'0.9em', color: '#aaa'}}>Llave: {selectedResultPartido?.bracketMatchId || selectedResultPartido?.id}</p>
+        <form onSubmit={handleResultSubmit}>
+            <div className="form-group">
+                <label htmlFor="localScore">{selectedResultPartido?.local || "Local"}:</label>
+                <input type="number" id="localScore" name="localScore" value={localScore} onChange={(e) => setLocalScore(e.target.value)} min="0" required  className="form-input"/>
+            </div>
+            <div className="form-group">
+                <label htmlFor="visitanteScore">{selectedResultPartido?.visitante || "Visitante"}:</label>
+                <input type="number" id="visitanteScore" name="visitanteScore" value={visitanteScore} onChange={(e) => setVisitanteScore(e.target.value)} min="0" required className="form-input"/>
+            </div>
+            {tipoTorneo === 'torneo' && localScore !== "" && visitanteScore !== "" && localScore === visitanteScore && (
+                <p style={{color: '#FF6D14', fontSize: '0.9em', textAlign: 'center'}}>Los empates no son válidos en eliminatorias.</p>
+            )}
+            <div className="modal-actions">
+                <button type="submit" className="form-button primary">Guardar Resultado</button>
+                <button type="button" onClick={() => closeModal('resultForm')} className="form-button secondary">Cancelar</button>
+            </div>
+        </form>
       </ReactModal>
 
-      <ReactModal isOpen={modalStates.info} onRequestClose={() => closeModal('info')} contentLabel="Información del Partido" className="ReactModal__Content info-modal">
+      {/* info Modal (remains the same) */}
+      <ReactModal
+        isOpen={modalStates.info}
+        onRequestClose={() => closeModal('info')}
+        contentLabel="Información del Partido"
+        className="ReactModal__Content info-modal"
+      >
          <h3>Información del Partido</h3>
-            {selectedMatchSeed && ( 
+            {selectedMatchSeed && (
               <>
-                <p>
-                  <strong>Local:</strong> {selectedMatchSeed.local || "?"}
-                  {selectedMatchSeed.resultado?.includes('-') ? ` (${selectedMatchSeed.resultado.split('-')[0]})` : ''}
-                </p>
-                <p>
-                  <strong>Visitante:</strong> {selectedMatchSeed.visitante || "?"}
-                  {selectedMatchSeed.resultado?.includes('-') ? ` (${selectedMatchSeed.resultado.split('-')[1]})` : ''}
-                </p>
-                {selectedMatchSeed.resultado && (
-                  <p><strong>Resultado:</strong> {selectedMatchSeed.resultado}</p>
-                )}
+                <p><strong>Local:</strong> {selectedMatchSeed.local || "Por determinar"} {selectedMatchSeed.resultado?.includes('-') ? ` (${selectedMatchSeed.resultado.split('-')[0]})` : ''} </p>
+                <p><strong>Visitante:</strong> {selectedMatchSeed.visitante || "Por determinar"} {selectedMatchSeed.resultado?.includes('-') ? ` (${selectedMatchSeed.resultado.split('-')[1]})` : ''} </p>
+                {selectedMatchSeed.resultado && (<p><strong>Resultado:</strong> {selectedMatchSeed.resultado}</p>)}
                 <p><strong>Fecha:</strong> {selectedMatchSeed.fecha || "Por definir"}</p>
                 <p><strong>Hora:</strong> {selectedMatchSeed.hora || "Por definir"}</p>
                 <hr/>
-                <p><small>ID Partido (Firestore): {selectedMatchSeed.id}</small></p>
-                <p><small>ID Casilla (Bracket): {selectedMatchSeed.bracketMatchId}</small></p>
+                <p><small>ID Casilla (Llave): {selectedMatchSeed.bracketMatchId || (typeof selectedMatchSeed.id === 'number' || selectedMatchSeed.id?.toString().startsWith('Partido') ? selectedMatchSeed.id : 'N/A')} </small></p>
+                {selectedMatchSeed.id && !(typeof selectedMatchSeed.id === 'number' || selectedMatchSeed.id?.toString().startsWith('Partido')) &&
+                    <p><small>ID Partido (BD): {selectedMatchSeed.id}</small></p>
+                }
+                {!selectedMatchSeed.id && selectedMatchSeed.partidoId &&
+                    <p><small>ID Partido (BD): {selectedMatchSeed.partidoId}</small></p>
+                }
+                {(!selectedMatchSeed.fecha || selectedMatchSeed.fecha === "Por definir") && (!rawPartidos.some(p => String(p.bracketMatchId) === String(selectedMatchSeed.bracketMatchId || selectedMatchSeed.id))) && (
+                    <p style={{color: '#FFC107', fontSize: '0.9em'}}>Este partido de la llave aún no tiene fecha/hora asignada. Haz clic en la llave para definirlo.</p>
+                )}
               </>
             )}
             <div className="modal-actions">
-                <button onClick={() => closeModal('info')} className="form-button secondary">Cerrar</button>
+                <button type="button" onClick={() => closeModal('info')} className="form-button secondary">Cerrar</button>
             </div>
       </ReactModal>
 
 
-      {!loading && tipoTorneo !== "torneo" && tipoTorneo !== "liga" && (
-        <div>
-          <h2>Clasificación</h2>
-          <p>Tipo de torneo no configurado o no reconocido.</p>
-        </div>
-      )}
-      {!loading && tipoTorneo === "torneo" && numParticipantes === 0 && (
-        <div>
-          <h2>Clasificación - Eliminatoria</h2>
-          <p>Configure un número de participantes (potencia de 2) en los ajustes del torneo para generar las llaves.</p>
-        </div>
-      )}
+      {!loading && tipoTorneo !== "torneo" && tipoTorneo !== "liga" && ( <div style={{ padding: '20px', textAlign: 'center', color: '#e0e0e0' }}> <h2>Clasificación</h2> <p>Tipo de torneo no configurado o no reconocido.</p> </div> )}
+      {!loading && tipoTorneo === "torneo" && numParticipantes === 0 && ( <div style={{ padding: '20px', textAlign: 'center', color: '#e0e0e0' }}> <h2>Clasificación - Eliminatoria</h2> <p>Para generar las llaves, el torneo debe tener un número de participantes que sea una potencia de 2. Configure el número de equipos en los ajustes.</p> </div> )}
     </div>
   );
 }

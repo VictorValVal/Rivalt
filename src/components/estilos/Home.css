@@ -4,7 +4,7 @@
 .home-banner {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Espacio entre logo y botón logout */
+    justify-content: space-between;
     padding: 0 1.5rem;
     background-color: #1e1e1e;
     border-bottom: 1px solid #333;
@@ -23,29 +23,50 @@
     flex-shrink: 0;
 }
 
-.user-info-home {
-    color: #E0E0E0;
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-align: center;
-    padding: 0 10px;
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0; /* Permite que los hijos usen overflow correctamente */
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    /* Posicionamiento opcional si se quiere centrado absoluto */
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    flex-shrink: 0;
+    border: 2px solid #FF6D14;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3a3a3a;
+    color: #eee;
 }
 
-.user-info-home span {
-
-    padding: 6px 12px;
-
-    color: #ffffff;
-    display: inline-block;
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
+.user-avatar-default {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* --- User Welcome Text styles (Desktop Only) --- */
+.user-welcome-text {
+  max-width: 160px; /* Ajusta este valor según tu diseño */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  color: white;
+}
+
+/* --- Logout Button Adaptations --- */
 .logout-button-home {
     padding: 8px 15px;
     font-size: 0.85rem;
@@ -69,13 +90,18 @@
 }
 
 .logout-button-home svg {
+    color: #FFFFFF;
     font-size: 1rem;
+}
+
+.logout-button-home .logout-text {
+    display: inline;
 }
 
 /* Botones flotantes principales (+ / ->) */
 .main-buttons {
     position: fixed;
-    top: calc(65px + 30px); /* Debajo del banner + margen */
+    top: calc(65px + 30px);
     right: 30px;
     display: flex;
     flex-direction: column;
@@ -109,9 +135,9 @@
 .card-grid-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px; /* Espacio entre tarjetas */
-    justify-content: center; /* Centra las tarjetas */
-    padding: 20px 0; /* Padding arriba/abajo */
+    gap: 30px;
+    justify-content: center;
+    padding: 20px 0;
 }
 
 /* Estilos para la nueva tarjeta (card-v2) */
@@ -149,7 +175,7 @@
     flex-direction: column;
     box-sizing: border-box;
     color: #e0e0e0;
-    border: 1px solid #333; /* Borde sutil */
+    border: 1px solid #333;
 }
 
 /* Cara Frontal */
@@ -169,39 +195,19 @@
     left: 15px;
     right: 15px;
     display: flex;
-    justify-content: space-between; /* Separa campana (izq) y papelera (der) si ambos están */
-    /* Si solo hay un icono y quieres que esté a la derecha (ej. papelera): */
-    /* justify-content: flex-end; */
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-start;
     z-index: 2;
-    pointer-events: none; /* Contenedor no interactivo */
+    pointer-events: none;
+    gap: 10px;
 }
 
-.card-v2-front-header-icons > * {
-    pointer-events: auto; /* Iconos sí son interactivos */
-}
-
-.notification-badge-card {
-    color: #FFD700;
-    font-size: 1.3rem;
-    animation: pulse-card 1.8s infinite ease-in-out;
-}
-
-@keyframes pulse-card {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.2); opacity: 1; }
-}
-
-.trash-icon-card { /* Estilo para la papelera en el frontal */
-    color: #888;
-    font-size: 1.2rem;
+.status-icon {
+    font-size: 1.5rem;
     transition: color 0.2s ease, transform 0.2s ease;
     cursor: pointer;
-}
-
-.trash-icon-card:hover {
-    color: #e74c3c;
-    transform: scale(1.1);
+    pointer-events: auto;
+    color: #FF6D14;
 }
 
 .card-v2-front-trophy {
@@ -219,7 +225,7 @@
     line-height: 1.3;
 }
 
-.card-v2-front-subtitle { /* Para el deporte en el frontal */
+.card-v2-front-subtitle {
     font-size: 0.95em;
     color: #aaaaaa;
     margin: 0;
@@ -260,7 +266,7 @@
     margin: 0;
     flex-grow: 1;
     overflow-y: auto;
-    max-height: calc(100% - 100px); /* Ajustar si la altura del título/footer cambia */
+    max-height: calc(100% - 100px);
 }
 
 /* Estilo para scrollbar */
@@ -280,7 +286,7 @@
     color: #FF6D14;
     margin-right: 10px;
     font-size: 1.1em;
-    min-width: 20px; /* Alineación */
+    min-width: 20px;
     text-align: center;
 }
 
@@ -296,7 +302,7 @@
     font-weight: 500;
 }
 
-.join-code-v2 { /* Estilo para el código de unión */
+.join-code-v2 {
     background-color: #1e1e1e;
     color: #FFC107;
     padding: 2px 6px;
@@ -328,4 +334,178 @@ main[style*="paddingTop: 80px"] {
   .card-v2-front-trophy { font-size: 4em; }
   .card-v2-back-title { font-size: 1.2em; }
   .card-v2-back-details li { font-size: 0.85em; }
+
+  .home-banner {
+    padding: 0 1rem;
+  }
+
+  .user-controls {
+    gap: 10px;
+  }
+  
+
+  .user-welcome-text {
+    display: none;
+  }
+
+  .logout-button-home {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* <-- Añade esto para centrar el icono */
+  }
+
+  .logout-button-home .logout-text {
+    display: none;
+  }
+
+  .logout-button-home .logout-icon {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+}
+/* components/estilos/Home.css */
+
+/* ... (existing styles for home-banner, user-controls, user-avatar, logout-button-home, card-grid-container, card-v2, etc.) ... */
+
+/* Botones flotantes principales (+ / ->) */
+.main-buttons {
+    position: fixed;
+    top: calc(65px + 30px); /* Default desktop position: below banner */
+    right: 30px;
+    display: flex;
+    flex-direction: column; /* Stacked by default on desktop */
+    gap: 15px;
+    z-index: 1001;
+}
+
+.main-buttons button { /* Styles for all buttons (add, join, and toggle) */
+    background-color: #FF6D14;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.main-buttons button:hover {
+    background-color: #E05A0B;
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Specific button styles */
+/* Hide the mobile toggle button on desktop */
+.main-buttons .toggle-button-mobile {
+    display: none;
+}
+
+/* Container for the Add and Join buttons (always visible on desktop) */
+.main-buttons .action-buttons-container {
+    display: flex;
+    flex-direction: column; /* Stack them */
+    gap: 15px; /* Match main-buttons gap */
+}
+
+
+/* --- Responsive Adjustments (Mobile) --- */
+@media (max-width: 768px) {
+  /* General responsive adjustments */
+  .card-grid-container { gap: 20px; }
+  .card-v2 { width: calc(50% - 20px); min-width: 280px; height: 300px; }
+  .card-v2-front-title { font-size: 1.4em; }
+  .card-v2-front-trophy { font-size: 4em; }
+  .card-v2-back-title { font-size: 1.2em; }
+  .card-v2-back-details li { font-size: 0.85em; }
+
+  .home-banner { padding: 0 1rem; }
+  .user-controls { gap: 10px; }
+  .user-welcome-text { display: none; } /* Hide welcome text on mobile */
+
+  .logout-button-home { /* Make logout button a circle icon */
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logout-button-home .logout-text { display: none; }
+  .logout-button-home .logout-icon { font-size: 1.2rem; margin: 0; }
+
+
+  /* Main Floating Buttons - Mobile specific positioning and layout */
+  .main-buttons {
+    top: auto; /* Override desktop top position */
+    bottom: 30px; /* Position at the bottom-right */
+    right: 20px; /* Slightly smaller right margin */
+    align-items: flex-end; /* Align items to the right edge */
+    flex-direction: column-reverse; /* Puts the toggle button below the action buttons */
+    gap: 10px; /* Smaller gap between buttons */
+  }
+
+  .main-buttons button { /* Smaller size for all floating buttons on mobile */
+      width: 50px;
+      height: 50px;
+      font-size: 22px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); /* Smaller shadow */
+  }
+
+  /* Make the toggle button visible on mobile */
+  .main-buttons .toggle-button-mobile {
+      display: flex; /* Show the toggle button */
+      width: 50px; /* Slightly larger for the primary toggle */
+      height: 50px;
+      font-size: 24px;
+      background-color: #FF6D14; /* Keep original color */
+      color: white;
+      border-radius: 50%;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      transition: transform 0.3s ease; /* For rotation animation */
+  }
+
+  /* Rotate the toggle button when the menu is active (open) */
+  .main-buttons.active .toggle-button-mobile {
+      transform: rotate(180deg); /* Arrow points up when open */
+  }
+  .main-buttons.active .toggle-button-mobile svg {
+      transform: rotate(180deg); /* Arrow points up when open */
+  }
+
+  /* Container for the Add and Join buttons - Hidden by default on mobile */
+  .main-buttons .action-buttons-container {
+      max-height: 0; /* Hide by setting max-height to 0 */
+      overflow: hidden; /* Hide overflow content */
+      opacity: 0; /* Start fully transparent */
+      transform: translateY(10px); /* Start slightly offset */
+      transition: max-height 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out; /* Smooth transition */
+      pointer-events: none; /* Disable clicks when hidden */
+      display: flex; /* Keep flex for column layout when visible */
+      flex-direction: column;
+      gap: 10px; /* Match main-buttons gap */
+  }
+
+  /* When main-buttons has the 'active' class, show the action buttons */
+  .main-buttons.active .action-buttons-container {
+      max-height: 200px; /* A value large enough to display buttons */
+      opacity: 1; /* Fully opaque */
+      transform: translateY(0); /* Return to original position */
+      pointer-events: auto; /* Enable clicks when visible */
+  }
 }
