@@ -11,37 +11,61 @@
     color: #E0E0E0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistent font */
     position: relative; /* For potential pseudo-elements or future animated shapes */
-    overflow-x: hidden;
+    overflow: hidden; /* <<< MODIFIED: ensure both overflows are hidden */
 }
 
-/* Optional: Animated background shapes (if you want to replicate from Main/Login) */
-/* Add .animated-shape .shape1-unirse, .shape2-unirse styles here if desired */
+/* --- NEW: Animated background shapes --- */
+.animated-shape {
+    position: absolute;
+    z-index: 1; /* Behind the form box */
+    pointer-events: none;
+    /* Base transition for general movements if you add JS-driven animation later */
+    /* transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); */
+}
 
-/* .unirse-torneo-main-title was not used in Unirse.js, removed from CSS */
+.shape1-unirse {
+  width: 55vw; /* Adjusted size */
+  height: 55vh;
+  top: -20vh;    /* Adjusted position */
+  left: -25vw;
+  background: radial-gradient(circle, rgba(255, 109, 20, 0.22) 0%, rgba(255, 109, 20, 0.08) 70%); /* Adjusted opacity */
+  border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%; /* Slightly different shape */
+  filter: blur(80px); 
+  transform: rotate(-15deg); /* Slight rotation */
+}
+
+.shape2-unirse {
+  width: 320px; /* Adjusted size */
+  height: 180px;
+  bottom: -5vh;  /* Adjusted position */
+  right: -10vw;
+  border-radius: 60% 40% 30% 70% / 55% 35% 65% 45%; /* Slightly different shape */
+  background-color: rgba(255, 109, 20, 0.18); /* Adjusted opacity */
+  filter: blur(95px); 
+  transform: rotate(25deg); /* Slight rotation */
+}
+
 
 .form-box-unirse { /* Renamed from .unirse-torneo-card */
     width: 100%;
     max-width: 580px; /* Slightly wider card */
-    background-color: rgba(30, 30, 30, 0.85); /* Darker, slightly transparent base for a subtle frosted glass effect */
-    backdrop-filter: blur(10px) saturate(150%); /* Frosted glass effect */
+    background-color: rgba(30, 30, 30, 0.85); 
+    backdrop-filter: blur(10px) saturate(150%); 
     -webkit-backdrop-filter: blur(10px) saturate(150%);
-    padding: 2.8rem 3rem; /* More padding */
-    border-radius: 12px; /* More rounded */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), /* Adjusted shadow for a slightly softer, more diffused look like Nuevo.css */
-                inset  0 1px 1px rgba(255, 255, 255, 0.05); /* Inner highlight for depth */
+    padding: 2.8rem 3rem; 
+    border-radius: 12px; 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 
+                inset  0 1px 1px rgba(255, 255, 255, 0.05); 
     display: flex;
     flex-direction: column;
-    gap: 2rem; /* Generous gap */
-    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Transition for hover (optional) */
+    gap: 2rem; 
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    position: relative; /* <<< NEW: Ensure form box can have a z-index */
+    z-index: 2;         /* <<< NEW: Make sure form box is above shapes */
 }
 
-/* Optional hover effect for the card */
-/* .form-box-unirse:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
-} */
-
+/* ... (rest of Unirse.css remains the same) ... */
 .form-box-unirse .form-title { /* Selector updated */
     font-size: 2rem;
     font-weight: 600;
@@ -215,11 +239,11 @@
 
 /* Messages */
 .info-message, .warning-message, .form-error-message, .form-success-message {
-    width: 100%;
     border-radius: 8px;
     text-align: center;
     font-size: 1rem;
-    margin-top: 0.8rem;
+    margin-top: 0.8rem; /* Adjusted from 1rem */
+    padding: 12px 18px;  /* Added padding */
     line-height: 1.6;
     border-left-width: 4px;
     border-top: 1px solid;

@@ -508,4 +508,177 @@ main[style*="paddingTop: 80px"] {
       transform: translateY(0); /* Return to original position */
       pointer-events: auto; /* Enable clicks when visible */
   }
+}/* components/estilos/Home.css */
+
+/* ... (otros estilos como .home-banner, .card-grid-container, etc. se mantienen) ... */
+/* components/estilos/Home.css */
+
+/* ... (otros estilos como .home-banner, .card-grid-container, etc. se mantienen) ... */
+
+.home-background-shapes-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
 }
+
+.home-animated-shape { /* Clase base para estilos comunes, pero sin la animación principal */
+    position: absolute;
+    border-radius: 50%;
+    /* background-color ya se define en las clases específicas .home-shape-X */
+    pointer-events: none;
+    /* La animación se definirá por cada shape individualmente */
+}
+
+.home-shape-1 {
+    width: 450px; /* Tamaño original */
+    height: 450px;
+    top: 5vh;    /* Posición inicial original */
+    left: 10vw;
+    background-color: rgba(255, 110, 20, 0.404);
+    filter: blur(90px); /* Ajusta el blur como prefieras */
+    animation: move-shape-1 45s ease-in-out infinite; /* Duración larga para movimientos amplios */
+    animation-delay: -3s; /* Retraso inicial */
+}
+
+.home-shape-2 {
+    width: 350px;
+    height: 350px;
+    bottom: 10vh; /* Posición inicial original */
+    right: 15vw;
+    background-color: rgba(255, 110, 20, 0.473);
+    filter: blur(100px);
+    animation: move-shape-2 50s ease-in-out infinite; /* Duración y animación diferentes */
+    animation-delay: -1s;
+}
+
+.home-shape-3 {
+    width: 250px;
+    height: 250px;
+    top: 50%;     /* Posición inicial original (centrada) */
+    left: 50%;
+    /* transform: translate(-50%, -50%); Ya no es necesario si el 0% de la animación lo resetea */
+    background-color: rgba(255, 110, 20, 0.404);
+    filter: blur(110px);
+    animation: move-shape-3 40s ease-in-out infinite; /* Duración y animación diferentes */
+    animation-delay: -5s;
+}
+
+/* --- Animaciones Individuales para cada Shape --- */
+
+/* Animación para .home-shape-1 (ej: recorre las esquinas) */
+@keyframes move-shape-1 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg); /* Punto de partida relativo a su pos inicial */
+    }
+    25% {
+        /* Mover hacia abajo a la derecha (relativo a su inicio en top-left) */
+        transform: translate(60vw, 70vh) scale(1.2) rotate(45deg);
+    }
+    50% {
+        /* Mover hacia arriba a la derecha */
+        transform: translate(70vw, -10vh) scale(0.9) rotate(-30deg);
+    }
+    75% {
+        /* Mover hacia abajo a la izquierda */
+        transform: translate(-5vw, 60vh) scale(1.1) rotate(20deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg); /* Volver al inicio */
+    }
+}
+
+/* Animación para .home-shape-2 (ej: un patrón diferente, empezando desde bottom-right) */
+@keyframes move-shape-2 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg); /* Punto de partida relativo a su pos inicial */
+    }
+    25% {
+        /* Mover hacia arriba a la izquierda (relativo a su inicio en bottom-right) */
+        transform: translate(-65vw, -75vh) scale(1.15) rotate(-25deg);
+    }
+    50% {
+        /* Mover hacia abajo a la izquierda */
+        transform: translate(-70vw, 15vh) scale(0.8) rotate(50deg);
+    }
+    75% {
+        /* Mover hacia arriba a la derecha */
+        transform: translate(10vw, -60vh) scale(1.2) rotate(-10deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg); /* Volver al inicio */
+    }
+}
+
+/* Animación para .home-shape-3 (ej: un movimiento más central y circular, empezando desde el centro) */
+@keyframes move-shape-3 {
+    0% {
+        /* Ajustamos el translate inicial para compensar el top:50% left:50% si no se usa el transform original */
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+    25% {
+        transform: translate(calc(-50% + 30vw), calc(-50% - 30vh)) scale(1.1) rotate(60deg);
+    }
+    50% {
+        transform: translate(calc(-50% - 25vw), calc(-50% + 20vh)) scale(0.9) rotate(-45deg);
+    }
+    75% {
+        transform: translate(calc(-50% + 10vw), calc(-50% + 35vh)) scale(1.05) rotate(30deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+}
+
+
+/* Ajust main content z-index if necessary */
+main[style*="paddingTop: 80px"] {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 40px;
+}
+
+
+/* --- Responsive Adjustments for Home Shapes --- */
+@media (max-width: 992px) {
+    .home-shape-1 { width: 400px; height: 400px; filter: blur(80px); }
+    .home-shape-2 { width: 300px; height: 300px; filter: blur(90px); }
+    .home-shape-3 { width: 200px; height: 200px; filter: blur(100px); }
+    /* Las animaciones usan vw/vh, por lo que se adaptarán, pero el tamaño de la shape cambia */
+}
+
+@media (max-width: 768px) {
+  .home-shape-1 {
+    width: 300px;
+    height: 300px;
+    filter: blur(70px);
+    /* Podrías considerar animaciones menos intensas en móvil si el rendimiento se ve afectado */
+  }
+  .home-shape-2 {
+    width: 250px;
+    height: 250px;
+    filter: blur(80px);
+  }
+  .home-shape-3 { /* Ocultar la tercera en pantallas más pequeñas si es demasiado */
+      display: none;
+  }
+}
+
+@media (max-width: 480px) {
+    .home-shape-1 {
+        width: 250px;
+        height: 250px;
+        filter: blur(60px);
+    }
+    .home-shape-2 { /* Ocultar o hacer aún más pequeña la segunda */
+        width: 180px;
+        height: 180px;
+        filter: blur(70px);
+    }
+}
+
+/* ... (resto de tus estilos de Home.css) ... */

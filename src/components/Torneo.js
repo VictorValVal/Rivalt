@@ -1,33 +1,49 @@
+// src/components/Torneo.js
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom"; // Añade useLocation
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth } from "firebase/auth"; // Ensure getAuth is imported correctly
 import { app } from "../firebase";
 import Informacion from "./Información";
 import Participantes from "./Participantes";
 import Calendario from "./Calendario";
 import Clasificacion from "./Clasificacion";
-import "./estilos/Torneo.css"; 
+import "./estilos/Torneo.css";
 import { FaInfoCircle, FaUsers, FaCalendarAlt, FaChartBar, FaQuestionCircle, FaExclamationTriangle, FaArrowLeft } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 const db = getFirestore(app);
-const auth = getAuth();
+const authInstance = getAuth(app); // Use a distinct name if auth is also from 'firebase/auth'
 
 function Torneo() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation(); // Hook para acceder al estado de navegación
+  const location = useLocation();
 
   const [componenteActivo, setComponenteActivo] = useState(null);
   const [tituloTorneo, setTituloTorneo] = useState("");
   const [hayNotificacionesInfoNoLeidas, setHayNotificacionesInfoNoLeidas] = useState(false);
+  const [creadorId, setCreadorId] = useState(null); // State to store creator ID
+  const [currentUserId, setCurrentUserId] = useState(null); // State for current user ID
+  const [isCreator, setIsCreator] = useState(false); // State to determine if current user is creator
+
+  useEffect(() => {
+    const unsubscribe = authInstance.onAuthStateChanged(user => {
+      if (user) {
+        setCurrentUserId(user.uid);
+      } else {
+        setCurrentUserId(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchTorneo = async () => {
       if (!id) {
-        console.error("No tournament ID provided.");
+        console.error("[Torneo.js] No tournament ID provided.");
         setTituloTorneo("Torneo no encontrado");
+        setCreadorId(null);
         return;
       }
       try {
@@ -35,35 +51,46 @@ function Torneo() {
         const torneoSnapshot = await getDoc(torneoRef);
 
         if (torneoSnapshot.exists()) {
-          setTituloTorneo(torneoSnapshot.data().titulo);
-          
-          // Leer el estado de la pestaña si viene de la navegación
+          const torneoData = torneoSnapshot.data();
+          setTituloTorneo(torneoData.titulo);
+          setCreadorId(torneoData.creadorId); // Set creatorId from fetched data
+
+          // Initial active component logic
           if (location.state?.activeTab && location.state?.fromDetails) {
             setComponenteActivo(location.state.activeTab);
-            // Limpiar el estado para que no afecte navegaciones futuras dentro de Torneo.js
-            navigate(location.pathname, { replace: true, state: {} }); 
+            navigate(location.pathname, { replace: true, state: {} });
           } else if (componenteActivo === null) {
             setComponenteActivo("componente1");
           }
         } else {
-          console.log("Torneo no encontrado");
+          console.log("[Torneo.js] Torneo no encontrado");
           setTituloTorneo("Torneo no encontrado");
+          setCreadorId(null);
           if (componenteActivo === null && !location.state?.activeTab) setComponenteActivo(null);
         }
       } catch (error) {
-          console.error("Error fetching tournament title:", error);
+          console.error("[Torneo.js] Error fetching tournament:", error);
           setTituloTorneo("Error al cargar");
+          setCreadorId(null);
           if (componenteActivo === null && !location.state?.activeTab) setComponenteActivo(null);
       }
     };
 
     fetchTorneo();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, location.state]); // Añadir location.state como dependencia
+  }, [id, location.state]);
+
+  useEffect(() => {
+    if (currentUserId && creadorId) {
+      setIsCreator(currentUserId === creadorId);
+    } else {
+      setIsCreator(false);
+    }
+  }, [currentUserId, creadorId]);
 
 
   const handleGoToHome = () => {
-    navigate("/home"); 
+    navigate("/home");
   };
 
   const handleUnreadInfoStatus = (status) => {
@@ -72,7 +99,7 @@ function Torneo() {
 
   const handleInformacionClick = () => {
     setComponenteActivo("componente1");
-    const currentUser = auth.currentUser;
+    const currentUser = authInstance.currentUser;
     if (currentUser && hayNotificacionesInfoNoLeidas) {
       const ultimaVisitaKey = `ultimaVisitaNovedades_${id}_${currentUser.uid}`;
       localStorage.setItem(ultimaVisitaKey, Date.now().toString());
@@ -80,17 +107,17 @@ function Torneo() {
     }
   };
 
-
   const renderComponente = () => {
     switch (componenteActivo) {
       case "componente1":
-        return <Informacion torneoId={id} onUnreadNovedadesChange={handleUnreadInfoStatus} />;
+        return <Informacion torneoId={id} onUnreadNovedadesChange={handleUnreadInfoStatus} isCreator={isCreator} currentUserId={currentUserId} />;
       case "participantes":
-        return <Participantes torneoId={id} />;
+        return <Participantes torneoId={id} isCreator={isCreator} />;
       case "calendario":
-        return <Calendario torneoId={id} />;
+        return <Calendario torneoId={id} isCreator={isCreator} />;
       case "clasificacion":
-        return <Clasificacion torneoId={id} />;
+        // Pass torneoId and isCreator to Clasificacion
+        return <Clasificacion torneoIdProp={id} isCreatorProp={isCreator} />;
       default:
         if (tituloTorneo === "Torneo no encontrado" || tituloTorneo === "Error al cargar") {
              return (
@@ -129,12 +156,12 @@ function Torneo() {
         <button
           onClick={handleGoToHome}
           title="Volver"
-          className="torneo-header-home-button" 
+          className="torneo-header-home-button"
         >
           <FaArrowLeft />
         </button>
         <span className="torneo-header-title">{tituloTorneo || "Cargando..."}</span>
-        <div style={{ width: '40px', height: '100%' }}></div> 
+        <div style={{ width: '40px', height: '100%' }}></div>
       </header>
       <main className="torneo-main">
         <nav className="vertical-sidebar">

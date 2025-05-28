@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { app } from "../firebase"; // Ajusta ruta si es necesario
-import { FaBell, FaSpinner, FaUserPlus, FaUserSlash, FaPlusSquare, FaClipboardList, FaTrashAlt, FaSignOutAlt } from "react-icons/fa";
+import { app } from "../firebase"; 
+import { FaBell,FaUsers, FaSpinner, FaUserPlus, FaUserSlash, FaPlusSquare, FaClipboardList, FaTrashAlt, FaSignOutAlt, FaEye } from "react-icons/fa"; // IMPORT FaEye
 
 const db = getFirestore(app);
-const auth = getAuth();
+const authInstance = getAuth(); // Use a different name to avoid conflict if auth is also from 'firebase/auth'
 
 function NovedadesSection({ torneoId, onUnreadStatusChange }) {
   const [novedades, setNovedades] = useState([]);
@@ -24,7 +24,7 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
     setErrorNovedades("");
     console.log(`[NovedadesSection.js] Suscribiéndose a novedades para torneoId: ${torneoId}`);
 
-    const currentUser = auth.currentUser;
+    const currentUser = authInstance.currentUser;
     console.log("[NovedadesSection.js] useEffect - currentUser:", currentUser ? currentUser.uid : "null", "TorneoID:", torneoId);
 
     const novedadesRef = collection(db, `torneos/${torneoId}/novedades`);
@@ -82,7 +82,7 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
 
 
   const formatNovedadTimestamp = (timestamp) => {
-    if (!timestamp || typeof timestamp.seconds !== 'number') { // Verificación más robusta
+    if (!timestamp || typeof timestamp.seconds !== 'number') { 
       console.warn(`[NovedadesSection.js] Timestamp inválido o sin propiedad .seconds numérica:`, timestamp);
       return "Fecha pendiente...";
     }
@@ -98,10 +98,13 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
   };
 
   const getNovedadIcon = (tipo) => {
-    // console.log(`[NovedadesSection.js] getNovedadIcon llamado con tipo: ${tipo}`); // Log para ver qué tipos se procesan
     switch (tipo) {
       case 'user_join':
         return <FaUserPlus style={{ color: '#2ecc71' }} title="Nuevo participante" />;
+      case 'team_join': // Icon for team joining
+        return <FaUsers style={{ color: '#3498db' }} title="Nuevo equipo" />; // Example icon
+      case 'spectator_join': // Icon for spectator joining
+        return <FaEye style={{ color: '#9b59b6' }} title="Nuevo espectador" />;
       case 'user_leave':
         return <FaUserSlash style={{ color: '#e74c3c' }} title="Participante salió/eliminado por creador" />;
       case 'user_self_leave':
@@ -139,16 +142,14 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
       ) : (
         <ul className="novedades-list">
           {novedades.map(novedad => {
-            // Log detallado de cada novedad antes de intentar renderizarla
             console.log("[NovedadesSection.js] Renderizando novedad:", { 
               id: novedad.id, 
               tipo: novedad.tipo, 
               mensaje: novedad.mensaje,
-              timestamp_obj: novedad.timestamp, // Loguea el objeto timestamp completo
-              dataExtra: novedad.dataExtra // Loguea dataExtra por si hay algo relevante
+              timestamp_obj: novedad.timestamp, 
+              dataExtra: novedad.dataExtra 
             });
             
-            // Comprobación adicional por si el mensaje es undefined o null
             const mensajeRenderizar = typeof novedad.mensaje === 'string' ? novedad.mensaje : "Mensaje no disponible";
 
             return (

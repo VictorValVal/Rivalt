@@ -1,0 +1,237 @@
+/* ==================================================
+   ESTILOS PROFESIONALES PARA EL FOOTER
+   ================================================== */
+
+.professional-footer {
+    background-color: #1c1c1c;
+    color: #a0a0a0;
+    padding: 3rem 2rem;
+    border-top: 3px solid #FF6D14;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 5;
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+.footer-top-section {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto 2.5rem auto;
+}
+
+.footer-brand-column {
+    flex-basis: 25%;
+    min-width: 200px;
+    /* El contenido se alineará a la izquierda por defecto en desktop */
+}
+
+.footer-brand-link {
+    display: flex; /* Mantenido como flex para alinear logo y texto */
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    /* Para centrar este bloque en móvil, su contenedor (.footer-brand-column) se encargará */
+}
+
+.footer-logo {
+    height: 35px;
+    width: auto;
+}
+
+.footer-brand-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.footer-links-container {
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 160px;
+    text-align: left;
+}
+
+.footer-column h4 {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-column ul li a {
+    color: #a0a0a0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-column ul li a:hover {
+    color: #FF6D14;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid #333;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #888;
+    text-align: left;
+}
+
+.social-media-icons {
+    display: flex;
+    gap: 1rem;
+    /* Se centrarán como bloque en móvil a través de su contenedor .footer-bottom */
+}
+
+.social-media-icons a {
+    color: #a0a0a0;
+    font-size: 1.3rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-media-icons a:hover {
+    color: #FF6D14;
+    transform: scale(1.1);
+}
+
+
+/* --- Ajustes de Responsividad para el Footer Profesional --- */
+@media (max-width: 992px) {
+    .footer-top-section {
+        flex-direction: column;
+        align-items: flex-start; /* Mantenemos a la izquierda para tabletas aún */
+    }
+
+    .footer-brand-column {
+        flex-basis: auto;
+        width: 100%;
+        margin-bottom: 1.5rem;
+         /* Aún no centramos aquí, esperamos a la vista móvil más pequeña */
+    }
+
+    .footer-links-container {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .professional-footer {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .footer-top-section {
+        flex-direction: column;
+        align-items: center; /* CAMBIO: Centra los bloques (.footer-brand-column y .footer-links-container) */
+    }
+
+    .footer-brand-column {
+        flex-basis: auto;
+        width: 100%; /* Ocupa el ancho para permitir centrar su contenido */
+        display: flex; /* Hacemos flex para centrar el .footer-brand-link */
+        justify-content: center; /* Centra el .footer-brand-link */
+        margin-bottom: 2rem; /* Aumentamos un poco el margen */
+    }
+    /* .footer-brand-link ya es display:flex y align-items:center, se centrará como un bloque */
+
+    .footer-links-container {
+       flex-direction: column;
+       align-items: center; /* CAMBIO: Centra las .footer-column */
+       gap: 2rem;
+       width: 100%; /* Asegura que ocupe el ancho para centrar las columnas */
+    }
+
+    .footer-column {
+        min-width: auto; /* Permitimos que se encoja si es necesario */
+        width: auto; /* Que el contenido defina el ancho, para que el text-align:center funcione bien */
+        max-width: 300px; /* Opcional: un ancho máximo para las columnas de texto si se vuelven muy anchas */
+        text-align: center; /* CAMBIO: Centra el texto dentro de cada columna */
+    }
+
+    .footer-column h4 {
+        text-align: center; /* CAMBIO: Centra los títulos de columna */
+    }
+
+    .footer-column ul {
+        text-align: center; /* CAMBIO: Centra los items de la lista */
+        /* Si los items de la lista son largos y quieres que el texto *dentro* del <li> se centre
+           pero el <li> en sí mismo no ocupe todo el ancho, se podría necesitar display:inline-block para los <li>
+           o ajustar el padding/margin de la ul si es necesario. */
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center; /* CAMBIO: Centra los items (párrafo y div de iconos) */
+        text-align: center; /* CAMBIO: Centra el texto dentro */
+        gap: 1.5rem;
+        padding-top: 1.5rem;
+    }
+
+    .footer-bottom p {
+        text-align: center; /* CAMBIO: Centra el texto del copyright */
+    }
+    /* .social-media-icons ya se centrará como bloque debido a align-items: center en .footer-bottom */
+}
+
+@media (max-width: 480px) {
+    .professional-footer {
+        padding: 2rem 1rem;
+    }
+    .footer-brand-name {
+        font-size: 1.3rem;
+    }
+    .footer-logo {
+        height: 30px;
+    }
+    /* Los estilos de centrado de 768px se heredan, pero puedes hacer ajustes finos aquí */
+    .footer-column h4 {
+        font-size: 0.95rem;
+    }
+    .footer-column ul li a {
+        font-size: 0.85rem;
+    }
+    .footer-bottom {
+        font-size: 0.8rem;
+    }
+    .social-media-icons a {
+        font-size: 1.2rem;
+    }
+}

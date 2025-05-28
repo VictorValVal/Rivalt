@@ -32,7 +32,6 @@
   color: #FFFFFF !important; /* */
   border: 1px solid #FF6D14 !important; /* */
   border-radius: 8px !important; /* */
-  padding: 12px !important; /* */
   box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important; /* */
   text-align: left !important; /* */
   position: relative !important; /* */
@@ -60,15 +59,15 @@
 
 /* Estilos para los equipos dentro de un enfrentamiento */
 .SeedTeam {
-  display: flex; /* */
-  justify-content: space-between; /* */
-  align-items: center; /* */
-  padding: 8px 0px; /* Reducido ligeramente el padding vertical para un look más compacto */ /* */
-  border-bottom: 1px solid #333333; /* */
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 8px 0px; 
+  border-bottom: 1px solid #ff0000; /* This is the line */
 }
 
 .SeedTeam:last-child {
-  border-bottom: none; /* */
+  border-bottom: none; /* This removes the line from the second team */
 }
 
 .team-name {
@@ -188,7 +187,7 @@ div[class*="bracket"] svg path, /* Si la clase del contenedor de bracket es din�
   }
 
   .SeedItem {
-    padding: 10px !important; /* */
+
     margin-bottom: 10px !important; /* */
   }
 
@@ -361,3 +360,84 @@ div[class*="bracket"] svg path, /* Si la clase del contenedor de bracket es din�
 .llaves-container.llaves-en-fullscreen-activo .mobile-round-navigation {
   display: none !important;
 }
+/* ===== Correcciones para móvil (más de 4 participantes) ===== */
+@media (max-width: 768px) {
+  /* Contenedor principal del bracket: permite scroll horizontal */
+  .llaves-container .bracket-content-wrapper {
+    overflow-x: auto !important;
+    padding-bottom: 20px; /* Espacio para el scroll */
+  }
+
+  /* Rondas: ancho mínimo basado en el número de participantes */
+  .llaves-container [class*="RoundContainer"] {
+    min-width: 180px !important; /* Ajusta según necesidad */
+    margin-right: 15px !important; /* Separación entre rondas */
+    flex-shrink: 0 !important; /* Evita que se encojan */
+  }
+
+  /* Partidos individuales (Seeds): evita compresión */
+  .llaves-container .sc-iMYVAi.jknKFS {
+    min-width: 150px !important; /* Fija un ancho mínimo */
+    width: auto !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Equipos: ajusta el padding para más participantes */
+  .llaves-container .teams-display-container {
+    padding-right: 60px !important; /* Más espacio para botones */
+  }
+
+  /* Botones de acción: asegura visibilidad */
+  .llaves-container .seed-actions {
+    right: 8px !important;
+    gap: 6px !important;
+  }
+}
+
+/* === Ajuste adicional para evitar herencia de width:100% === */
+.llaves-container .sc-aXZvQ.kZIziA > div {
+  width: max-content !important; /* Contenedor interno del bracket */
+}
+/* ========== CORRECCIONES PARA MÓVIL ========== */
+@media (max-width: 768px) {
+  /* Contenedor principal del bracket - Fuerza scroll horizontal */
+  .llaves-container .bracket-content-wrapper {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    max-width: 90vw !important;
+    padding-bottom: 15px;
+  }
+
+  /* Contenedor interno de react-brackets - Evita herencia de width */
+  .llaves-container .sc-aXZvQ.kZIziA {
+    width: max-content !important;
+    min-width: unset !important;
+    padding: 0 10px !important;
+  }
+
+  /* Rondas individuales - Ancho fijo para móvil */
+  .llaves-container [class*="RoundContainer"] {
+    width: 180px !important; /* Ancho fijo para todas las rondas */
+    min-width: unset !important;
+    margin-right: 10px !important;
+  }
+
+  /* Celdas de partidos (Seeds) - Tamaño consistente */
+  .llaves-container .sc-iMYVAi.jknKFS {
+    width: 160px !important; /* Ancho fijo para móvil */
+    min-width: unset !important;
+    margin: 5px 0 !important;
+    font-size: 12px !important;
+  }
+
+  /* Equipos - Ajuste de padding para evitar desbordamiento */
+  .llaves-container .teams-display-container {
+    padding-right: 50px !important;
+  }
+
+  /* Botones de acción - Posición compacta */
+  .llaves-container .seed-actions {
+    right: 5px !important;
+    transform: translateY(-50%) scale(0.9);
+  }
+} 

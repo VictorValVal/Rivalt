@@ -3,7 +3,6 @@
 .clasificacion-container {
   margin: 20px auto; /* Centrar contenedor si tiene max-width */
   max-width: 900px; /* O el ancho que prefieras */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Mantener o cambiar a fuente moderna */
   color: #E0E0E0; /* Texto claro por defecto */
   background-color: #1e1e1e; /* Fondo para el contenedor si es necesario */
   padding: 20px;

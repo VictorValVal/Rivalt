@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { app } from "../firebase";
 import EquipoForm from "./EquipoForm";
-import { FaEllipsisV, FaUser, FaTrash, FaUserPlus, FaSpinner, FaUserCircle } from "react-icons/fa"; // <--- ADDED FaUserCircle for default avatar
+import { FaEllipsisV, FaUser, FaTrash, FaUserPlus, FaSpinner, FaUserCircle } from "react-icons/fa";
 import "./estilos/Participantes.css";
 import { agregarNovedadConDebug } from "./utils/NovedadesUtils";
 
@@ -30,7 +30,6 @@ function Participantes() {
   const [mostrarEquipoForm, setMostrarEquipoForm] = useState(false);
   const [menuParticipante, setMenuParticipante] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // NEW STATE: To store details (photoURL, displayName) for individual participants
   const [individualParticipantDetails, setIndividualParticipantDetails] = useState({});
 
   useEffect(() => {
@@ -52,11 +51,9 @@ function Participantes() {
         if (isMounted) {
           if (torneoDoc.exists()) {
             const currentTorneoData = { id: torneoDoc.id, ...torneoDoc.data() };
-            setTorneo(currentTorneoData); // Set torneo first
+            setTorneo(currentTorneoData);
 
-            // --- NEW LOGIC: Fetch individual participant details if mode is individual ---
             if (currentTorneoData.modo === "individual" && Array.isArray(currentTorneoData.participantes)) {
-              // Filter UIDs that are strings (individual participants) and not already in state
               const UIDsToFetch = currentTorneoData.participantes.filter(uid =>
                 typeof uid === 'string' && !individualParticipantDetails[uid]
               );
@@ -86,7 +83,6 @@ function Participantes() {
                 setIndividualParticipantDetails(prev => ({ ...prev, ...newDetailsMap }));
               }
             }
-            // --- END NEW LOGIC ---
           } else {
             console.log("No se encontró el torneo con ID:", torneoId);
             setError("El torneo no existe o fue eliminado.");
@@ -127,7 +123,7 @@ function Participantes() {
       isMounted = false;
       unsubscribeAuth();
     };
-  }, [torneoId, individualParticipantDetails]); // individualParticipantDetails dependency helps re-fetch new UIDs that might appear
+  }, [torneoId, individualParticipantDetails]);
 
 
   const esCreador = useMemo(() => {
@@ -154,7 +150,9 @@ function Participantes() {
     if (!user || !torneo || estaInscritoElUsuarioActual) {
       return false;
     }
-    return !estaInscritoElUsuarioActual && (participantesArray.length || 0) < (torneo.numEquipos || Infinity);
+    // Asegurarse de que numEquipos existe y es un número antes de la comparación
+    const maxParticipantes = typeof torneo.numEquipos === 'number' ? torneo.numEquipos : Infinity;
+    return !estaInscritoElUsuarioActual && (participantesArray.length || 0) < maxParticipantes;
   }, [user, torneo, estaInscritoElUsuarioActual, participantesArray]);
 
 
@@ -416,11 +414,13 @@ function Participantes() {
       {botonInscripcionPrincipal}
 
       {mostrarEquipoForm && torneo.modo === "equipo" && (
-        <EquipoForm
-          onSubmit={handleInscripcionEquipoSubmit}
-          onCancel={() => { setMostrarEquipoForm(false); setError(""); }}
-          maxMiembros={torneo.maxMiembrosPorEquipo || 10}
-        />
+        <div className="equipo-form-container"> {/* Envolver EquipoForm en su contenedor */}
+          <EquipoForm
+            onSubmit={handleInscripcionEquipoSubmit}
+            onCancel={() => { setMostrarEquipoForm(false); setError(""); }}
+            maxMiembros={torneo.maxMiembrosPorEquipo || 10} // Asumiendo que tienes esta propiedad
+          />
+        </div>
       )}
 
       <h3>Participantes ({participantesArray.length} / {torneo.numEquipos || "Ilimitados"})</h3>
@@ -432,31 +432,30 @@ function Participantes() {
             const esObjEquipo = typeof participante === "object" && participante !== null && participante.capitan;
             let nombreMostrar = "Desconocido";
             let idParaMenuYAcciones = null;
-            let participantPhoto = null; // Variable for photo URL
-            let participantInitial = "?"; // Variable for default avatar initial (first letter of name/email)
+            let participantPhoto = null;
+            let participantInitial = "?";
 
             if (esObjEquipo) {
               nombreMostrar = participante.nombre || `Equipo (Cap: ${participante.capitan?.substring(0, 6)}...)`;
               idParaMenuYAcciones = participante.capitan;
-            } else if (typeof participante === 'string') { // It's an individual participant UID
+            } else if (typeof participante === 'string') {
               idParaMenuYAcciones = participante;
               const details = individualParticipantDetails[participante];
               if (details) {
                 nombreMostrar = details.displayName;
-                participantPhoto = details.photoURL || details.photoURL; // <-- Cambia aquí
+                participantPhoto = details.photoURL;
                 participantInitial = details.displayName
                   ? details.displayName.charAt(0).toUpperCase()
                   : (details.email ? details.email.charAt(0).toUpperCase() : "?");
               } else {
                 nombreMostrar = `Cargando... (${participante.substring(0, 6)}...)`;
-                // Use UID's first char as a temporary initial if no details yet
                 participantInitial = participante.charAt(0).toUpperCase();
               }
             }
 
             return (
               <li key={index} className={`participante-item ${esObjEquipo ? 'item-equipo' : 'item-individual'}`}>
-                {torneo.modo === "individual" && !esObjEquipo && ( // Show avatar only for individual mode participants
+                {torneo.modo === "individual" && !esObjEquipo && (
                   <div className="participante-avatar-container">
                     {typeof participantPhoto === "string" && participantPhoto.trim().length > 0 ? (
                       <img src={participantPhoto} alt={`Avatar de ${nombreMostrar}`} className="participante-avatar-img" />
@@ -466,41 +465,42 @@ function Participantes() {
                   </div>
                 )}
                 <span className="nombre-participante">{nombreMostrar}</span>
-                {(esCreador || (user && user.uid === idParaMenuYAcciones)) && (
-                  <div className="opciones-participante">
-                    <button
-                      className="boton-opciones"
-                      onClick={() => toggleMenuParticipante(index)}
-                      aria-label="Opciones del participante"
-                      disabled={isSubmitting && menuParticipante === index}
-                    >
-                      <FaEllipsisV />
-                    </button>
-                    {menuParticipante === index && (
-                      <div className="menu-desplegable">
+                {/* Mostrar el menú de opciones para todos los usuarios */}
+                <div className="opciones-participante">
+                  <button
+                    className="boton-opciones"
+                    onClick={() => toggleMenuParticipante(index)}
+                    aria-label="Opciones del participante"
+                    disabled={isSubmitting && menuParticipante === index}
+                  >
+                    <FaEllipsisV />
+                  </button>
+                  {menuParticipante === index && (
+                    <div className="menu-desplegable">
+                      <button
+                        className="menu-item"
+                        onClick={() => {
+                          handleVerDetalles(participante);
+                          setMenuParticipante(null);
+                        }}
+                        title="Ver perfil o detalles"
+                      >
+                        <FaUser /> Ver Detalles
+                      </button>
+                      {/* El botón de eliminar solo se muestra si el usuario actual es el creador */}
+                      {/* y no está intentando eliminarse a sí mismo (si es un participante individual) */}
+                      {esCreador && (user?.uid !== idParaMenuYAcciones || esObjEquipo) && (
                         <button
-                          className="menu-item"
-                          onClick={() => {
-                            handleVerDetalles(participante);
-                            setMenuParticipante(null);
-                          }}
-                          title="Ver perfil o detalles"
+                          className="menu-item eliminar"
+                          onClick={() => handleEliminarParticipante(participante)}
+                          title="Eliminar del torneo"
                         >
-                          <FaUser /> Ver Detalles
+                          <FaTrash /> Eliminar
                         </button>
-                        {esCreador && user.uid !== idParaMenuYAcciones && (
-                          <button
-                            className="menu-item eliminar"
-                            onClick={() => handleEliminarParticipante(participante)}
-                            title="Eliminar del torneo"
-                          >
-                            <FaTrash /> Eliminar
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
+                      )}
+                    </div>
+                  )}
+                </div>
               </li>
             );
           })}

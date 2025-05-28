@@ -1,0 +1,254 @@
+/* components/estilos/FAQ.css */
+
+/* Estilos generales del contenedor de la página FAQ */
+.faq-page-container {
+    background-color: #121212; /* Fondo principal oscuro */
+    color: #e0e0e0; /* Color de texto principal claro */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistencia con Torneo.css */
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 25px 30px;
+    border-radius: 12px;
+    /* Sombra similar a .contenido-bloque en Torneo.css o .info-section */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    border: 1px solid #1e1e1e; /* Un borde sutil si el fondo es el mismo que el body */
+}
+
+.faq-main-title {
+    text-align: center;
+    color: #FFFFFF; /* Texto blanco para el título principal */
+    font-size: 2.6em;
+    font-weight: 700; /* Consistente con h1/h2 en Main.css */
+    margin-bottom: 15px;
+    letter-spacing: 1px; /* Sutil espaciado como en Main.css */
+}
+
+.faq-intro {
+    text-align: center;
+    font-size: 1.1em;
+    color: #AAAAAA; /* Color de texto secundario */
+    margin-bottom: 35px;
+    line-height: 1.7;
+}
+
+/* Menú de Navegación de Categorías */
+.faq-category-menu {
+    margin-bottom: 45px;
+    padding: 20px 0;
+    border-top: 1px solid #333; /* Bordes sutiles como en Main.css/Torneo.css */
+    border-bottom: 1px solid #333;
+    text-align: center;
+}
+
+.faq-category-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 18px;
+}
+
+.faq-category-menu li a {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 6px; /* Bordes como .login-button */
+    background-color: rgba(42, 42, 42, 0.7); /* Similar a .info-features div */
+    color: #AAAAAA; /* Color de texto secundario */
+    border: 1px solid #555; /* Borde como .login-button */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    font-size: 0.9em;
+}
+
+.faq-category-menu li a:hover,
+.faq-category-menu li a:focus,
+.faq-category-menu li a.active-category { /* Clase para la categoría activa (opcional, requeriría JS) */
+    background-color: #FF6D14; /* Color de acento RIVALT */
+    color: #FFFFFF;
+    border-color: #FF6D14;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 109, 20, 0.25); /* Sombra con el color de acento */
+    outline: none;
+}
+
+/* Contenedor de la lista de FAQs */
+.faq-list-container {
+    margin-top: 20px;
+}
+
+.faq-category-section {
+    margin-bottom: 40px;
+    /* Ajusta este valor a la altura de tu header fijo + un pequeño margen */
+    scroll-margin-top: 80px; /* Asumiendo ~65px de header + margen */
+}
+
+.faq-category-title {
+    font-size: 1.9em;
+    color: #FFFFFF; /* Títulos de categoría en blanco */
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #FF6D14; /* Borde inferior con color de acento */
+    position: relative;
+}
+
+/* Estilos para cada item de pregunta/respuesta (FAQItem) */
+.faq-item {
+    border-bottom: 1px solid #333; /* Separador oscuro */
+    margin-bottom: 12px;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-question {
+    background-color: transparent;
+    color: #e0e0e0; /* Texto principal claro */
+    cursor: pointer;
+    padding: 18px 15px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 1.2em;
+    font-weight: 500;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px; /* Ligero redondeo para los items */
+}
+
+.faq-question:hover,
+.faq-question:focus {
+    background-color: #1e1e1e; /* Fondo sutil al hacer hover, como contenedores */
+    color: #FF6D14; /* Texto en color de acento al hacer hover */
+    outline: none;
+}
+
+.faq-icon {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #AAAAAA; /* Icono en color secundario */
+    transition: transform 0.3s ease, color 0.3s ease;
+    margin-left: 15px;
+}
+.faq-question:hover .faq-icon,
+.faq-question:focus .faq-icon,
+.faq-question[aria-expanded="true"] .faq-icon { /* Icono activo */
+    color: #FF6D14; /* Icono en color de acento */
+}
+
+.faq-icon.open {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    padding: 15px 20px 20px 20px;
+    background-color: #1e1e1e; /* Fondo para la respuesta, ligeramente diferenciado */
+    border-left: 3px solid #FF6D14; /* Borde izquierdo de acento */
+    font-size: 1em;
+    line-height: 1.75;
+    color: #AAAAAA; /* Texto de respuesta en color secundario */
+    animation: fadeIn 0.4s ease-out;
+    margin-top: 5px;
+    border-radius: 0 0 4px 4px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Media queries para responsividad (manteniendo la estructura anterior, ajustando colores si es necesario) */
+@media (max-width: 768px) {
+    .faq-page-container {
+        margin: 20px 10px; /* Menos margen en tablet */
+        padding: 20px 15px;
+    }
+
+    .faq-main-title {
+        font-size: 2.1em;
+    }
+    .faq-intro {
+        font-size: 1em;
+        margin-bottom: 25px;
+    }
+
+    .faq-category-menu {
+        padding: 15px 0;
+        margin-bottom: 35px;
+    }
+    .faq-category-menu ul {
+        gap: 10px;
+    }
+    .faq-category-menu li a {
+        padding: 8px 16px;
+        font-size: 0.85em;
+    }
+
+    .faq-category-title {
+        font-size: 1.6em;
+        scroll-margin-top: 70px;
+    }
+
+    .faq-question {
+        font-size: 1.1em;
+        padding: 16px 10px;
+    }
+
+    .faq-answer {
+        font-size: 0.95em;
+        line-height: 1.7;
+        background-color: #1a1a1a; /* Un poco más oscuro que el hover de la pregunta */
+    }
+}
+
+@media (max-width: 480px) {
+    .faq-page-container {
+        padding: 15px 10px;
+        margin: 15px 5px;
+        border-radius: 8px;
+    }
+    .faq-main-title {
+        font-size: 1.8em;
+    }
+    .faq-intro {
+        font-size: 0.95em;
+    }
+
+    .faq-category-menu ul {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .faq-category-menu li a {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        padding: 10px; /* Aumentar padding para mejor toque */
+    }
+
+    .faq-category-title {
+        font-size: 1.4em;
+        scroll-margin-top: 65px; /* Ajustar según altura del header en móvil */
+    }
+
+    .faq-question {
+        font-size: 1em;
+        padding: 15px 8px;
+    }
+    .faq-answer {
+        font-size: 0.9em;
+    }
+}

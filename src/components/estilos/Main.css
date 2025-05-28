@@ -173,6 +173,7 @@ html, body {
      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
 
+
 /* --- Formas de Fondo Reactivas --- */
 .animated-shape {
     position: absolute;
@@ -207,7 +208,6 @@ html, body {
 
 /* --- ESTILOS MEJORADOS para la Sección de Información --- */
 .info-section {
-    background: linear-gradient(150deg, #1a1a1a 0%, #161616 100%);
     color: #e0e0e0;
     padding: 6rem 2rem;
     text-align: center;
@@ -266,69 +266,81 @@ html, body {
     line-height: 1.7;
     max-width: 700px;
     margin: 0 auto 3.5rem auto;
-    color: #ffffff; /* Cambio para mayor contraste */
+    color: #ffffff; 
     position: relative;
     z-index: 10;
 }
+
+
+
+/* === Styles for Feature Cards (previously .info-features) === */
+/* Located within .basketball-promo-text-container */
 
 .info-features {
     display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
+    justify-content: center; /* This will center the cards in the available space */
+    gap: 1rem; /* Reduced gap between cards for a tighter fit */
+    flex-wrap: wrap; /* Allows wrapping if space is still insufficient or on smaller screens */
     margin-top: 2rem;
     position: relative;
     z-index: 10;
+    /* text-align: center; /* Optional: can help if block itself needs centering, but justify-content should handle items */
 }
 
-.info-features div {
-    background-color: rgba(42, 42, 42, 0.7);
-    padding: 1.8rem 2.2rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #d0d0d0;
-    border: 1px solid rgba(255, 109, 20, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    min-width: 220px;
-    text-align: center;
-    backdrop-filter: blur(3px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+.info-features div { /* This is each individual feature card/button */
+    background-color: rgba(42, 42, 42, 0.7); /* */
+    padding: 1.2rem 1rem; /* Adjusted padding: smaller left/right padding */
+    border-radius: 12px; /* */
+    font-size: 0.9rem; /* Slightly reduced font size to help with smaller card size */
+    font-weight: 500; /* */
+    color: #d0d0d0; /* */
+    border: 1px solid rgba(255, 109, 20, 0.15); /* */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; /* */
+    
+    display: flex; /* For internal layout of icon and text */ /* */
+    flex-direction: column; /* Keeps icon and text vertical within the card */ /* */
+    align-items: center; /* */
+    gap: 0.5rem; /* Reduced gap between icon and text inside the card */
+    
+    /* Sizing adjustments for horizontal layout: */
+    
+    flex-grow: 1;      /* Allows cards to grow and share extra space */
+    flex-shrink: 1;    /* Allows cards to shrink if necessary */
+    flex-basis: 140px; /* An ideal starting width before flexing */
+
+    text-align: center; /* */
+    backdrop-filter: blur(3px); /* */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* */
 }
 
-.info-features div:hover {
-    transform: translateY(-10px) scale(1.04);
-    background-color: rgba(255, 109, 20, 0.1);
-    border-color: rgba(255, 109, 20, 0.5);
-    box-shadow: 0 12px 30px rgba(255, 109, 20, 0.2), 0 0 15px rgba(255, 109, 20, 0.1);
-    color: #ffffff;
-}
-.info-features div:hover svg,
-.info-features div:hover i { /* Aplicar también a iconos <i> si los usas */
-    color: #ffffff; /* Cambia el color del icono al hacer hover */
-    transform: scale(1.1);
+.info-features div:hover { /* Styles from original .info-features div:hover */ /* */
+    transform: translateY(-10px) scale(1.04); /* */
+    background-color: rgba(255, 109, 20, 0.1); /* */
+    border-color: rgba(255, 109, 20, 0.5); /* */
+    box-shadow: 0 12px 30px rgba(255, 109, 20, 0.2), 0 0 15px rgba(255, 109, 20, 0.1); /* */
+    color: #ffffff; /* */
 }
 
-
-.info-features svg,
-.info-features i { /* Estilo general para SVG o <i> si los usas */
-    color: #FF6D14;
-    font-size: 2.2rem;
-    margin-bottom: 0.5rem;
-    transition: color 0.3s ease, transform 0.3s ease;
+.info-features div:hover svg, /* Styles from original .info-features div:hover svg, i */ /* */
+.info-features div:hover i { 
+    color: #ffffff;  /* */
+    transform: scale(1.1); /* */
 }
 
-/* --- Formas Naranjas Difuminadas (Ajustadas para visibilidad) --- */
+.info-features svg, /* Styles from original .info-features svg, i */ /* */
+.info-features i { 
+    color: #FF6D14; /* */
+    font-size: 2rem; /* Slightly adjusted icon size if needed */
+    margin-bottom: 0.5rem; /* */
+    transition: color 0.3s ease, transform 0.3s ease; /* */
+}
+
 .info-shape {
     position: absolute;
     border-radius: 50%;
-    background-color: rgba(255, 109, 20, 0.28); /* Aumentada la opacidad */
-    filter: blur(85px); /* Aumentado el desenfoque */
-    z-index: 1; /* Detrás del contenido pero visible */
+    background-color: rgba(255, 109, 20, 0.28); 
+    filter: blur(85px); 
+    z-index: 1; 
     pointer-events: none;
     animation: subtle-float 8s ease-in-out infinite alternate;
 }
@@ -369,9 +381,8 @@ html, body {
 /* === ESTILOS PARA LA NUEVA SECCIÓN DE PROMOCIÓN MÓVIL === */
 /* ================================================== */
 .mobile-promo-section {
-    background-color: #181818; /* Un fondo ligeramente diferente para distinguirla visualmente si se desea */
     color: #e0e0e0;
-    padding: 6rem 2rem; /* Aumentado el padding vertical */
+    padding: 6rem 2rem; 
     position: relative;
     overflow: hidden;
     z-index: 6;
@@ -387,23 +398,22 @@ html, body {
     transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
                 transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
                 filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                background-color 0.7s ease, /* Transición suave del color de fondo si cambia */
+                background-color 0.7s ease, 
                 visibility 0s linear 0.7s;
     visibility: hidden;
 }
 
-/* NUEVO: Línea superior animada para mobile-promo-section */
 .mobile-promo-section::before {
     content: '';
     position: absolute;
     top: 0;
-    right: 0; /* Comienza desde la derecha */
+    right: 0; 
     height: 3px;
-    width: 0; /* Comienza con ancho 0 */
+    width: 0; 
     background-color: #FF6D14;
     transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-    transition-delay: 0.4s; /* Retraso similar a info-section */
-    z-index: 7; /* Por encima del contenido de la sección pero debajo de elementos superpuestos globales */
+    transition-delay: 0.4s; 
+    z-index: 7; 
 }
 
 .mobile-promo-section.visible {
@@ -415,24 +425,24 @@ html, body {
 }
 
 .mobile-promo-section.visible::before {
-    width: 100%; /* Anima el ancho al 100% */
+    width: 100%; 
 }
 
 .mobile-promo-content {
     display: flex;
     align-items: center;
-    gap: 3rem; /* Espacio entre imagen y texto */
-    max-width: 1000px; /* Ancho máximo del contenido */
+    gap: 3rem; 
+    max-width: 1000px; 
     width: 100%;
     position: relative;
-    z-index: 10; /* Asegura que el contenido esté sobre las shapes y la línea */
+    z-index: 10; 
 }
 
 .mobile-promo-image-container {
     flex: 0 0 45%;
     max-width: 380px;
     opacity: 0;
-    transform: translateX(-30px); /* Animación de entrada para la imagen */
+    transform: translateX(-30px); 
     transition: opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s;
 }
 
@@ -445,14 +455,14 @@ html, body {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 8px; /* Opcional: bordes redondeados para la imagen */
+    border-radius: 8px; 
 }
 
 .mobile-promo-text-container {
     flex: 1;
     text-align: left;
     opacity: 0;
-    transform: translateX(30px); /* Animación de entrada para el texto */
+    transform: translateX(30px); 
     transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
 }
 .mobile-promo-section.visible .mobile-promo-text-container {
@@ -471,11 +481,10 @@ html, body {
 .mobile-promo-text-container p {
     font-size: 1.1rem;
     line-height: 1.7;
-    color: #ffffff; /* Mejor contraste */
-    margin-bottom: 1.5rem; /* Espacio antes del botón si lo hubiera */
+    color: #ffffff; 
+    margin-bottom: 1.5rem; 
 }
 
-/* Estilos para el botón de promoción móvil (si decides añadir uno) */
 .mobile-promo-text-container .form-button.promo-button {
     padding: 12px 30px;
     font-size: 1rem;
@@ -495,22 +504,20 @@ html, body {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
 
-
-/* NUEVO: Formas de fondo para la sección móvil */
 .mobile-promo-shape {
     position: absolute;
     border-radius: 50%;
-    background-color: rgba(255, 109, 20, 0.22); /* Opacidad ligeramente diferente para distinguirlas */
-    filter: blur(80px); /* Desenfoque similar */
-    z-index: 1; /* Detrás del contenido de la sección */
+    background-color: rgba(255, 109, 20, 0.22); 
+    filter: blur(80px); 
+    z-index: 1; 
     pointer-events: none;
-    animation: subtle-float-alt 9s ease-in-out infinite alternate; /* Animación ligeramente diferente */
+    animation: subtle-float-alt 9s ease-in-out infinite alternate; 
 }
 
 .mobile-promo-shape-1 {
     width: 350px;
     height: 350px;
-    top: -120px; /* Posiciones ajustadas */
+    top: -120px; 
     right: -90px;
     animation-delay: -1s;
 }
@@ -523,23 +530,199 @@ html, body {
     animation-delay: -3s;
 }
 
-/* Opcional: una tercera forma si se desea más densidad */
 .mobile-promo-shape-3 {
     width: 180px;
     height: 180px;
     top: 50%;
     left: 15%;
     transform: translateY(-50%);
-    animation-duration: 11s; /* Duración diferente */
+    animation-duration: 11s; 
     animation-delay: -4s;
-    background-color: rgba(255, 109, 20, 0.18); /* Aún más sutil */
+    background-color: rgba(255, 109, 20, 0.18); 
 }
 
 
-@keyframes subtle-float-alt { /* Animación ligeramente variada para las nuevas shapes */
+@keyframes subtle-float-alt { 
     0% { transform: translateY(0px) translateX(0px) scale(1); }
     50% { transform: translateY(10px) translateX(-15px) scale(1.03); }
     100% { transform: translateY(0px) translateX(0px) scale(1); }
+}
+
+
+/* ================================================== */
+/* === ESTILOS PARA LA NUEVA SECCIÓN DE BALONCESTO === */
+/* ================================================== */
+.basketball-promo-section {
+
+    color: #e0e0e0;
+    padding: 6rem 2rem;
+    position: relative; /* This is important for the ::before pseudo-element */
+    overflow: hidden; 
+    z-index: 7; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateY(60px) scale(0.98);
+    filter: blur(3px);
+    transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
+                transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
+                filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
+                visibility 0s linear 0.8s; 
+    visibility: hidden;
+    
+}
+
+.basketball-promo-section.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+
+
+.basketball-promo-content {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    gap: 1.2rem; /* REDUCIDO: Menos espacio entre texto e imagen */
+    max-width: 1300px; /* AUMENTADO: Más ancho total */
+    width: 100%;
+    position: relative;
+    z-index: 10; 
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.basketball-promo-text-container {
+    /* flex: 1 1 55%; OLD VALUE */
+    flex: 1 1 75%; /* MODIFIED: Increased basis to 65% to take more width */
+    text-align: left;
+    opacity: 0;
+    transform: translateX(-40px); 
+    transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s; 
+}
+/* .basketball-promo-section.visible .basketball-promo-text-container styles remain the same */
+
+
+.basketball-promo-image-container {
+    /* flex: 1 1 45%; OLD VALUE */
+    flex: 1 1 25%; /* MODIFIED: Decreased basis to 35% to take less width */
+    /* max-width: 400px; OLD VALUE */
+    max-width: 340px; /* MODIFIED: Slightly reduced max-width for the image container */
+    position: relative; 
+    opacity: 0;
+    transform: translateX(40px) scale(0.9); 
+    transition: opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s; 
+}
+.basketball-promo-section.visible .basketball-promo-text-container {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.basketball-promo-text-container h2 {
+    font-size: 2.5rem; 
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1.2rem;
+    line-height: 1.3;
+}
+
+.basketball-promo-text-container p {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: #c0c0c0; 
+    margin-bottom: 2rem; 
+}
+
+.basketball-promo-image-container {
+    flex: 1 1 45%;
+    max-width: 400px; 
+    position: relative; 
+    opacity: 0;
+    transform: translateX(40px) scale(0.9); 
+    transition: opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s; 
+}
+.basketball-promo-section.visible .basketball-promo-image-container {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+
+.basketball-player-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px; 
+    position: relative; 
+    z-index: 12; 
+}
+
+.basketball-promo-bg-shape {
+    position: absolute;
+    width: 800px;  
+    height: 400px; 
+    background-color: rgba(255, 110, 20, 0.788); 
+    border-radius: 40% 60% 70% 30% / 60% 30% 70% 40%; 
+    filter: blur(90px); 
+    z-index: 9; 
+    top: 50%;
+    right: -10%; 
+    transform: translate(20%, -50%) scale(0.8); 
+    opacity: 0;
+    transition: opacity 0.7s ease-out 0.6s, transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s; 
+}
+
+.basketball-promo-section.visible .basketball-promo-bg-shape {
+    opacity: 1;
+    transform: translate(0%, -50%) scale(1); 
+}
+
+/* --- ESTILOS PARA LA PELOTA DE BALONCESTO FLOTANTE --- */
+.basketball-floating-ball {
+    position: absolute;
+    top: -35px;      /* Más negativo para sobresalir más */
+    left: -35px;     /* Más negativo para sobresalir más */
+    width: 70px;
+    height: 70px;
+    color: #FF6D14;
+    z-index: 20;     /* Asegúrate de que esté por encima del fondo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 70px;
+    opacity: 0; 
+    transform: translate(0, 0) scale(1) rotate(-45deg); 
+    animation: 
+        appearBall 0.8s ease-out 0.7s forwards,   
+        simpleRotateBall 30s linear infinite 1.5s;
+}
+
+/* Keyframes para la rotación simple y continua */
+@keyframes simpleRotateBall {
+    0% {
+        /* El transform de rotación se aplicará aditivamente al transform final de 'appearBall'
+           si 'appearBall' también manipula 'rotate'. Para evitarlo, 'appearBall'
+           debería idealmente terminar en rotate(0deg) si la rotación continua empieza desde 0. */
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Keyframes para la animación de aparición de la pelota */
+@keyframes appearBall {
+    to {
+        opacity: 0.85;
+        /* La pelota aparecerá en su posición definida por top/left en .basketball-floating-ball */
+        transform: translate(0, 0) scale(1) rotate(0deg); 
+    }
 }
 
 
@@ -551,10 +734,10 @@ html, body {
     font-size: 0.9rem;
     color: #888;
     border-top: 1px solid #222;
-    margin-top: 0; /* Asegurar que no haya margen superior que cause espacios */
-    flex-shrink: 0; /* Para layouts flex, evita que se encoja */
-    z-index: 5; /* Por si acaso, para mantenerlo debajo de elementos flotantes */
-    position: relative; /* Para asegurar el z-index */
+    margin-top: 0; 
+    flex-shrink: 0; 
+    z-index: 5; 
+    position: relative; 
 }
 
 
@@ -565,16 +748,26 @@ html, body {
     .info-features div { min-width: 200px; padding: 1.5rem; }
     .info-shape-1 { width: 300px; height: 300px; top: -100px; left: -80px; }
     .info-shape-2 { width: 250px; height: 250px; bottom: -80px; right: -50px; }
-    .info-shape-3 { display: none; } /* Ocultar la tercera forma de info en pantallas medianas */
+    .info-shape-3 { display: none; } 
 
     .mobile-promo-section { padding: 5rem 1.5rem; }
     .mobile-promo-text-container h2 { font-size: 2.2rem; }
     .mobile-promo-image-container {
-        max-width: 320px; /* Ajustar si es necesario */
+        max-width: 320px; 
     }
     .mobile-promo-shape-1 { width: 300px; height: 300px; top: -100px; right: -70px;}
     .mobile-promo-shape-2 { width: 220px; height: 220px; bottom: -70px; left: -50px;}
     .mobile-promo-shape-3 { display: none; }
+
+    /* Ajustes responsivos para la sección de baloncesto */
+    .basketball-promo-section { padding: 5rem 1.5rem; }
+    .basketball-promo-text-container h2 { font-size: 2.2rem; }
+    .basketball-promo-image-container { max-width: 350px; }
+    .basketball-promo-bg-shape { width: 250px; height: 230px; filter: blur(70px); }
+    .basketball-floating-ball { 
+        width: 50px; height: 50px; font-size: 50px; 
+        top: -33%; left: -8%; 
+    }
 }
 
 @media (max-width: 768px) {
@@ -597,44 +790,97 @@ html, body {
 
     .mobile-promo-section { padding: 4rem 1rem; }
     .mobile-promo-content {
-        flex-direction: column; /* Stack vertical en móviles */
-        text-align: center; /* Centrar texto */
-        gap: 2.5rem; /* Espacio entre elementos */
+        flex-direction: column; 
+        text-align: center; 
+        gap: 2.5rem; 
     }
     .mobile-promo-image-container {
-        max-width: 280px; /* Ajustar tamaño de imagen para móviles */
-        margin: 0 auto; /* Centrar imagen */
-        /* Las animaciones de entrada ya no necesitan transform X al estar centrados */
+        max-width: 280px; 
+        margin: 0 auto; 
         transform: translateX(0); 
-        opacity: 1; /* Asegurar visibilidad si las transiciones se basaban en .visible */
+        opacity: 1; 
     }
     .mobile-promo-text-container {
         transform: translateX(0);
-        opacity: 1; /* Igual para el texto */
+        opacity: 1; 
         text-align: center;
     }
     .mobile-promo-text-container h2 { font-size: 2rem; }
     .mobile-promo-text-container p { font-size: 1rem; max-width: 500px; margin-left: auto; margin-right: auto;}
     .mobile-promo-shape-1 { width: 250px; height: 250px; top: -80px; right: -60px;}
     .mobile-promo-shape-2 { width: 180px; height: 180px; bottom: -60px; left: -40px;}
+
+    /* Ajustes responsivos para la sección de baloncesto */
+    .basketball-promo-section { padding: 4rem 1rem; }
+    .basketball-promo-content {
+        flex-direction: column-reverse; 
+        text-align: center;
+        gap: 2.5rem;
+    }
+    .basketball-promo-image-container {
+        max-width: 280px; 
+        margin: 0 auto;
+        /* El transform de entrada se maneja por la animación y la clase .visible */
+    }
+    .basketball-promo-text-container {
+        text-align: center;
+         /* El transform de entrada se maneja por la animación y la clase .visible */
+    }
+    .basketball-promo-text-container h2 { font-size: 2rem; }
+    .basketball-promo-text-container p { max-width: 500px; margin-left: auto; margin-right: auto;}
+
+    .basketball-promo-bg-shape {
+        width: 200px;
+        height: 180px;
+        top: 20%; 
+        right: 50%;
+        /* El transform se maneja por la animación y la clase .visible */
+    }
+     .basketball-floating-ball { 
+        width: 45px; height: 45px; font-size: 45px; 
+        top: -30%; 
+        left: 5%; 
+        /* El transform inicial se define en la clase base, y 'appearBallMobile' se encarga de la animación */
+        /* Si 'appearBallMobile' se define, debe usarse en la propiedad 'animation' para este breakpoint */
+        transform: translateX(-50%) translateY(10px) scale(0.5) rotate(-45deg); /* Estado inicial para appearBallMobile */
+        animation: 
+            appearBallMobile 0.8s ease-out 0.7s forwards,
+            simpleRotateBall 30s linear infinite 1.5s;
+    }
+    /* Keyframes para la animación de aparición de la pelota en móvil */
+    @keyframes appearBallMobile {
+        to {
+            opacity: 0.85;
+            transform: translateX(-50%) translateY(-20px) scale(1) rotate(0deg); /* Pelota "flota" encima y centrada */
+        }
+    }
 }
 
 @media (max-width: 480px) {
     .text-content h1 { font-size: 1.8rem; }
     .info-section { padding: 3rem 1rem; }
     .info-section h2 { font-size: 1.8rem; }
-    .info-features div { width: 100%; padding: 1.5rem 1rem; }
+    .info-features div { padding: 1.5rem 1rem; }
     .info-shape-1 { width: 200px; height: 200px; top: -50px; left: -40px; filter: blur(60px); background-color: rgba(255, 109, 20, 0.35); }
-    .info-shape-2 { display: none; } /* Ocultar la segunda forma de info en pantallas muy pequeñas */
+    .info-shape-2 { display: none; } 
 
     .mobile-promo-section { padding: 3rem 1rem; }
     .mobile-promo-image-container {
-         max-width: 240px; /* Imagen aún más pequeña */
+         max-width: 240px; 
     }
     .mobile-promo-text-container h2 { font-size: 1.8rem; }
     .mobile-promo-shape-1 { width: 200px; height: 200px; top: -60px; right: -40px;}
-    .mobile-promo-shape-2 { display: none; } /* Ocultar la segunda forma de móvil */
+    .mobile-promo-shape-2 { display: none; } 
 
+    /* Ajustes responsivos para la sección de baloncesto */
+    .basketball-promo-section { padding: 3rem 1rem; }
+    .basketball-promo-image-container { max-width: 240px; }
+    .basketball-promo-text-container h2 { font-size: 1.8rem; }
+    .basketball-promo-bg-shape { display: none; } 
+    .basketball-floating-ball { 
+        width: 40px; height: 40px; font-size: 40px; 
+        top: -10%; 
+    }
 }
 
 
@@ -682,25 +928,25 @@ html, body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 997; /* Asegurar que esté debajo de otros elementos UI importantes si es necesario */
+    z-index: 997; 
 }
 
 .screen-edge-glow-segment {
     position: fixed;
     background-color: rgba(255, 109, 20, 0.25);
-    box-shadow: 0 0 4px 0px rgba(255, 109, 20, 0.2); /* Sombra más sutil */
+    box-shadow: 0 0 4px 0px rgba(255, 109, 20, 0.2); 
     border-radius: 1px;
     pointer-events: none;
-    z-index: 998; /* Consistente con el contenedor */
+    z-index: 998; 
 }
 
 /* Media Query para pantallas pequeñas (ej. menos de 768px de ancho) */
 @media (max-width: 767.98px) {
   .flying-ball {
-    display: none; /* Oculta las pelotas voladoras */
+    display: none; 
   }
 
-  .localized-glow-container { /* Oculta el contenedor de los brillos */
+  .localized-glow-container { 
     display: none;
   }
 }

@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect, useRef, useCallback } from "react"; // Añadimos useCallback
+import React, { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { Bracket, Seed, SeedItem, SeedTeam } from "react-brackets";
-import { FaEdit, FaCheck } from "react-icons/fa"; // Eliminamos FaArrowLeft, FaArrowRight
+import { FaEdit, FaCheck } from "react-icons/fa";
 import "../components/estilos/Llaves.css"; // Confirmado que esta es la ruta correcta
 
-// --- Helper Functions (sin cambios) ---
+// --- Helper Functions (sin cambios del original que subiste) ---
 const generateBracketStructure = (numParticipantes) => {
   if (!numParticipantes || numParticipantes < 2 || !Number.isInteger(Math.log2(numParticipantes))) {
     console.error("generateBracketStructure: El número de participantes debe ser una potencia de 2.");
@@ -41,7 +41,7 @@ const generateBracketStructure = (numParticipantes) => {
 };
 
 // --- Components (CustomSeed) ---
-const CustomSeed = React.memo(({ seed, breakpoint, onClick, onModify, onAddResult }) => {
+const CustomSeed = React.memo(({ seed, breakpoint, onClick, onModify, onAddResult, isCreator }) => { // Añadida prop isCreator
   const homeTeam = seed.teams[0] || { name: "Por definir", score: undefined, id: null };
   const awayTeam = seed.teams[1] || { name: "Por determinar", score: undefined, id: null };
   const isVisuallyClickable = homeTeam.id || awayTeam.id || seed.partidoId;
@@ -61,14 +61,18 @@ const CustomSeed = React.memo(({ seed, breakpoint, onClick, onModify, onAddResul
     }
   }, [breakpoint]);
 
-  const seedStyles = { fontSize: "12px" };
+  const seedStyles = { fontSize: "12px" }; // Estilos para el componente Seed padre
   if (isMobileSeedView) {
-    seedStyles.minWidth = "150px";
+    seedStyles.minWidth = "150px"; // Esto se aplica a Seed, no a SeedItem directamente
   }
 
   return (
     <Seed mobileBreakpoint={breakpoint} style={seedStyles}>
-      <SeedItem style={{ cursor: isVisuallyClickable ? "pointer" : "default" }} onClick={() => onClick(seed)}>
+      <SeedItem
+        className="SeedItem" // <--- Aplicamos la clase CSS para que se estile desde Llaves.css
+        style={{ cursor: isVisuallyClickable ? "pointer" : "default" }} // Estilo de cursor dinámico se mantiene inline
+        onClick={() => onClick(seed)}
+      >
         <div className="teams-display-container">
           <SeedTeam style={{ backgroundColor: homeTeam.isWinner ? "rgba(255, 109, 20, 0.15)" : undefined }} className={homeTeam.isWinner ? "winner-team" : ""}>
             <div className="team-name">{homeTeam.name}</div>
@@ -79,7 +83,7 @@ const CustomSeed = React.memo(({ seed, breakpoint, onClick, onModify, onAddResul
             {awayTeam.score !== undefined && <div className="score">{awayTeam.score}</div>}
           </SeedTeam>
         </div>
-        {isReadyForActions && (
+        {isCreator && isReadyForActions && ( // Condicionado por isCreator
           <div className="seed-actions">
             {seed.partidoId && (<button className="modify-button" onClick={(e) => { e.stopPropagation(); onModify(seed); }}><FaEdit /></button>)}
             {needsResult && (<button className="add-result-button" onClick={(e) => { e.stopPropagation(); onAddResult(seed); }}><FaCheck /></button>)}
@@ -97,7 +101,8 @@ function Llaves({
   onMatchClick,
   onModify,
   onAddResult,
-  isFullScreenModeActive
+  isFullScreenModeActive,
+  isCreator // Añadida prop isCreator
 }) {
   const [isMobileView, setIsMobileView] = useState(false);
   const bracketContentWrapperRef = useRef(null);
@@ -125,9 +130,9 @@ function Llaves({
     let workingBracket = JSON.parse(JSON.stringify(initialBracketStructure));
     const matchesById = workingBracket.reduce((acc, match) => { acc[match.id] = match; return acc; }, {});
     const latestPartidosData = {};
-    rawPartidos.forEach(partido => { if (partido.bracketMatchId) { latestPartidosData[partido.bracketMatchId] = partido; } });
+    rawPartidos.forEach(partido => { if (partido.bracketMatchId) { latestPartidosData[String(partido.bracketMatchId)] = partido; } }); // Asegurar que bracketMatchId sea string para la clave
     workingBracket.forEach(match => {
-      const latestPartido = latestPartidosData[String(match.id)];
+      const latestPartido = latestPartidosData[String(match.id)]; // Usar String(match.id) para la búsqueda
       if (latestPartido) {
         match.partidoId = latestPartido.id;
         let score1, score2;
@@ -143,7 +148,14 @@ function Llaves({
           if (score1 > score2) match.teams[0].isWinner = true;
           else if (score2 > score1) match.teams[1].isWinner = true;
           else match.state = 'tied';
-        } else { match.state = 'scheduled'; }
+        } else { 
+            // Si no hay resultado, el estado depende de si los equipos están definidos
+            if (latestPartido.localId && latestPartido.visitanteId) {
+                match.state = 'scheduled'; // Equipos definidos, partido programado
+            } else {
+                match.state = 'pending'; // Equipos aún no definidos
+            }
+        }
       }
     });
     workingBracket.forEach(match => {
@@ -173,45 +185,63 @@ function Llaves({
 
   const roundsForBracket = useMemo(() => {
     if (Object.keys(bracketData).length === 0) return [];
-    // Ordenar las rondas si es necesario, ej. "Ronda 1", "Ronda 2", etc.
-    // Esta implementación asume que Object.entries devolverá las rondas en un orden razonable
-    // o que los títulos de ronda ya tienen un ordenamiento natural (como "Ronda 1", "Ronda 2"...)
-    return Object.entries(bracketData).map(([title, seeds]) => ({ title, seeds }));
+    return Object.entries(bracketData)
+        .sort(([titleA], [titleB]) => { // Asegurar orden de rondas
+            const numA = parseInt(titleA.split(" ")[1], 10);
+            const numB = parseInt(titleB.split(" ")[1], 10);
+            return numA - numB;
+        })
+        .map(([title, seeds]) => ({ title, seeds }));
   }, [bracketData]);
 
   const totalRounds = roundsForBracket.length;
 
   const updateVisibleRoundInfo = useCallback(() => {
     if (!isMobileView || !bracketContentWrapperRef.current || totalRounds === 0) {
+      setVisibleRoundInfo({ title: "", current: 0, total: 0 });
       return;
     }
 
     const scrollableElement = bracketContentWrapperRef.current;
-    const roundsContainerElement = scrollableElement.querySelector('.RoundsContainer'); // AÚN NECESITAS VERIFICAR ESTA CLASE
-
+    // Estas clases son las que usa react-brackets por defecto. Si cambian en una actualización de la lib, esto podría romperse.
+    const roundsContainerElement = scrollableElement.querySelector('.RoundsContainer'); 
+    
     if (roundsContainerElement) {
-      const roundElements = roundsContainerElement.querySelectorAll('.RoundContainer'); // Y ESTA CLASE
+      const roundElements = roundsContainerElement.querySelectorAll('.RoundContainer');
 
       if (roundElements && roundElements.length > 0) {
         const scrollLeft = scrollableElement.scrollLeft;
-        const scrollableWidth = scrollableElement.clientWidth;
-        const viewportCenter = scrollLeft + scrollableWidth / 2;
+        // const scrollableWidth = scrollableElement.clientWidth;
+        // const viewportCenter = scrollLeft + scrollableWidth / 2;
 
         let mostVisibleRoundIndex = 0;
-        let minDistanceToCenter = Infinity;
+        // let minDistanceToCenter = Infinity;
+
+        // Lógica simplificada: tomar la primera ronda visible desde la izquierda
+        // o la que esté más cerca del inicio del viewport
+        let bestMatch = { index: -1, visibleAmount: 0, position: Infinity };
 
         roundElements.forEach((roundDiv, index) => {
-          const roundOffsetLeftInScrollable = roundsContainerElement.offsetLeft + roundDiv.offsetLeft;
-          const roundWidth = roundDiv.offsetWidth;
-          const roundCenterInScrollable = roundOffsetLeftInScrollable + roundWidth / 2;
-          const distance = Math.abs(roundCenterInScrollable - viewportCenter);
+            const roundRect = roundDiv.getBoundingClientRect();
+            const scrollableRect = scrollableElement.getBoundingClientRect();
 
-          if (distance < minDistanceToCenter) {
-            minDistanceToCenter = distance;
-            mostVisibleRoundIndex = index;
-          }
+            // Calcular cuánto del roundDiv está visible dentro del scrollableElement
+            const visibleLeft = Math.max(roundRect.left, scrollableRect.left);
+            const visibleRight = Math.min(roundRect.right, scrollableRect.right);
+            const visibleWidth = visibleRight - visibleLeft;
+
+            if (visibleWidth > 0) { // Si al menos una parte es visible
+                if (visibleWidth > bestMatch.visibleAmount) { // Si es más visible que la anterior mejor
+                    bestMatch = { index, visibleAmount: visibleWidth, position: roundRect.left };
+                } else if (visibleWidth === bestMatch.visibleAmount && roundRect.left < bestMatch.position) {
+                    // Si es igual de visible, pero está más a la izquierda
+                    bestMatch = { index, visibleAmount: visibleWidth, position: roundRect.left };
+                }
+            }
         });
         
+        mostVisibleRoundIndex = bestMatch.index !== -1 ? bestMatch.index : 0; // Fallback a la primera ronda
+
         const currentRoundData = roundsForBracket[mostVisibleRoundIndex];
         if (currentRoundData) {
             setVisibleRoundInfo({
@@ -219,16 +249,22 @@ function Llaves({
                 current: mostVisibleRoundIndex + 1,
                 total: totalRounds,
             });
+        } else if (totalRounds > 0 && roundsForBracket[0]) { // Fallback si algo sale mal
+             setVisibleRoundInfo({
+                title: roundsForBracket[0].title,
+                current: 1,
+                total: totalRounds,
+            });
         }
       }
     }
-     animationFrameId.current = null; // Permite la siguiente actualización
+     animationFrameId.current = null; 
   }, [isMobileView, totalRounds, roundsForBracket]);
 
 
   useEffect(() => {
     const scrollableElement = bracketContentWrapperRef.current;
-    if (isMobileView && scrollableElement) {
+    if (isMobileView && scrollableElement && totalRounds > 0) { // Añadido totalRounds > 0
         const handleScroll = () => {
             if (animationFrameId.current) {
                 cancelAnimationFrame(animationFrameId.current);
@@ -237,7 +273,7 @@ function Llaves({
         };
         
         scrollableElement.addEventListener('scroll', handleScroll, { passive: true });
-        updateVisibleRoundInfo(); // Llama una vez al montar/cambiar vista para estado inicial
+        updateVisibleRoundInfo(); 
 
         return () => {
             scrollableElement.removeEventListener('scroll', handleScroll);
@@ -245,20 +281,29 @@ function Llaves({
                 cancelAnimationFrame(animationFrameId.current);
             }
         };
+    } else if (!isMobileView || totalRounds === 0) { // Limpiar si no es vista móvil o no hay rondas
+        setVisibleRoundInfo({ title: "", current: 0, total: 0 });
     }
-  }, [isMobileView, updateVisibleRoundInfo]);
+  }, [isMobileView, updateVisibleRoundInfo, totalRounds]); // Añadida totalRounds a dependencias
 
 
   const renderContent = () => {
     if (numParticipantes > 0 && !initialBracketStructure.length) { return <p>Número de participantes inválido. Debe ser una potencia de 2.</p>; }
     if (!initialBracketStructure.length && numParticipantes === 0) { return <p>Esperando datos para generar el esquema.</p>; }
     if (!initialBracketStructure.length) { return <p>No se pudo generar la estructura del bracket.</p>; }
-    if (Object.keys(bracketData).length > 0) {
+    
+    if (roundsForBracket.length > 0) {
       return (
         <Bracket
-          rounds={roundsForBracket} // Usamos el array de rondas ya procesado
+          rounds={roundsForBracket} 
           renderSeedComponent={(props) => (
-            <CustomSeed {...props} onClick={onMatchClick} onModify={onModify} onAddResult={onAddResult} />
+            <CustomSeed 
+              {...props} 
+              onClick={onMatchClick} 
+              onModify={onModify} 
+              onAddResult={onAddResult}
+              isCreator={isCreator} // Pasar isCreator
+            />
           )}
         />
       );
@@ -270,12 +315,9 @@ function Llaves({
 
   return (
     <div className={containerClassName}>
-      {/* Ya no hay botones de navegación de ronda aquí */}
       <div className="bracket-content-wrapper" ref={bracketContentWrapperRef}>
         {renderContent()}
       </div>
-
-      {/* Nuevo indicador de scroll y ronda actual para móvil */}
       {isMobileView && totalRounds > 0 && (
         <div className="mobile-scroll-indicator">
           <span className="scroll-hint-text">‹ Desliza para ver rondas ›</span>

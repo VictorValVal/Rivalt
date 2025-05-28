@@ -1,0 +1,57 @@
+/* estilos/Legales.css */
+.legal-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 40px auto; /* Aumentado el margen superior e inferior */
+  background-color: #1F1F1F; /* Un fondo ligeramente gris para destacar el contenido (NO es blanco) */
+  border-radius: 8px; /* Bordes redondeados para suavizar */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para dar profundidad */
+  color: #DADADA;
+}
+
+.legal-container h1 {
+  color: #ffffff; /* Color oscuro para el título principal */
+  text-align: center;
+  margin-bottom: 30px; /* Más espacio debajo del título */
+  border-bottom: 2px solid #e0e0e0; /* Línea separadora sutil */
+  padding-bottom: 15px; /* Espacio para la línea separadora */
+}
+
+.legal-container h2 {
+  color: #FF6D14; /* NARANJA CORRECTO */
+  margin-top: 30px; /* Espacio antes de los subtítulos */
+  margin-bottom: 15px;
+}
+
+.legal-text {
+  line-height: 1.8; /* Mayor interlineado para facilitar la lectura */
+  color: #555; /* Color de texto ligeramente más suave que el negro puro */
+  text-align: justify; /* Texto justificado para un aspecto más formal */
+}
+
+.legal-text p {
+  margin-bottom: 15px; /* Espacio entre párrafos */
+}
+
+.legal-text strong {
+  color: #333; /* Destacar los elementos strong */
+}
+
+/* Botón de "Volver" o similar */
+.btn-volver {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 12px 25px;
+  background-color: #FF6D14; /* NARANJA CORRECTO */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-volver:hover {
+  background-color: #e05a0f; /* Un tono de NARANJA CORRECTO más oscuro para el hover (ajustado desde #FF6D14) */
+}

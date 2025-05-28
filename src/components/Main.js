@@ -4,26 +4,30 @@ import { useNavigate } from "react-router-dom";
 import "./estilos/Main.css";
 import logoRivalt from "../img/logoRivaltN.png";
 import imagenPrincipal from '../img/laptop.png';
-import phoneImage from '../img/phone.png'; // Asegúrate de que la ruta sea correcta
+import phoneImage from '../img/phone.png';
+import JugadorBaloncestoPNG from '../img/JugadorBaloncesto.png';
 import {
   FaFutbol,
   FaBasketballBall,
-  FaGolfBall,
   FaFootballBall,
   FaBaseballBall,
   FaVolleyballBall,
-  FaRegLightbulb, // Icono para "Crea"
-  FaUserCog, // Icono para "Gestiona"
-  FaChartLine // Icono para "Resultados"
+  FaRegLightbulb, 
+  FaUserCog, 
+  FaChartLine 
 } from 'react-icons/fa';
+import Footer from './Footer';
 
-
-// ... (constantes y lógica de las pelotas y glow como estaban)
+// Constants for ball animations and glow effects (unchanged)
 const RIVALT_ORANGE_RGB = '255, 109, 20';
-
-// --- Configuración Pelota de Tenis ---
 const TENNIS_BALL_ICON = FaBaseballBall;
 const TENNIS_BALL_SIZE = 28;
+const OTHER_BALL_TYPES = [
+  { id: 'soccer', IconComponent: FaFutbol, size: 40, weight: 1.0 },
+  { id: 'basketball', IconComponent: FaBasketballBall, size: 45, weight: 1.2 },
+  { id: 'rugby', IconComponent: FaFootballBall, size: 40, weight: 1.1 },
+  { id: 'volleyball', IconComponent: FaVolleyballBall, size: 38, weight: 0.9 },
+];
 const TENNIS_BALL_WEIGHT = 0.3;
 const TENNIS_GRAVITY = 0.6;
 const TENNIS_BOUNCE_DAMPING = 0.75;
@@ -31,41 +35,33 @@ const TENNIS_GROUND_Y_PERCENT = 0.85;
 const TENNIS_HORIZONTAL_SPEED_FACTOR = 13.5;
 const TENNIS_INITIAL_VERTICAL_FACTOR = 4.5;
 
-// --- Configuración Pelotas Aleatorias ---
-const OTHER_BALL_TYPES = [
-  { id: 'soccer', IconComponent: FaFutbol, size: 40, weight: 1.0 },
-  { id: 'basketball', IconComponent: FaBasketballBall, size: 45, weight: 1.2 },
-  { id: 'rugby', IconComponent: FaFootballBall, size: 40, weight: 1.1 },
-  { id: 'volleyball', IconComponent: FaVolleyballBall, size: 38, weight: 0.9 },
-];
 const OTHER_SPAWN_INTERVAL = 4000;
 const OTHER_GRAVITY = 0.015;
 const MAX_OTHER_BALLS_ON_SCREEN = 3;
 
-// Glow effect configuration
 const GLOW_EDGE_THRESHOLD_PERCENT = 7;
-const GLOW_DURATION_MS = 300; // Duración del brillo
+const GLOW_DURATION_MS = 300;
 const GLOW_LENGTH_PX = 80;
 const GLOW_THICKNESS_PX = 2;
 
-// Nuevas constantes para la intensidad del brillo
 const WALL_GLOW_BASE_ALPHA = 0.25;
 const WALL_GLOW_SHADOW_ALPHA = 0.2;
 const WALL_GLOW_SHADOW_BLUR = '4px';
 const WALL_GLOW_SHADOW_SPREAD = '0px';
 
-const BOUNCE_GLOW_BASE_ALPHA = 0.7; // Más opaco para el bote
-const BOUNCE_GLOW_SHADOW_ALPHA = 0.6; // Sombra más opaca
-const BOUNCE_GLOW_SHADOW_BLUR = '12px'; // Sombra más difusa y grande
-const BOUNCE_GLOW_SHADOW_SPREAD = '3px'; // Sombra más extendida
+const BOUNCE_GLOW_BASE_ALPHA = 0.7;
+const BOUNCE_GLOW_SHADOW_ALPHA = 0.6;
+const BOUNCE_GLOW_SHADOW_BLUR = '12px';
+const BOUNCE_GLOW_SHADOW_SPREAD = '3px';
 
 
 function Main() {
   const navigate = useNavigate();
   const shape1Ref = useRef(null);
   const shape2Ref = useRef(null);
-  const infoSectionRef = useRef(null);
+  // infoSectionRef is removed
   const mobilePromoSectionRef = useRef(null);
+  const basketballPromoSectionRef = useRef(null); 
 
   const [tennisBall, setTennisBall] = useState(null);
   const [randomOtherBalls, setRandomOtherBalls] = useState([]);
@@ -98,18 +94,21 @@ function Main() {
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
 
-    const observerOptions = { threshold: 0.1 }; // Umbral para que se active la animación
+    const observerOptions = { threshold: 0.1 }; 
 
     const observerCallback = (entries) => {
       entries.forEach(entry => {
-        // El navegador gestionará la animación CSS via la clase 'visible'
         entry.target.classList.toggle("visible", entry.isIntersecting);
       });
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-    const sectionsToObserve = [infoSectionRef.current, mobilePromoSectionRef.current];
+    // infoSectionRef.current removed from this array
+    const sectionsToObserve = [
+        mobilePromoSectionRef.current,
+        basketballPromoSectionRef.current 
+    ];
     sectionsToObserve.forEach(section => {
       if (section) {
         observer.observe(section);
@@ -124,11 +123,11 @@ function Main() {
         }
       });
     };
-  }, [handleMouseMove]); // handleMouseMove no cambia, pero es buena práctica listarlo si se usa en el efecto.
+  }, [handleMouseMove]); 
 
   const handleLogin = () => navigate("/login");
 
-  // ... (lógica de initializeTennisBall, spawnRandomOtherBall, addGlowEffect, y useEffect de animación de pelotas como estaban)
+  // Logic for tennis ball (unchanged)
   const initializeTennisBall = useCallback((serveFromLeft = true) => {
     const screenWidth = window.innerWidth; const screenHeight = window.innerHeight;
     let startX, velocityX, startY, velocityY;
@@ -151,6 +150,7 @@ function Main() {
     initializeTennisBall(Math.random() < 0.5);
   }, [initializeTennisBall]);
 
+  // Logic for other random balls (unchanged)
   const spawnRandomOtherBall = useCallback(() => {
     setRandomOtherBalls((prevBalls) => {
       if (prevBalls.length >= MAX_OTHER_BALLS_ON_SCREEN) return prevBalls;
@@ -185,6 +185,7 @@ function Main() {
     return () => { if (intervalId) { clearInterval(intervalId); } document.removeEventListener("visibilitychange", handleVisibilityChange); };
   }, [spawnRandomOtherBall]);
 
+  // Logic for glow effects (unchanged)
   const addGlowEffect = useCallback((edge, positionValue, yPosition = null, glowType = 'wall') => {
     const newGlow = {
       id: Date.now() + Math.random(),
@@ -196,13 +197,12 @@ function Main() {
       timestamp: Date.now(),
       type: glowType,
     };
-
     setActiveGlows((prevGlows) => [...prevGlows, newGlow]);
   }, []);
 
+  // Animation loop for all balls and glows (unchanged)
   useEffect(() => {
     let animationFrameId;
-
     const animateAllBalls = () => {
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
@@ -226,7 +226,6 @@ function Main() {
       setTennisBall(prevTB => {
         if (!prevTB) return null;
         let { x, y, velocityX, velocityY, rotation, rotationSpeed, hasBouncedOnGround, isMovingLeftToRight, size, weight } = prevTB;
-
         const nextX = x + velocityX;
         const nextY = y + velocityY;
         checkAndTriggerWallGlow(prevTB, nextX, nextY);
@@ -239,7 +238,6 @@ function Main() {
           prevTB.hasBouncedOnGround = true;
           prevTB.velocityX *= 0.98;
           prevTB.rotationSpeed *= 0.8;
-
           const ballCenterXOnBounce = x + size / 2;
           const glowStartX = Math.max(0, Math.min(ballCenterXOnBounce - GLOW_LENGTH_PX / 2, screenWidth - GLOW_LENGTH_PX));
           addGlowEffect('groundBounce', glowStartX, groundContactY, 'bounce');
@@ -261,7 +259,6 @@ function Main() {
         currentBalls.map(ball => {
           if (!ball) return null;
           let { x, y, velocityX, velocityY, rotation, rotationSpeed, type } = ball;
-
           const nextX = x + velocityX;
           const nextY = y + velocityY;
           checkAndTriggerWallGlow(ball, nextX, nextY);
@@ -287,22 +284,19 @@ function Main() {
 
   return (
     <div className="main-page-container">
-      {/* Glow Container */}
+      {/* Glow Container (unchanged) */}
       <div className="localized-glow-container">
         {activeGlows.map(glow => {
            const timeElapsed = Date.now() - glow.timestamp;
            let visualOpacity = Math.max(0, 1 - timeElapsed / GLOW_DURATION_MS);
            if (visualOpacity <= 0) return null;
-
            const currentScrollX = window.scrollX;
            const currentScrollY = window.scrollY;
-
            const isBounceGlow = glow.type === 'bounce';
            const baseAlpha = isBounceGlow ? BOUNCE_GLOW_BASE_ALPHA : WALL_GLOW_BASE_ALPHA;
            const shadowAlpha = isBounceGlow ? BOUNCE_GLOW_SHADOW_ALPHA : WALL_GLOW_SHADOW_ALPHA;
            const shadowBlur = isBounceGlow ? BOUNCE_GLOW_SHADOW_BLUR : WALL_GLOW_SHADOW_BLUR;
            const shadowSpread = isBounceGlow ? BOUNCE_GLOW_SHADOW_SPREAD : WALL_GLOW_SHADOW_SPREAD;
-
            const style = {
              position: 'fixed',
              opacity: visualOpacity,
@@ -310,7 +304,6 @@ function Main() {
              boxShadow: `0 0 ${shadowBlur} ${shadowSpread} rgba(${RIVALT_ORANGE_RGB}, ${shadowAlpha})`,
              borderRadius: '1px',
            };
-
            if (glow.edge === 'top') {
              style.top = `0px`; style.left = `${glow.position - currentScrollX}px`;
              style.width = `${glow.length}px`; style.height = `${glow.thickness}px`;
@@ -325,16 +318,14 @@ function Main() {
              style.left = `${glow.position - currentScrollX}px`;
              style.width = `${glow.length}px`; style.height = `${glow.thickness}px`;
            } else { return null; }
-
            return <div key={glow.id} className="screen-edge-glow-segment" style={style}></div>;
         })}
       </div>
 
-      {/* Formas animadas de fondo */}
       <div ref={shape1Ref} className="animated-shape shape1"></div>
       <div ref={shape2Ref} className="animated-shape shape2"></div>
 
-      {/* Pelota de tenis */}
+      {/* Tennis ball rendering (unchanged) */}
       {tennisBall && (
         <div
           key={tennisBall.id} className="flying-ball tennis-rally-ball"
@@ -347,7 +338,7 @@ function Main() {
         </div>
       )}
 
-      {/* Otras pelotas */}
+      {/* Other random balls rendering (unchanged) */}
       {randomOtherBalls.map(ball => {
         const BallIcon = ball.type.IconComponent;
         return (
@@ -363,6 +354,7 @@ function Main() {
         );
       })}
 
+      {/* Header (unchanged) */}
       <header className="main-banner">
         <img src={logoRivalt} alt="Logo Rivalt" className="rivalt-logo" />
         <button onClick={handleLogin} className="form-button secondary login-button">
@@ -370,6 +362,7 @@ function Main() {
         </button>
       </header>
 
+      {/* Main Content Section (hero) (unchanged) */}
       <section className="main-content">
         <div className="content-grid">
           <div className="image-container">
@@ -388,32 +381,41 @@ function Main() {
         </div>
       </section>
 
-      <section ref={infoSectionRef} className="info-section">
-        <div className="info-shape info-shape-1"></div>
-        <div className="info-shape info-shape-2"></div>
-        <div className="info-shape info-shape-3"></div>
-        <h2>Descubre lo que puedes hacer</h2>
-        <p>
-          Rivalt te ofrece todas las herramientas necesarias para organizar
-          y gestionar torneos de cualquier tipo de forma sencilla e intuitiva.
-          Desde la creación de brackets hasta el seguimiento en tiempo real.
-        </p>
-        <div className="info-features">
-          <div><FaRegLightbulb /> Crea Torneos Personalizados</div>
-          <div><FaUserCog /> Gestiona Participantes Fácilmente</div>
-          <div><FaChartLine /> Resultados en Tiempo Real</div>
+      {/* Basketball Promo Section - MODIFIED CONTENT, ORIGINAL POSITION (NOW FIRST PROMO) */}
+      <section ref={basketballPromoSectionRef} className="basketball-promo-section">
+        <div className="basketball-promo-bg-shape"></div>
+        <div className="basketball-promo-content">
+          <div className="basketball-promo-text-container">
+            {/* Content from old info-section */}
+            <h2>Descubre lo que puedes hacer</h2>
+            <p>
+              Rivalt te ofrece todas las herramientas necesarias para organizar
+              y gestionar torneos de cualquier tipo de forma sencilla e intuitiva.
+              Desde la creación de brackets hasta el seguimiento en tiempo real.
+            </p>
+            {/* Features from old info-section */}
+            <div className="info-features"> {/* Retaining class for styling */}
+              <div><FaRegLightbulb /> Crea Torneos Personalizados</div>
+              <div><FaUserCog /> Gestiona Participantes Fácilmente</div>
+              <div><FaChartLine /> Resultados en Tiempo Real</div>
+            </div>
+          </div>
+          <div className="basketball-promo-image-container">
+            <img src={JugadorBaloncestoPNG} alt="Jugador de Baloncesto con Rivalt" className="basketball-player-image" />
+            <div className="basketball-floating-ball">
+              <FaBasketballBall />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* =============================================== */}
-      {/* =========== NUEVA SECCIÓN PROMOCIÓN MÓVIL =========== */}
-      {/* =============================================== */}
+      {/* info-section is REMOVED */}
+
+      {/* Mobile Promo Section (unchanged content, now second promo section) */}
       <section ref={mobilePromoSectionRef} className="mobile-promo-section">
-        {/* NUEVO: Shapes de fondo para la sección móvil */}
         <div className="mobile-promo-shape mobile-promo-shape-1"></div>
         <div className="mobile-promo-shape mobile-promo-shape-2"></div>
-        <div className="mobile-promo-shape mobile-promo-shape-3"></div> {/* Opcional, puedes quitarla si no la quieres */}
-
+        <div className="mobile-promo-shape mobile-promo-shape-3"></div>
         <div className="mobile-promo-content">
           <div className="mobile-promo-image-container">
             <img src={phoneImage} alt="Rivalt en el móvil" />
@@ -425,21 +427,13 @@ function Main() {
               disponible en móvil, para que no te pierdas ni un detalle.
               Accede y administra desde cualquier dispositivo.
             </p>
-            {/* Podrías añadir un botón aquí si quieres, ej:
-            <button className="form-button promo-button">
-              Más Información
-            </button>
-            */}
+            {/* Assuming this button was meant to stay or be here, it's part of original mobile promo */}
+            {/* <button className="form-button promo-button">Conoce Más</button> */}
           </div>
         </div>
       </section>
-      {/* =============================================== */}
-      {/* ============ FIN NUEVA SECCIÓN ============ */}
-      {/* =============================================== */}
-
-      <footer className="main-footer">
-        <p>&copy; {new Date().getFullYear()} Rivalt. Todos los derechos reservados.</p>
-      </footer>
+      
+     <Footer />
     </div>
   );
 }
