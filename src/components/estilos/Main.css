@@ -583,6 +583,23 @@ html, body {
     transition-delay: 0s;
 }
 
+/* ADDED: Orange line for basketball-promo-section */
+.basketball-promo-section::before { /* */
+    content: ''; /* */
+    position: absolute; /* */
+    top: 0; /* */
+    left: 0; /* */
+    height: 3px; /* */
+    width: 0; /* */
+    background-color: #FF6D14; /* */
+    transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1); /* */
+    transition-delay: 0.4s; /* */
+    z-index: 9; /* */
+}
+
+.basketball-promo-section.visible::before { /* */
+    width: 100%; /* */
+}
 
 
 .basketball-promo-content {

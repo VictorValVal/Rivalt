@@ -682,3 +682,86 @@ main[style*="paddingTop: 80px"] {
 }
 
 /* ... (resto de tus estilos de Home.css) ... */
+/* components/estilos/Home.css */
+
+/* ... (estilos existentes) ... */
+
+/* Estilos para mostrar el plan del usuario en el banner */
+.user-plan-display {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Espacio entre icono y texto del plan */
+  padding: 4px 10px;
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo sutil */
+  border-radius: 15px; /* Bordes redondeados */
+  font-size: 0.8rem; /* Tamaño de fuente pequeño */
+  font-weight: 500;
+  color: #FFD700; /* Color dorado para Premium/Pro, o ajusta según plan */
+  margin-right: 10px; /* Espacio antes del avatar */
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.user-plan-display:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.user-plan-display .user-plan-label {
+  /* Estilos específicos para el texto si es necesario */
+}
+
+/* Ajustes para que el plan y el nombre de usuario no se oculten tan rápido en móvil */
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Ajustado el gap un poco */
+  min-width: 0; /* Permite que los hijos usen overflow correctamente */
+}
+
+/* El user-welcome-text ya se oculta en móvil por una media query existente. */
+/* Modificamos user-plan-display para móvil */
+@media (max-width: 768px) {
+  .home-banner {
+    padding: 0 0.8rem; /* Un poco menos de padding en el banner */
+  }
+  .user-controls {
+    gap: 8px; /* Reducir gap un poco más */
+  }
+  .user-plan-display {
+    padding: 3px 8px;
+    font-size: 0.75rem;
+    margin-right: 8px;
+  }
+  .user-plan-display .user-plan-label {
+    display: none; /* Ocultar solo el texto del plan en pantallas muy pequeñas si es necesario */
+  }
+  /* Mostrar solo icono del plan en pantallas muy pequeñas */
+   @media (max-width: 480px) { /* O un breakpoint más adecuado */
+     .user-plan-display .user-plan-label {
+        display: none;
+     }
+     .user-plan-display {
+        padding: 5px; /* Para que sea más cuadrado con solo el icono */
+     }
+   }
+
+  .logout-button-home {
+    width: 38px; /* Ajustar según necesidad */
+    height: 38px;
+  }
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+
+
+.tournament-count-display {
+    font-size: 1.1rem;
+    color: #FF6D14;
+    font-weight: bold;
+    width: 100%; /* Ensure it takes full available width within the wrapper */
+    box-sizing: border-box; /* Include padding/border in the width calculation */
+}

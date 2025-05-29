@@ -294,3 +294,229 @@ select.form-input option {
     margin-top: 1.2rem; /* Más compacto */
   }
 }
+/* ==================================================
+   NUEVO TORNEO FORMULARIO ESTILOS (MODIFICADO PARA MÓVIL Y PLANES)
+   ================================================== */
+
+/* ... (estilos existentes) ... */
+
+.form-input option.option-disabled-premium {
+  color: #888; /* Color de texto para opciones deshabilitadas */
+}
+.form-input option.option-disabled-premium:hover {
+  background-color: #f0f0f0; /* Evitar cambio de fondo en hover */
+}
+
+/* Para navegadores que soportan ::before o ::after en option (limitado) */
+/* Esto es más un hack y puede no funcionar en todos los navegadores para <option> */
+/* Considerar una librería de select custom si se necesita un estilo más robusto */
+.form-input option.option-disabled-premium::after {
+  content: " ✨"; /* O el icono que quieras */
+  font-size: 0.8em;
+  color: #FF6D14; /* Naranja Rivalt */
+}
+
+/* Estilo para mensajes de error específicos del formulario de Nuevo.js */
+.form-error-message-nuevo {
+  color: #ff9a9a; /* Un rojo claro */
+  background-color: rgba(220, 53, 69, 0.1); /* Fondo rojo muy sutil */
+  border: 1px solid rgba(220, 53, 69, 0.3); /* Borde rojo sutil */
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-top: 1rem; /* Espacio antes del mensaje */
+  margin-bottom: 1rem; /* Espacio después del mensaje */
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.loading-plan-message {
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+
+/* ... (resto de los estilos y media queries) ... */
+
+/* Ajuste para el botón de volver y título en el header de unirse/nuevo */
+.unirse-header { /* Esta clase ya existe en Unirse.css, asegúrate que sea consistente o renómbrala */
+  width: 100%;
+  max-width: 550px; /* Coincide con nuevo-torneo-container */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  position: relative; /* Para el posicionamiento absoluto del botón de volver */
+  padding: 0 1rem; /* Asegurar que el botón de volver no se pegue al borde en móviles */
+  box-sizing: border-box;
+}
+
+.unirse-header .torneo-header-home-button { /* Estilo del botón de volver */
+  color: #E0E0E0;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem; /* Tamaño del icono */
+  cursor: pointer;
+  padding: 0.5rem;
+  position: absolute; /* Lo posiciona a la izquierda del contenedor */
+  left: 1rem; /* Espacio desde el borde del .unirse-header */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+
+/* Si tienes un título en .unirse-header */
+.unirse-header h1 {
+  color: #E0E0E0;
+  font-size: 1.5rem; /* Ajusta según el diseño */
+  text-align: center;
+  flex-grow: 1; /* Permite que el título ocupe el espacio y se centre */
+  margin: 0; /* Quitar márgenes por defecto del h1 */
+  padding: 0 3rem; /* Espacio para que el título no se solape con el botón de volver */
+}
+/* components/estilos/Nuevo.css */
+
+/* components/estilos/Nuevo.css */
+
+/* ... (otros estilos existentes de Nuevo.css) ... */
+
+/* Estilo para las opciones de select deshabilitadas por plan, si se quiere diferenciar */
+.form-input option.option-disabled-by-plan {
+  color: #888; /* Texto más claro para indicar que no es la opción ideal ahora */
+  /* Considerar no cambiar el fondo para que la selección no parezca tan "final" visualmente */
+}
+.option-plan-indicator {
+  font-size: 0.9em;
+  margin-left: 5px; /* Un pequeño espacio antes del icono/texto del plan */
+  opacity: 0.8;
+}
+
+
+/* --- ESTILOS PARA REACT MODAL --- */
+.ReactModal__Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(18, 18, 18, 0.9) !important; /* Fondo oscuro semi-transparente */
+  z-index: 1050; /* Asegurar que esté por encima de otro contenido */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
+.ReactModal__Content {
+  background: #2a2a2e !important; /* Fondo del modal ligeramente más claro que el overlay */
+  color: #E0E0E0 !important;
+  padding: 2rem 2.5rem !important;
+  border-radius: 10px !important;
+  border: 1px solid #484848 !important; /* Borde sutil */
+  max-width: 500px; /* Ancho máximo del modal */
+  width: calc(100% - 40px); /* Ancho responsivo con padding */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65) !important; /* Sombra más pronunciada */
+  position: relative !important;
+  top: auto !important; /* Resetea posicionamiento por defecto de react-modal */
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  margin: 20px; /* Para evitar que toque los bordes en pantallas muy pequeñas */
+  outline: none;
+  transform: scale(0.95) translateY(15px); /* Estado inicial para animación */
+  opacity: 0;
+  transition: transform 350ms cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 300ms ease-in-out; /* Animación de entrada "pop" */
+}
+
+.ReactModal__Content--after-open {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.ReactModal__Content--before-close {
+  transform: scale(0.95) translateY(15px);
+  opacity: 0;
+  transition: transform 300ms cubic-bezier(0.6, -0.28, 0.74, 0.05), opacity 250ms ease-in-out; /* Animación de salida */
+}
+
+.ReactModal__Content h3 {
+  color: #FFFFFF;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 1.6rem; /* Título del modal un poco más grande */
+  border-bottom: 2px solid #FF6D14; /* Línea de acento */
+  padding-bottom: 1rem;
+}
+
+.ReactModal__Content p {
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.ReactModal__Content p strong {
+  color: #FFBE8A; /* Un color naranja más claro para destacar texto */
+  font-weight: 600;
+}
+
+.ReactModal__Content .modal-plan-icon { /* Estilo para el icono de advertencia en el modal */
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: #FFC107; /* Amarillo/Naranja para advertencia */
+  font-size: 2.5rem;
+}
+
+.ReactModal__Content .modal-actions {
+  display: flex;
+  justify-content: space-around; /* Botones distribuidos */
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #3a3a3a; /* Separador sutil */
+}
+
+.ReactModal__Content .modal-actions .form-button {
+  padding: 12px 25px; /* Botones más grandes y cómodos */
+  min-width: 150px; /* Ancho mínimo para que se vean bien */
+  font-size: 1rem;
+  text-transform: uppercase; /* Para consistencia con otros botones primarios */
+  letter-spacing: 0.5px;
+}
+
+.ReactModal__Content .modal-actions .form-button.secondary {
+  background-color: #555; /* Gris oscuro para el botón "Más tarde" */
+  color: #ddd;
+  border: 1px solid #6f6f6f;
+}
+.ReactModal__Content .modal-actions .form-button.secondary:hover:not(:disabled) {
+  background-color: #666;
+  border-color: #888;
+  color: #fff;
+}
+
+.ReactModal__Content .modal-actions .form-button.primary {
+  /* Ya debería heredar estilos de .form-button.primary */
+  /* Se pueden añadir aquí si es necesario específicamente para el modal */
+}
+
+.ReactModal__Content .modal-actions .form-button.primary svg,
+.ReactModal__Content .modal-actions .form-button.secondary svg {
+  margin-right: 8px; /* Espacio entre icono y texto del botón */
+  font-size: 1.1em; /* Ajusta el tamaño del icono si es necesario */
+}

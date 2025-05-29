@@ -35,7 +35,11 @@ const Footer = () => {
           <div className="footer-column">
             <h4>Ayuda</h4>
             <ul>
-              <li><Link to="/centro-de-ayuda">Centro de ayuda</Link></li>
+              <li>
+  <a href="mailto:rivalt.contacto@gmail.com" target="_blank" rel="noopener noreferrer">
+    Contacto
+  </a>
+</li>
               <li><Link to="/Preguntas">Preguntas frecuentes</Link></li>
             </ul>
           </div>

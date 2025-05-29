@@ -8,6 +8,7 @@ import Unirse from './components/Unirse';
 import Torneo from './components/Torneo';
 import DetallesParticipante from './components/DetallesParticipante';
 import Footer from './components/Footer'; // Importamos el Footer
+import Planes from './components/Planes'; 
 
 // Importamos los componentes para las páginas legales
 import Terminos from './components/Terminos';     // Asegúrate que la ruta es correcta y el componente existe
@@ -33,6 +34,7 @@ function App() {
         <Route path="/Terminos" element={<Terminos />} />
         <Route path="/Privacidad" element={<Privacidad />} />
         <Route path="/Preguntas" element={<Preguntas />} />
+        <Route path="/planes" element={<Planes />} /> 
 
         {/* Si tienes otras páginas como Guía, Centro de Ayuda, etc., sus rutas irían aquí también */}
         {/* Ejemplo:

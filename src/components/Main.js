@@ -12,13 +12,18 @@ import {
   FaFootballBall,
   FaBaseballBall,
   FaVolleyballBall,
-  FaRegLightbulb, 
-  FaUserCog, 
-  FaChartLine 
+  FaRegLightbulb,
+  FaUserCog,
+  FaChartLine
 } from 'react-icons/fa';
 import Footer from './Footer';
+import Planes from './Planes';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { app } from "../firebase";
 
-// Constants for ball animations and glow effects (unchanged)
+const authInstance = getAuth(app);
+
+// ... (Constantes de animación de pelotas sin cambios) ...
 const RIVALT_ORANGE_RGB = '255, 109, 20';
 const TENNIS_BALL_ICON = FaBaseballBall;
 const TENNIS_BALL_SIZE = 28;
@@ -59,13 +64,20 @@ function Main() {
   const navigate = useNavigate();
   const shape1Ref = useRef(null);
   const shape2Ref = useRef(null);
-  // infoSectionRef is removed
   const mobilePromoSectionRef = useRef(null);
-  const basketballPromoSectionRef = useRef(null); 
+  const basketballPromoSectionRef = useRef(null);
 
   const [tennisBall, setTennisBall] = useState(null);
   const [randomOtherBalls, setRandomOtherBalls] = useState([]);
   const [activeGlows, setActiveGlows] = useState([]);
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(authInstance, (user) => {
+      setIsUserAuthenticated(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleMouseMove = useCallback((event) => {
     const { clientX, clientY } = event;
@@ -93,41 +105,30 @@ function Main() {
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
-
-    const observerOptions = { threshold: 0.1 }; 
-
+    const observerOptions = { threshold: 0.1 };
     const observerCallback = (entries) => {
       entries.forEach(entry => {
         entry.target.classList.toggle("visible", entry.isIntersecting);
       });
     };
-
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    // infoSectionRef.current removed from this array
     const sectionsToObserve = [
         mobilePromoSectionRef.current,
-        basketballPromoSectionRef.current 
+        basketballPromoSectionRef.current
     ];
     sectionsToObserve.forEach(section => {
-      if (section) {
-        observer.observe(section);
-      }
+      if (section) { observer.observe(section); }
     });
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       sectionsToObserve.forEach(section => {
-        if (section) {
-          observer.unobserve(section);
-        }
+        if (section) { observer.unobserve(section); }
       });
     };
-  }, [handleMouseMove]); 
+  }, [handleMouseMove]);
 
   const handleLogin = () => navigate("/login");
 
-  // Logic for tennis ball (unchanged)
   const initializeTennisBall = useCallback((serveFromLeft = true) => {
     const screenWidth = window.innerWidth; const screenHeight = window.innerHeight;
     let startX, velocityX, startY, velocityY;
@@ -144,13 +145,12 @@ function Main() {
       velocityX, velocityY, rotation: 0, rotationSpeed: (Math.random() - 0.5) * 8,
       hasBouncedOnGround: false, isMovingLeftToRight: serveFromLeft,
     });
-  }, []);
+  }, []); //
 
   useEffect(() => {
     initializeTennisBall(Math.random() < 0.5);
-  }, [initializeTennisBall]);
+  }, [initializeTennisBall]); //
 
-  // Logic for other random balls (unchanged)
   const spawnRandomOtherBall = useCallback(() => {
     setRandomOtherBalls((prevBalls) => {
       if (prevBalls.length >= MAX_OTHER_BALLS_ON_SCREEN) return prevBalls;
@@ -172,7 +172,7 @@ function Main() {
         },
       ];
     });
-  }, []);
+  }, []); //
 
   useEffect(() => {
     let intervalId = null;
@@ -183,9 +183,8 @@ function Main() {
     if (!document.hidden) { intervalId = setInterval(spawnRandomOtherBall, OTHER_SPAWN_INTERVAL); }
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => { if (intervalId) { clearInterval(intervalId); } document.removeEventListener("visibilitychange", handleVisibilityChange); };
-  }, [spawnRandomOtherBall]);
+  }, [spawnRandomOtherBall]); //
 
-  // Logic for glow effects (unchanged)
   const addGlowEffect = useCallback((edge, positionValue, yPosition = null, glowType = 'wall') => {
     const newGlow = {
       id: Date.now() + Math.random(),
@@ -198,9 +197,8 @@ function Main() {
       type: glowType,
     };
     setActiveGlows((prevGlows) => [...prevGlows, newGlow]);
-  }, []);
+  }, []); //
 
-  // Animation loop for all balls and glows (unchanged)
   useEffect(() => {
     let animationFrameId;
     const animateAllBalls = () => {
@@ -284,7 +282,6 @@ function Main() {
 
   return (
     <div className="main-page-container">
-      {/* Glow Container (unchanged) */}
       <div className="localized-glow-container">
         {activeGlows.map(glow => {
            const timeElapsed = Date.now() - glow.timestamp;
@@ -321,118 +318,19 @@ function Main() {
            return <div key={glow.id} className="screen-edge-glow-segment" style={style}></div>;
         })}
       </div>
-
       <div ref={shape1Ref} className="animated-shape shape1"></div>
       <div ref={shape2Ref} className="animated-shape shape2"></div>
-
-      {/* Tennis ball rendering (unchanged) */}
-      {tennisBall && (
-        <div
-          key={tennisBall.id} className="flying-ball tennis-rally-ball"
-          style={{
-            width: `${tennisBall.size}px`, height: `${tennisBall.size}px`, color: `rgba(${RIVALT_ORANGE_RGB}, 1)`,
-            transform: `translate(${tennisBall.x}px, ${tennisBall.y}px) rotate(${tennisBall.rotation}deg)`,
-            zIndex: 5
-          }}>
-          <tennisBall.IconComponent style={{ fontSize: `${tennisBall.size}px` }} />
-        </div>
-      )}
-
-      {/* Other random balls rendering (unchanged) */}
-      {randomOtherBalls.map(ball => {
-        const BallIcon = ball.type.IconComponent;
-        return (
-          <div
-            key={ball.id} className="flying-ball other-random-ball"
-            style={{
-              width: `${ball.type.size}px`, height: `${ball.type.size}px`, color: `rgba(${RIVALT_ORANGE_RGB},1)`,
-              transform: `translate(${ball.x}px, ${ball.y}px) rotate(${ball.rotation}deg)`,
-              zIndex: 5
-            }}>
-            <BallIcon style={{ fontSize: `${ball.type.size}px` }} />
-          </div>
-        );
-      })}
-
-      {/* Header (unchanged) */}
-      <header className="main-banner">
-        <img src={logoRivalt} alt="Logo Rivalt" className="rivalt-logo" />
-        <button onClick={handleLogin} className="form-button secondary login-button">
-          Iniciar sesión
-        </button>
-      </header>
-
-      {/* Main Content Section (hero) (unchanged) */}
-      <section className="main-content">
-        <div className="content-grid">
-          <div className="image-container">
-            <img src={imagenPrincipal} alt="Presentación de la plataforma Rivalt" className="responsive-image" />
-          </div>
-          <div className="text-content">
-            <h1>CREA TU PRÓXIMO TORNEO CON <span className="highlight">RIVALT</span></h1>
-            <ul className="features-list">
-              <li><span className="bullet">-</span> 100% Gratis</li>
-              <li><span className="bullet">-</span> Fácil y rápido</li>
-            </ul>
-            <button onClick={handleLogin} className="form-button primary start-button">
-              EMPEZAR AHORA
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Basketball Promo Section - MODIFIED CONTENT, ORIGINAL POSITION (NOW FIRST PROMO) */}
-      <section ref={basketballPromoSectionRef} className="basketball-promo-section">
-        <div className="basketball-promo-bg-shape"></div>
-        <div className="basketball-promo-content">
-          <div className="basketball-promo-text-container">
-            {/* Content from old info-section */}
-            <h2>Descubre lo que puedes hacer</h2>
-            <p>
-              Rivalt te ofrece todas las herramientas necesarias para organizar
-              y gestionar torneos de cualquier tipo de forma sencilla e intuitiva.
-              Desde la creación de brackets hasta el seguimiento en tiempo real.
-            </p>
-            {/* Features from old info-section */}
-            <div className="info-features"> {/* Retaining class for styling */}
-              <div><FaRegLightbulb /> Crea Torneos Personalizados</div>
-              <div><FaUserCog /> Gestiona Participantes Fácilmente</div>
-              <div><FaChartLine /> Resultados en Tiempo Real</div>
-            </div>
-          </div>
-          <div className="basketball-promo-image-container">
-            <img src={JugadorBaloncestoPNG} alt="Jugador de Baloncesto con Rivalt" className="basketball-player-image" />
-            <div className="basketball-floating-ball">
-              <FaBasketballBall />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* info-section is REMOVED */}
-
-      {/* Mobile Promo Section (unchanged content, now second promo section) */}
-      <section ref={mobilePromoSectionRef} className="mobile-promo-section">
-        <div className="mobile-promo-shape mobile-promo-shape-1"></div>
-        <div className="mobile-promo-shape mobile-promo-shape-2"></div>
-        <div className="mobile-promo-shape mobile-promo-shape-3"></div>
-        <div className="mobile-promo-content">
-          <div className="mobile-promo-image-container">
-            <img src={phoneImage} alt="Rivalt en el móvil" />
-          </div>
-          <div className="mobile-promo-text-container">
-            <h2>Rivalt donde quieras</h2>
-            <p>
-              Lleva la gestión de tus torneos contigo. Rivalt también está
-              disponible en móvil, para que no te pierdas ni un detalle.
-              Accede y administra desde cualquier dispositivo.
-            </p>
-            {/* Assuming this button was meant to stay or be here, it's part of original mobile promo */}
-            {/* <button className="form-button promo-button">Conoce Más</button> */}
-          </div>
-        </div>
-      </section>
+      {tennisBall && ( <div key={tennisBall.id} className="flying-ball tennis-rally-ball" style={{ width: `${tennisBall.size}px`, height: `${tennisBall.size}px`, color: `rgba(${RIVALT_ORANGE_RGB}, 1)`, transform: `translate(${tennisBall.x}px, ${tennisBall.y}px) rotate(${tennisBall.rotation}deg)`, zIndex: 5 }}> <tennisBall.IconComponent style={{ fontSize: `${tennisBall.size}px` }} /> </div> )}
+      {randomOtherBalls.map(ball => { const BallIcon = ball.type.IconComponent; return ( <div key={ball.id} className="flying-ball other-random-ball" style={{ width: `${ball.type.size}px`, height: `${ball.type.size}px`, color: `rgba(${RIVALT_ORANGE_RGB},1)`, transform: `translate(${ball.x}px, ${ball.y}px) rotate(${ball.rotation}deg)`, zIndex: 5 }}> <BallIcon style={{ fontSize: `${ball.type.size}px` }} /> </div> ); })}
+      <header className="main-banner"> <img src={logoRivalt} alt="Logo Rivalt" className="rivalt-logo" /> <button onClick={handleLogin} className="form-button secondary login-button"> Iniciar sesión </button> </header>
       
+      <section className="main-content"> <div className="content-grid"> <div className="image-container"> <img src={imagenPrincipal} alt="Presentación de la plataforma Rivalt" className="responsive-image" /> </div> <div className="text-content"> <h1>CREA TU PRÓXIMO TORNEO CON <span className="highlight">RIVALT</span></h1> <ul className="features-list"> <li><span className="bullet">-</span> 100% Gratis</li> <li><span className="bullet">-</span> Fácil y rápido</li> </ul> <button onClick={handleLogin} className="form-button primary start-button"> EMPREZAR AHORA </button> </div> </div> </section>
+      <section ref={basketballPromoSectionRef} className="basketball-promo-section"> <div className="basketball-promo-bg-shape"></div> <div className="basketball-promo-content"> <div className="basketball-promo-text-container"> <h2>Descubre lo que puedes hacer</h2> <p> Rivalt te ofrece todas las herramientas necesarias para organizar y gestionar torneos de cualquier tipo de forma sencilla e intuitiva. Desde la creación de brackets hasta el seguimiento en tiempo real. </p> <div className="info-features"> <div><FaRegLightbulb /> Crea Torneos Personalizados</div> <div><FaUserCog /> Gestiona Participantes Fácilmente</div> <div><FaChartLine /> Resultados en Tiempo Real</div> </div> </div> <div className="basketball-promo-image-container"> <img src={JugadorBaloncestoPNG} alt="Jugador de Baloncesto con Rivalt" className="basketball-player-image" /> <div className="basketball-floating-ball"> <FaBasketballBall /> </div> </div> </div> </section>
+      <section ref={mobilePromoSectionRef} className="mobile-promo-section"> <div className="mobile-promo-shape mobile-promo-shape-1"></div> <div className="mobile-promo-shape mobile-promo-shape-2"></div> <div className="mobile-promo-shape mobile-promo-shape-3"></div> <div className="mobile-promo-content"> <div className="mobile-promo-image-container"> <img src={phoneImage} alt="Rivalt en el móvil" /> </div> <div className="mobile-promo-text-container"> <h2>Rivalt donde quieras</h2> <p> Lleva la gestión de tus torneos contigo. Rivalt también está disponible en móvil, para que no te pierdas ni un detalle. Accede y administra desde cualquier dispositivo. </p> </div> </div> </section>
+
+      {/* Renderiza Planes y pasa isAuthenticated. No pasa onPlanChange aquí. */}
+      <Planes isAuthenticated={isUserAuthenticated} />
+
      <Footer />
     </div>
   );
