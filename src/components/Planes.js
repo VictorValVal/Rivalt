@@ -230,7 +230,7 @@ const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
             <ul className="plan-features">
               <li><FaCheckCircle /> Hasta 8 equipos en torneo</li>
               <li><FaCheckCircle /> Hasta 10 equipos en liga</li>
-              <li><FaCheckCircle /> Máximo 5 torneos simultáneos</li>
+              <li><FaCheckCircle /> Máximo 2 torneos simultáneos</li>
               <li><FaCheckCircle /> Funcionalidades básicas</li>
             </ul>
             {isCurrentPlan('free') ? (

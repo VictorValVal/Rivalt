@@ -307,9 +307,6 @@ main {
   cursor: pointer;
 }
 
-.button.primary {
-  background-color: #28a745;
-}
 
 .button.primary:hover {
   background-color: #1e7e34;

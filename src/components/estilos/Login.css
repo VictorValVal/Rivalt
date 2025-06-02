@@ -321,3 +321,51 @@
   color: #b0b0b0; /* Un gris más claro que el texto principal */
   font-size: 0.9em;
 }
+/* ==================================================
+   LOGIN FORMULARIO ESTILOS (ADDITIONS FOR MULTI-STEP)
+   ================================================== */
+
+/* Contenedor para la barra de progreso */
+.login-container .progress-bar-container {
+  width: 100%;
+  height: 8px; /* Slightly smaller than in Nuevo.css for login */
+  background-color: #333;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.4rem; /* Reduced margin */
+  margin-top: 1rem; /* Add some top margin to separate from title */
+}
+
+/* Relleno de la barra de progreso */
+.login-container .progress-bar-fill {
+  height: 100%;
+  background-color: #FF6D14; /* Rivalt orange */
+  border-radius: 4px;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Texto del paso de progreso */
+.login-container .progress-step-text {
+  font-size: 0.75rem; /* Smaller font size */
+  color: #aaa;
+  text-align: right;
+  display: block; /* Ensure it takes full width and new line */
+  margin-bottom: 1rem; /* Space below the text */
+}
+
+/* Adjustments for the login-title-animate */
+.login-container .login-title-animate {
+  margin-bottom: 0.5rem; /* Reduce margin to make space for progress bar */
+}
+
+.registration-field-wrapper {
+  /* ... */
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+.registration-field-wrapper.show {
+  max-height: 100px; /* Adjust based on content height */
+  opacity: 1;
+}

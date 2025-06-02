@@ -36,10 +36,10 @@ const Footer = () => {
             <h4>Ayuda</h4>
             <ul>
               <li>
-  <a href="mailto:rivalt.contacto@gmail.com" target="_blank" rel="noopener noreferrer">
-    Contacto
-  </a>
-</li>
+                <a href="mailto:rivalt.contacto@gmail.com" target="_blank" rel="noopener noreferrer">
+                  Contacto
+                </a>
+              </li>
               <li><Link to="/Preguntas">Preguntas frecuentes</Link></li>
             </ul>
           </div>
@@ -51,13 +51,13 @@ const Footer = () => {
           <a href="https://www.instagram.com/rivalt_torneos/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <FaInstagram />
           </a>
-           <a href="https://www.tiktok.com/@rivalt_torneos" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+          <a href="https://www.tiktok.com/@rivalt_torneos" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
             <SiTiktok />
           </a>
           <a href="https://x.com/rivalt_torneos" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
             <FaTwitter />
           </a>
-         
+
         </div>
       </div>
     </footer>

@@ -9,24 +9,27 @@ import {
 import { googleProvider, db, app } from "../firebase";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import "./estilos/Login.css";
+import "./estilos/Login.css"; // Ensure this path is correct
 import futbolistaImg from '../img/Futbolista.png';
 
 const authInstance = getAuth(app);
+const TOTAL_REGISTRATION_STEPS = 2; // Define total steps for clarity
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [nombre, setNombre] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
+  const [registrationStep, setRegistrationStep] = useState(1); // Start at step 1
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { intendedPlan } = location.state || {}; // Obtener intendedPlan
+  const { intendedPlan } = location.state || {};
 
   const shape1Ref = useRef(null);
   const shape2Ref = useRef(null);
@@ -101,8 +104,8 @@ function Login() {
           } else {
               console.log(`El usuario ${userId} ya tiene el plan ${currentPlanInDb} o uno superior. No se actualizó a ${planToSet}.`);
           }
-      } else { // Should not happen if setDoc was called before, but as a safeguard
-          await setDoc(userRef, { plan: planToSet }, { merge: true }); // Merge true in case doc was just created
+      } else {
+          await setDoc(userRef, { plan: planToSet }, { merge: true });
           console.log(`Plan ${planToSet} establecido para (posiblemente nuevo) usuario ${userId} después del login.`);
       }
     } catch (error) {
@@ -110,19 +113,107 @@ function Login() {
     }
   };
 
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return "La contraseña debe tener al menos 8 caracteres.";
+    }
+    if (password.length > 64) {
+      return "La contraseña no debe exceder los 64 caracteres.";
+    }
+    if (!/[A-Z]/.test(password)) {
+      return "La contraseña debe contener al menos una letra mayúscula.";
+    }
+    if (!/[a-z]/.test(password)) {
+      return "La contraseña debe contener al menos una letra minúscula.";
+    }
+    if (!/[0-9]/.test(password)) {
+      return "La contraseña debe contener al menos un número.";
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)) {
+      return "La contraseña debe contener al menos un carácter especial (!@#$%...).";
+    }
+    return null;
+  };
+
+  // New validation for name
+  const validateName = (name) => {
+    const trimmedName = name.trim();
+    if (trimmedName.length < 3) {
+      return "El nombre debe tener al menos 3 caracteres.";
+    }
+    // Optional: regex to allow only letters, spaces, and specific accented characters
+    const nameRegex = /^[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]+$/;
+    if (!nameRegex.test(trimmedName)) {
+      return "El nombre solo puede contener letras y espacios.";
+    }
+    return null;
+  };
+
+  const handleNextStep = (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (registrationStep === 1) {
+      if (!email.trim() || !password || !confirmPassword) {
+        setError("Correo, contraseña y confirmación son obligatorios.");
+        return;
+      }
+      if (!validateEmail(email)) {
+        setError("Por favor, introduce un correo electrónico válido.");
+        return;
+      }
+      const passwordError = validatePassword(password);
+      if (passwordError) {
+        setError(passwordError);
+        return;
+      }
+      if (password !== confirmPassword) {
+        setError("Las contraseñas no coinciden.");
+        return;
+      }
+      setRegistrationStep(2); // Move to next step
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    if (!isLogin && !nombre.trim()) { setError("Por favor, completa tu nombre para registrarte."); setIsLoading(false); return; }
-    if (!email.trim() || !password) { setError("Correo y contraseña son obligatorios."); setIsLoading(false); return; }
+
+    if (isLogin) {
+      // Login specific validations
+      if (!email.trim() || !password) {
+        setError("Correo y contraseña son obligatorios.");
+        setIsLoading(false);
+        return;
+      }
+      if (!validateEmail(email)) {
+        setError("Por favor, introduce un correo electrónico válido.");
+        setIsLoading(false);
+        return;
+      }
+    } else { // Registration - final step
+      if (registrationStep === 2) {
+        const nameError = validateName(nombre);
+        if (nameError) {
+          setError(nameError);
+          setIsLoading(false);
+          return;
+        }
+      }
+    }
 
     try {
       if (isLogin) {
         const userCredential = await signInWithEmailAndPassword(authInstance, email, password);
         await completePlanUpgradeAfterLogin(userCredential.user.uid, intendedPlan);
         navigate("/home");
-      } else {
+      } else { // Registration - final step
         const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
         await setDoc(doc(db, "usuarios", userCredential.user.uid), {
           nombre: nombre.trim(),
@@ -131,7 +222,6 @@ function Login() {
           authProvider: "email/password",
           plan: intendedPlan || 'free',
         });
-        // No need to call completePlanUpgradeAfterLogin separately if plan is set during creation
         navigate("/home");
       }
     } catch (firebaseError) {
@@ -184,13 +274,25 @@ function Login() {
   const toggleMode = () => {
     setIsSwitching(true);
     setError("");
-    if (!isLogin) {
-        setNombre("");
-    }
+    setRegistrationStep(1); // Always reset to step 1 when switching modes
+    setNombre("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
     setTimeout(() => {
       setIsLogin(prevIsLogin => !prevIsLogin);
       setIsSwitching(false);
     }, 250);
+  };
+
+  const progressPercent = (registrationStep / TOTAL_REGISTRATION_STEPS) * 100;
+
+  const isStep1Valid = () => {
+    return email.trim() !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword && validateEmail(email) && validatePassword(password) === null;
+  };
+
+  const isStep2Valid = () => {
+    return validateName(nombre) === null;
   };
 
   return (
@@ -206,26 +308,67 @@ function Login() {
           <h2 className={`login-title-animate ${isSwitching ? 'title-fading' : ''}`}>
             {isLogin ? "Iniciar Sesión" : "Crear Cuenta"}
           </h2>
-          <form onSubmit={handleSubmit} className="login-form" noValidate>
-            <div className="form-group">
-              <label className="form-label" htmlFor="email">Correo electrónico</label>
-              <input className="form-input" type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" required disabled={isLoading || isGoogleLoading || isSwitching} />
+
+          {!isLogin && (
+            <div className="progress-bar-container">
+              <div
+                className="progress-bar-fill"
+                style={{ width: `${progressPercent}%` }}
+              ></div>
+              <span className="progress-step-text">
+                Paso {registrationStep} de {TOTAL_REGISTRATION_STEPS}
+              </span>
             </div>
-            <div className="form-group">
-              <label className="form-label" htmlFor="password">Contraseña</label>
-              <input className="form-input" type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Introduce tu contraseña" required disabled={isLoading || isGoogleLoading || isSwitching} />
-            </div>
-            <div className={`registration-field-wrapper ${(!isLogin && !isSwitching) ? 'show' : ''}`}>
-              <div className="form-group">
-                <label className="form-label" htmlFor="nombre">Nombre completo</label>
-                <input className="form-input" type="text" id="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre y apellidos" required={!isLogin} disabled={isLoading || isGoogleLoading || isSwitching || isLogin} aria-hidden={isLogin || isSwitching} tabIndex={(isLogin || isSwitching) ? -1 : 0} />
+          )}
+
+          <form onSubmit={isLogin || registrationStep === TOTAL_REGISTRATION_STEPS ? handleSubmit : handleNextStep} className="login-form" noValidate>
+            {(isLogin || registrationStep === 1) && (
+              <>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="email">Correo electrónico</label>
+                  <input className="form-input" type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" required disabled={isLoading || isGoogleLoading || isSwitching} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="password">Contraseña</label>
+                  <input className="form-input" type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Introduce tu contraseña" required disabled={isLoading || isGoogleLoading || isSwitching} />
+                </div>
+                {!isLogin && (
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="confirmPassword">Confirmar Contraseña</label>
+                    <input className="form-input" type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repite tu contraseña" required={!isLogin} disabled={isLoading || isGoogleLoading || isSwitching} />
+                  </div>
+                )}
+              </>
+            )}
+
+            {!isLogin && registrationStep === 2 && (
+              <div className={`registration-field-wrapper ${(!isLogin && registrationStep === 2 && !isSwitching) ? 'show' : ''}`}>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="nombre">Nombre completo</label>
+                  <input className="form-input" type="text" id="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre y apellidos" required={!isLogin} disabled={isLoading || isGoogleLoading || isSwitching} aria-hidden={isLogin || isSwitching} tabIndex={(isLogin || isSwitching) ? -1 : 0} />
+                </div>
               </div>
-            </div>
+            )}
+
             {error && <p className="form-error-message">{error}</p>}
-            <button type="submit" className="form-button primary full-width" disabled={isLoading || isGoogleLoading || isSwitching}>
-              {isLoading ? "Procesando..." : isLogin ? "Iniciar Sesión" : "Registrarse"}
-            </button>
+            
+            {isLogin || registrationStep === TOTAL_REGISTRATION_STEPS ? (
+              <button type="submit" className="form-button primary full-width" disabled={isLoading || isGoogleLoading || isSwitching || (!isLogin && !isStep2Valid())}>
+                {isLoading ? "Procesando..." : isLogin ? "Iniciar Sesión" : "Registrarse"}
+              </button>
+            ) : (
+              <button type="submit" className="form-button primary full-width" disabled={isLoading || isGoogleLoading || isSwitching || !isStep1Valid()}>
+                Siguiente
+              </button>
+            )}
+            
+            {!isLogin && registrationStep === TOTAL_REGISTRATION_STEPS && (
+              <button type="button" onClick={() => { setRegistrationStep(1); setError(""); }} className="form-button secondary full-width" disabled={isLoading || isGoogleLoading || isSwitching} style={{ marginTop: '0.5rem' }}>
+                Volver
+              </button>
+            )}
           </form>
+          
           <div className="google-signin-container" style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>
             <p style={{ textAlign: 'center', marginBottom: '0.75rem', color: '#ccc', fontSize: '0.9em' }}>Otras opciones</p>
             <button onClick={handleGoogleSignIn} className="form-button google-logo-button" disabled={isLoading || isGoogleLoading || isSwitching} title="Continuar con Google" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px', width: '50px', height: '50px', borderRadius: '50%', margin: '0 auto', border: '1px solid #444', backgroundColor: '#2a2a2a' }}>

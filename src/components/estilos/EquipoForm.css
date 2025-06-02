@@ -204,3 +204,94 @@
       justify-content: center; /* Centra contenido del botón */
     }
   } 
+  .form-group {
+  margin-bottom: 20px; /* Espacio entre grupos de formulario */
+}
+
+
+
+.equipo-imagen-upload-container {
+  display: flex;
+  flex-direction: column; /* Apila la imagen/placeholder y el botón de selección */
+  align-items: center; /* Centra los elementos horizontalmente */
+  gap: 12px; /* Espacio entre la vista previa/placeholder y el botón */
+  padding: 10px;
+  border: 1px solid #e0e0e0; /* Borde sutil alrededor del contenedor de carga */
+  border-radius: 4px;
+  background-color: #f9f9f9; /* Fondo ligero */
+}
+
+.equipo-imagen-preview {
+  width: 120px;  /* Define el ancho deseado para la vista previa */
+  height: 120px; /* Define la altura deseada para la vista previa */
+  border-radius: 50%; /* Hace la vista previa circular, ideal para logos */
+  object-fit: cover; /* ESTA ES LA CLAVE:
+                       Escala la imagen para mantener su relación de aspecto
+                       mientras llena el contenedor. La imagen será recortada
+                       si es necesario para evitar espacios vacíos o distorsión. */
+  border: 2px solid #ccc; /* Borde para la imagen de vista previa */
+  background-color: #fff; /* Fondo por si la imagen tiene transparencias */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Sombra sutil */
+}
+
+.equipo-imagen-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /* Coherente con la vista previa */
+  background-color: #e9ecef; /* Color de fondo para el placeholder */
+  display: flex;
+  flex-direction: column; /* Apila el icono y el texto */
+  justify-content: center; /* Centra el contenido verticalmente */
+  align-items: center;   /* Centra el contenido horizontalmente */
+  color: #6c757d; /* Color del texto e icono */
+  border: 2px dashed #ced4da; /* Borde discontinuo para indicar que es un área de carga */
+  text-align: center;
+  font-size: 0.9em;
+  cursor: pointer; /* Indica que se puede hacer clic (aunque el clic lo maneja el input) */
+}
+
+.equipo-imagen-placeholder svg {
+  font-size: 2.5em; /* Tamaño del icono de cámara */
+  margin-bottom: 8px; /* Espacio entre el icono y el texto */
+}
+
+/* Oculta el input de archivo por defecto, ya que usaremos un label estilizado como botón */
+.form-input-file {
+  display: none;
+}
+
+/* Estilo para el label que actúa como botón de carga de imagen */
+.equipo-imagen-upload-button {
+  padding: 10px 18px;
+  background-color: #007bff; /* Color primario (Bootstrap) */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.equipo-imagen-upload-button:hover {
+  background-color: #0056b3; /* Color primario más oscuro al pasar el ratón */
+}
+
+/* Contenedor general del formulario si necesitas aplicar estilos globales al form */
+.equipo-form-container {
+  padding: 20px;
+  border-radius: 8px;
+  /* box-shadow: 0 4px 12px rgba(0,0,0,0.1); opcional */
+}
+
+/* Mensaje de error */
+.error-message {
+  color: #dc3545; /* Rojo para errores */
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 0.9em;
+}

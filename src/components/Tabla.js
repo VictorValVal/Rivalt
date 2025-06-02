@@ -49,7 +49,7 @@ function Tabla({ rawPartidos }) {
                         localStats.draws += 1;
                         localStats.points += 1;
                         visitanteStats.draws += 1;
-                        localStats.points += 1;
+                        visitanteStats.points += 1;
                     }
 
                     localStats.goalDifference = localStats.goalsFor - localStats.goalsAgainst;

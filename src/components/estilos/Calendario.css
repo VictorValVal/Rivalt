@@ -1,8 +1,8 @@
-/* calendario.css (MODIFICADO) */
+/* calendario.css */
 
 .calendario-container {
   padding: 2rem;
-  background-color: #121212; /* Fondo general */
+  background-color: #0A0A0A; /* Tono más oscuro para el fondo general del calendario */
   color: #E0E0E0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -10,13 +10,10 @@
 .calendario-header {
   margin-bottom: 2rem;
   display: flex;
-  justify-content: flex-end; /* Alinea botón a la derecha */
+  justify-content: flex-end;
 }
 
-/* Botón Añadir Partido (Reutilizando clases primarias) */
 .calendario-add-button {
-  /* Aplicar estilos .form-button y .primary definidos en Nuevo/Login */
-  /* Ejemplo de cómo se vería si no estuvieran globales */
   background-color: #FF6D14;
   color: #FFFFFF;
   border: none;
@@ -27,9 +24,9 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  display: inline-flex; /* Para alinear icono y texto */
+  display: inline-flex;
   align-items: center;
-  gap: 8px; /* Espacio entre icono y texto */
+  gap: 8px;
   transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
@@ -42,7 +39,6 @@
 
 .calendario-partidos-grid {
   display: grid;
-  /* Ajustar minmax para que quepan bien, 300px puede ser mejor */
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 25px;
 }
@@ -57,7 +53,7 @@
   overflow: hidden;
   transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
   border: 1px solid #333; /* Borde sutil */
-  display: flex;
+  display: flex; /* Ensure display is set to flex */
   flex-direction: column;
   gap: 15px; /* Espacio entre bloques internos */
 }
@@ -129,7 +125,7 @@
   font-size: 1.2rem;
   padding: 10px 15px;
 }
-.partido-block.resultado strong { /* Quitar estilo strong si no es necesario */
+.partido-block.resultado strong {
  color: inherit;
  display: inline;
  margin: 0;
@@ -137,7 +133,6 @@
  text-transform: none;
 }
 
-/* Botones de acción en la tarjeta */
 .botones-accion-card {
   position: absolute;
   top: 10px;
@@ -148,22 +143,22 @@
 
 .boton-eliminar-partido,
 .boton-resultado-partido {
-  background: rgba(42, 42, 42, 0.8); /* Fondo semitransparente */
+  background: rgba(42, 42, 42, 0.8);
   color: #CCCCCC;
   border: 1px solid #555;
   cursor: pointer;
-  font-size: 0.9rem; /* Más pequeño */
+  font-size: 0.9rem;
   padding: 6px 10px;
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 1; /* Ajuste vertical */
+  line-height: 1;
 }
 .boton-eliminar-partido:hover,
 .boton-resultado-partido:hover {
-  background-color: #FF6D14; /* Naranja al pasar el ratón */
+  background-color: #FF6D14;
   color: #FFFFFF;
   border-color: #FF6D14;
   transform: scale(1.05);
@@ -174,7 +169,6 @@
 }
 
 
-/* Formulario de añadir partido (si se muestra inline o modal) */
 .calendario-form {
   background-color: #1e1e1e;
   padding: 2rem;
@@ -189,133 +183,281 @@
   margin-bottom: 1.5rem;
   font-weight: 600;
 }
-.calendario-form .form-group { /* Reutiliza estructura de Login/Nuevo */
+.calendario-form .form-group {
   margin-bottom: 1.5rem;
 }
-.calendario-form label { /* Reutiliza .form-label */
+.calendario-form label {
   display: block;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
   color: #AAAAAA;
   font-weight: 500;
 }
-.calendario-form input[type="date"],
-.calendario-form input[type="time"],
-.calendario-form input[type="number"], /* Si añades input number */
-.calendario-form select { /* Reutiliza .form-input */
-  background-color: #2a2a2a;
-  border: 1px solid #444444;
-  color: #E0E0E0;
-  padding: 10px 12px; /* Ligeramente menos padding que el general */
-  border-radius: 6px;
-  font-size: 1rem;
-  width: 100%;
-  box-sizing: border-box;
+.calendario-form .react-datepicker-custom-input,
+.calendario-form .react-timepicker-custom-input .react-time-picker__wrapper {
+    background-color: #2a2a2a;
+    border: 1px solid #444444;
+    color: #E0E0E0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
+
+.calendario-form .react-timepicker-custom-input {
+    width: 100%;
+}
+
+.calendario-form .react-timepicker-custom-input .react-time-picker__inputGroup__input {
+    color: #E0E0E0;
+}
+
+.react-time-picker__clock {
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+}
+.react-time-picker__clock-leading-zero {
+    color: #FF6D14;
+}
+
 .calendario-form input:focus,
-.calendario-form select:focus {
+.calendario-form select:focus,
+.calendario-form .react-datepicker-custom-input:focus,
+.calendario-form .react-timepicker-custom-input .react-time-picker__wrapper:focus-within {
    outline: none;
   border-color: #FF6D14;
   box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
 }
 
-.calendario-form .form-actions { /* Contenedor para botones del form */
+
+/* These rules are for the native select, but react-select will replace it */
+/* Kept for compatibility if react-select is not used or fails */
+.calendario-form select {
+  background-color: #2a2a2a;
+  border: 1px solid #444444;
+  color: #E0E0E0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.calendario-form .form-actions { /* Ensure you're targeting the correct .form-actions within calendario-form */
   display: flex;
-  justify-content: center;
+  justify-content: center; /* This centers the items horizontally */
   gap: 1rem;
   margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #333;
+  align-items: center;
 }
-/* Reutilizar .form-button */
-.calendario-form .button.primary { /* Para Guardar */
-   /* Hereda .form-button.primary */
+
+.calendario-form .button.primary {
+   /* Inherits .form-button.primary */
 }
-.calendario-form .button.secondary { /* Para Cancelar */
-  /* Hereda .form-button.secondary */
+.calendario-form .button.secondary {
+  /* Inherits .form-button.secondary */
 }
 
 
-/* Lista de eliminados */
 .eliminated-list {
   padding: 15px;
   background-color: #2a2a2a;
   border: 1px solid #444;
   border-radius: 6px;
   margin-top: 30px;
-  color: #AAAAAA; /* Texto secundario */
+  color: #AAAAAA;
   font-size: 0.9em;
 }
 .eliminated-list p {
   margin: 0;
 }
 .eliminated-list strong {
-  color: #CCCCCC; /* Ligeramente más claro */
+  color: #CCCCCC;
   font-weight: 500;
 }
-.calendario-container {
-  padding: 1rem;
-}
 
-.calendario-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1rem;
-}
-
-.calendario-add-button {
-  padding: 0.5rem 1rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.calendario-add-button:hover {
-  background-color: #0056b3;
-}
-
-.calendario-form {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 5px;
-
-}
-
-.calendario-form h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-.calendario-form .form-group {
-  margin-bottom: 0.8rem;
-}
-
-.calendario-form label {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-weight: bold;
-}
-
-.calendario-form input[type="date"],
-.calendario-form input[type="time"],
-.calendario-form select {
+.react-datepicker-wrapper {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  font-size: 1rem;
 }
 
-.calendario-form .form-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+/* Override react-datepicker's default background and text colors */
+body .react-datepicker { /* Added 'body ' for higher specificity */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.9rem;
+    background-color: #1e1e1e; /* Darker background for the entire date picker */
+    color: #E0E0E0; /* Text color inside the picker */
+    border: 1px solid #444; /* Darker border */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    display: inline-block;
+    position: relative;
+    line-height: initial;
 }
 
-.calendario-partidos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
+body .react-datepicker__header { /* Also apply to the header */
+    background-color: #2a2a2a; /* Darker header for the date picker */
+    border-bottom: 1px solid #444;
+    padding-top: 8px;
+}
+
+body .react-datepicker__current-month,
+body .react-datepicker__day-name {
+    color: #FF6D14;
+}
+
+body .react-datepicker__day {
+    color: #E0E0E0;
+}
+
+body .react-datepicker__day--selected,
+body .react-datepicker__day--keyboard-selected {
+    background-color: #FF6D14;
+    color: white;
+}
+
+body .react-datepicker__day--outside-month {
+    color: #888888;
+}
+
+body .react-datepicker__navigation--previous,
+body .react-datepicker__navigation--next {
+    top: 10px;
+    border: none;
+    background: none;
+}
+body .react-datepicker__navigation-icon::before {
+    border-color: #E0E0E0;
+}
+
+
+/* Styles for react-time-picker */
+.react-time-picker {
+    width: 100%;
+}
+.react-time-picker__wrapper {
+    background-color: #2a2a2a;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+.react-time-picker__inputGroup {
+    flex-grow: 1;
+}
+
+.react-time-picker__inputGroup__input {
+    background: none;
+    border: none;
+    color: #E0E0E0;
+    font-size: 1rem;
+    padding: 0;
+    outline: none;
+}
+
+.react-time-picker__inputGroup__divider {
+    color: #E0E0E0;
+}
+
+.react-time-picker__button {
+    color: #FF6D14;
+}
+.react-time-picker__button:enabled:hover .react-time-picker__button__icon,
+.react-time-picker__button:enabled:focus .react-time-picker__button__icon {
+    stroke: #E05A0B;
+}
+
+.react-time-picker__amPm {
+    color: #E0E0E0;
+}
+
+.react-time-picker__dropdown {
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.react-time-picker__clock-hand__mark {
+    background-color: #FF6D14;
+}
+
+.react-time-picker__hour, .react-time-picker__minute {
+    color: #E0E0E0;
+}
+.react-time-picker__hour--active, .react-time-picker__minute--active {
+    background-color: #FF6D14;
+    color: white;
+}
+
+
+/* --- react-select CUSTOM STYLES --- */
+/* Target classes with classNamePrefix="react-select" */
+
+/* Control (the visible select box) */
+.react-select__control {
+    background-color: #2a2a2a !important; /* Dark background */
+    border: 1px solid #444444 !important; /* Dark border */
+    color: #E0E0E0 !important; /* Text color */
+    box-shadow: none !important; /* Remove default shadow */
+    min-height: 40px; /* Adjust height if needed */
+    border-radius: 6px;
+}
+.react-select__control--is-focused {
+    border-color: #FF6D14 !important;
+    box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3) !important;
+}
+
+/* Input text color */
+.react-select__single-value {
+    color: #E0E0E0 !important;
+}
+.react-select__placeholder {
+    color: #AAAAAA !important; /* Placeholder color */
+}
+
+/* Menu (the dropdown list) */
+.react-select__menu {
+    background-color: #1e1e1e !important; /* Dark background for dropdown */
+    border: 1px solid #444 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+    z-index: 100; /* Ensure it's above other content */
+    border-radius: 6px; /* Match control border-radius */
+}
+
+/* Options (individual items in the dropdown) */
+.react-select__option {
+    background-color: transparent !important; /* Default background transparent */
+    color: #E0E0E0 !important; /* Text color */
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Hover and focus state for options - THIS IS THE KEY */
+.react-select__option--is-focused { /* When highlighted by keyboard or hover */
+    background-color: #FF6D14 !important; /* Orange background on hover/focus */
+    color: #FFFFFF !important; /* White text on orange */
+}
+
+/* Selected option in the dropdown list (if multi-select) */
+.react-select__option--is-selected {
+    background-color: #E05A0B !important; /* Slightly darker orange if selected */
+    color: #FFFFFF !important;
+}
+
+/* Indicators (dropdown arrow, clear icon) */
+.react-select__indicator-separator {
+    background-color: #666 !important; /* Separator line color */
+}
+.react-select__dropdown-indicator {
+    color: #FF6D14 !important; /* Dropdown arrow color */
+}
+.react-select__clear-indicator {
+    color: #FF6D14 !important; /* Clear icon color */
 }
