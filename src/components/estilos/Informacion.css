@@ -1,25 +1,23 @@
-/* styles/Informacion.css */
-
+/* Layout principal de la página de información (columnas) */
 .informacion-page-layout2 {
-  display: flex; /* CLAVE: Esto crea el layout de columnas para sus hijos directos */
+  display: flex;
   gap: 1.5rem;
-  align-items: stretch; /* Hace que .novedades-section e .informacion-container tengan la misma altura */
-  height: 100%; /* Asume que el padre (.contenido-bloque) tiene una altura definida */
+  align-items: stretch;
+  height: 100%;
   box-sizing: border-box;
 }
 
-/* --- Columna Izquierda: Novedades --- */
+/* Columna Izquierda: Novedades */
 .novedades-section {
-  flex: 0 0 320px; /* Ancho fijo para la columna de novedades. Puedes usar % (ej: 30%) o minmax */
+  flex: 0 0 320px;
   display: flex;
-  flex-direction: column; /* Para el contenido interno de novedades (título y lista) */
+  flex-direction: column;
   background-color: #262626;
   padding: 1.2rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   border: 1px solid #383838;
   box-sizing: border-box;
-  /* No necesita height: 100% si align-items: stretch funciona en el padre */
 }
 
 .novedades-section.placeholder-novedades {
@@ -28,6 +26,7 @@
   color: #777;
   min-height: 200px;
 }
+
 .novedades-section.placeholder-novedades .loading-novedades {
   padding: 0;
 }
@@ -44,6 +43,7 @@
   gap: 0.6rem;
   flex-shrink: 0;
 }
+
 .novedades-section h2 svg {
   font-size: 1.1em;
 }
@@ -58,6 +58,7 @@
   flex-grow: 1;
   font-size: 0.9rem;
 }
+
 .loading-novedades .spinner-icon {
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
@@ -69,13 +70,29 @@
   padding: 0;
   margin: 0;
   overflow-y: auto;
-  flex-grow: 1; /* Para que la lista ocupe el espacio vertical en .novedades-section */
+  flex-grow: 1;
 }
-.novedades-list::-webkit-scrollbar { width: 7px; }
-.novedades-list::-webkit-scrollbar-track { background: #262626; border-radius: 0 5px 5px 0; }
-.novedades-list::-webkit-scrollbar-thumb { background-color: #4e4e4e; border-radius: 3px; }
-.novedades-list::-webkit-scrollbar-thumb:hover { background-color: #666; }
 
+/* Estilos de scrollbar para la lista de novedades */
+.novedades-list::-webkit-scrollbar {
+  width: 7px;
+}
+
+.novedades-list::-webkit-scrollbar-track {
+  background: #262626;
+  border-radius: 0 5px 5px 0;
+}
+
+.novedades-list::-webkit-scrollbar-thumb {
+  background-color: #4e4e4e;
+  border-radius: 3px;
+}
+
+.novedades-list::-webkit-scrollbar-thumb:hover {
+  background-color: #666;
+}
+
+/* Elemento individual de novedad */
 .novedad-item {
   display: flex;
   align-items: flex-start;
@@ -84,8 +101,14 @@
   border-bottom: 1px solid #333;
   transition: background-color 0.15s ease;
 }
-.novedad-item:last-child { border-bottom: none; }
-.novedad-item:hover { background-color: #303030; }
+
+.novedad-item:last-child {
+  border-bottom: none;
+}
+
+.novedad-item:hover {
+  background-color: #303030;
+}
 
 .novedad-icon {
   font-size: 1.1rem;
@@ -94,7 +117,10 @@
   width: 20px;
   text-align: center;
 }
-.novedad-icon svg { display: block; }
+
+.novedad-icon svg {
+  display: block;
+}
 
 .novedad-content {
   display: flex;
@@ -103,6 +129,7 @@
   flex-grow: 1;
   overflow: hidden;
 }
+
 .novedad-mensaje {
   font-size: 0.85rem;
   color: #dadada;
@@ -110,10 +137,12 @@
   margin: 0;
   word-break: break-word;
 }
+
 .novedad-timestamp {
   font-size: 0.7rem;
   color: #888;
 }
+
 .no-novedades {
   color: #888;
   font-style: italic;
@@ -126,11 +155,11 @@
   font-size: 0.9rem;
 }
 
-/* --- Columna Derecha: Información del Torneo --- */
+/* Columna Derecha: Información del Torneo */
 .informacion-container {
-  flex-grow: 1; /* Ocupa el espacio horizontal restante */
+  flex-grow: 1;
   display: flex;
-  flex-direction: column; /* Apila sus 3 secciones internas verticalmente */
+  flex-direction: column;
   background-color: #1e1e1e;
   color: #e0e0e0;
   padding: 1.5rem;
@@ -138,8 +167,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
   border: 1px solid #333;
-  position: relative; /* Para .loading-inline */
-  /* No necesita height: 100% si align-items: stretch funciona en el padre */
+  position: relative;
 }
 
 .informacion-container.loading-container.main-loading {
@@ -149,6 +177,7 @@
   flex-grow: 1;
   min-height: 300px;
 }
+
 .informacion-container.loading-container.main-loading .spinner-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
@@ -158,7 +187,7 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(40,40,40,0.85);
+  background-color: rgba(40, 40, 40, 0.85);
   color: #FF6D14;
   padding: 6px 12px;
   border-radius: 5px;
@@ -169,12 +198,14 @@
   z-index: 10;
   border: 1px solid #444;
 }
+
 .loading-inline .spinner-icon.small {
   font-size: 0.9rem;
   margin: 0;
   color: #FF6D14;
 }
 
+/* Mensaje de error principal */
 .form-error-message.main-error {
   background-color: rgba(255, 80, 80, 0.1);
   border: 1px solid rgba(255, 80, 80, 0.3);
@@ -187,6 +218,8 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+/* Botón de reintento */
 .retry-button.small-retry {
   padding: 0.3rem 0.8rem;
   font-size: 0.8rem;
@@ -195,22 +228,39 @@
   color: #ddd;
   border: 1px solid #666;
 }
+
 .retry-button.small-retry:hover {
   background-color: #666;
   color: #fff;
 }
 
-/* Sección 1 (Derecha): Contenido principal de info (scrollable) */
+/* Sección de contenido principal (con scroll) */
 .informacion-contenido-scrollable {
-  flex-grow: 1; /* CLAVE: Esta sección toma el espacio vertical disponible */
-  overflow-y: auto; /* Permite scroll si el contenido (info-header + info-grid) es muy largo */
-  margin-bottom: 1.5rem; /* Espacio antes de la sección de código */
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
 }
-.informacion-contenido-scrollable::-webkit-scrollbar { width: 7px; }
-.informacion-contenido-scrollable::-webkit-scrollbar-track { background: #1e1e1e; border-radius: 0 5px 5px 0; }
-.informacion-contenido-scrollable::-webkit-scrollbar-thumb { background-color: #4e4e4e; border-radius: 3px; }
-.informacion-contenido-scrollable::-webkit-scrollbar-thumb:hover { background-color: #666; }
 
+/* Estilos de scrollbar para el contenido principal */
+.informacion-contenido-scrollable::-webkit-scrollbar {
+  width: 7px;
+}
+
+.informacion-contenido-scrollable::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 0 5px 5px 0;
+}
+
+.informacion-contenido-scrollable::-webkit-scrollbar-thumb {
+  background-color: #4e4e4e;
+  border-radius: 3px;
+}
+
+.informacion-contenido-scrollable::-webkit-scrollbar-thumb:hover {
+  background-color: #666;
+}
+
+/* Cabecera de la sección de información */
 .info-header {
   display: flex;
   align-items: center;
@@ -218,17 +268,29 @@
   margin-bottom: 1.5rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid #333;
-  flex-shrink: 0; /* Importante para que no se encoja */
+  flex-shrink: 0;
 }
-.info-header svg { font-size: 2.2rem; color: #FF6D14; }
-.info-header h1 { font-size: 1.8rem; font-weight: 700; color: #ffffff; margin: 0; }
 
+.info-header svg {
+  font-size: 2.2rem;
+  color: #FF6D14;
+}
+
+.info-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Cuadrícula de elementos de información */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.2rem;
-  /* No necesita flex-grow aquí, su padre .informacion-contenido-scrollable lo maneja */
 }
+
+/* Elemento individual de información */
 .info-item {
   background-color: #2a2a2a;
   padding: 0.9rem 1.1rem;
@@ -238,34 +300,63 @@
   gap: 0.7rem;
   border-left: 3px solid #FF6D14;
 }
-.info-item.full-width { grid-column: 1 / -1; }
-.info-icon { font-size: 1.1rem; color: #FF6D14; margin-top: 0.15rem; flex-shrink: 0; }
-.info-item div strong { display: block; font-size: 0.8rem; color: #aaaaaa; margin-bottom: 0.25rem; text-transform: uppercase; }
-.info-item div p { font-size: 0.95rem; color: #e0e0e0; margin: 0; line-height: 1.4; }
-.descripcion-text { white-space: pre-wrap; word-break: break-word; }
 
-/* Sección 2 (Derecha): Código Torneo */
+.info-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.info-icon {
+  font-size: 1.1rem;
+  color: #FF6D14;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+.info-item div strong {
+  display: block;
+  font-size: 0.8rem;
+  color: #aaaaaa;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.info-item div p {
+  font-size: 0.95rem;
+  color: #e0e0e0;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.descripcion-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Sección de código del torneo */
 .codigo-torneo-section {
   padding-top: 1.2rem;
   border-top: 1px solid #333;
-  text-align: left; /* MODIFICADO: de center a left */
-  flex-shrink: 0; /* Importante para que no se encoja */
+  text-align: left;
+  flex-shrink: 0;
 }
+
 .codigo-torneo-section h3 {
   font-size: 1.3rem;
   color: #ffffff;
   margin-bottom: 0.8rem;
 }
+
 .codigo-display-container {
   display: flex;
-  justify-content: flex-start; /* MODIFICADO: de center a flex-start */
+  justify-content: flex-start;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
-  max-width: 380px; /* Mantener o ajustar según preferencia visual */
-  margin-left: 0; /* MODIFICADO: quitado auto */
-  margin-right: 0; /* MODIFICADO: quitado auto */
+  max-width: 380px;
+  margin-left: 0;
+  margin-right: 0;
 }
+
 .codigo-input {
   background-color: #1a1a1a;
   color: #FF6D14;
@@ -274,10 +365,12 @@
   padding: 0.7rem 0.9rem;
   font-size: 1rem;
   font-weight: bold;
-  text-align: left; /* MODIFICADO: de center a left, si se desea */
+  text-align: left;
   flex-grow: 1;
   font-family: 'Courier New', Courier, monospace;
 }
+
+/* Botón de copiar */
 .copy-button {
   background-color: #FF6D14;
   color: white;
@@ -292,57 +385,62 @@
   gap: 0.4rem;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
+
 .copy-button:hover:not(:disabled) {
   background-color: #E05A0B;
   transform: translateY(-1px);
 }
+
 .copy-button:disabled {
   background-color: #555;
   cursor: not-allowed;
 }
+
 .copy-button svg {
   font-size: 1rem;
 }
+
 .copy-feedback {
   color: #4caf50;
   font-size: 0.85rem;
   margin-top: 0.5rem;
-  /* Se alineará a la izquierda si .codigo-torneo-section es text-align: left */
 }
 
-/* Sección 3 (Derecha): Zona de Peligro / Eliminar Torneo */
+/* Sección de zona de peligro / eliminar torneo */
 .danger-zone-section {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 2px solid #552200; 
-  background-color: rgba(255, 80, 80, 0.05); 
+  border-top: 2px solid #552200;
+  background-color: rgba(255, 80, 80, 0.05);
   padding: 1.5rem;
   border-radius: 6px;
   border: 1px solid #552200;
-  flex-shrink: 0; /* Importante para que no se encoja */
-  /* Por defecto, el contenido se alineará a la izquierda si no se especifica text-align: center aquí */
+  flex-shrink: 0;
 }
+
 .danger-zone-title {
   font-size: 1.3rem;
-  color: #ff9a9a; 
+  color: #ff9a9a;
   margin-bottom: 0.8rem;
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  /* justify-content: flex-start; es el valor por defecto para flex items */
 }
+
 .danger-zone-title svg {
   font-size: 1.2em;
 }
+
 .danger-zone-description {
   font-size: 0.9rem;
   color: #aaa;
   line-height: 1.6;
   margin-bottom: 1.5rem;
-  /* text-align: left; por defecto */
 }
+
+/* Botón de la zona de peligro */
 .danger-zone-button {
-  background-color: #c0392b; 
+  background-color: #c0392b;
   color: #ffffff;
   border: none;
   padding: 0.8rem 1.5rem;
@@ -350,64 +448,102 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  display: inline-flex; /* Para que se comporte como texto y respete text-align del padre si fuera necesario, y no ocupe todo el ancho */
+  display: inline-flex;
   align-items: center;
   gap: 0.7rem;
   transition: background-color 0.2s ease, transform 0.1s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  /* margin-left: 0;  Asegurar que no haya un margin: auto que lo centre */
 }
+
 .danger-zone-button:hover:not(:disabled) {
-  background-color: #a93226; 
+  background-color: #a93226;
   transform: translateY(-1px);
 }
+
 .danger-zone-button:disabled {
   background-color: #777;
   color: #bbb;
   cursor: not-allowed;
 }
+
 .danger-zone-button .spinner-icon {
-  font-size: 1em; 
-  margin: 0; 
-  animation: spin 1s linear infinite; 
+  font-size: 1em;
+  margin: 0;
+  animation: spin 1s linear infinite;
 }
 
+/* Animación de giro para spinners */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
 .spinner-icon {
   animation: spin 1.5s linear infinite;
 }
 
-/* --- Media Queries --- */
-/* Si quieres que en pantallas pequeñas las columnas se apilen una encima de otra: */
+/* Media Queries */
 @media (max-width: 992px) {
-    .informacion-page-layout2 { /* Renombrada la clase en el JS para evitar colisión, asegúrate que sea -layout2 o la que uses */
-        flex-direction: column; /* Apila Novedades encima de InformacionContainer */
-        height: auto; /* La altura se ajusta al contenido */
-    }
-    .novedades-section {
-        flex-basis: auto; /* Permite que la altura se ajuste al contenido o a max-height */
-        max-height: 40vh; /* Limita la altura de novedades en móvil, por ejemplo */
-        min-width: 100%;
-    }
-    .informacion-container {
-        min-width: 100%;
-    }
-    .informacion-contenido-scrollable {
-        overflow-y: visible; /* En móvil, es probable que toda la página scrollee */
-    }
+  .informacion-page-layout2 {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .novedades-section {
+    flex-basis: auto;
+    max-height: 40vh;
+    min-width: 100%;
+  }
+
+  .informacion-container {
+    min-width: 100%;
+  }
+
+  .informacion-contenido-scrollable {
+    overflow-y: visible;
+  }
 }
 
 @media (max-width: 768px) {
-    .informacion-container { padding: 1rem; }
-    .info-header h1 { font-size: 1.6rem; }
-    .info-header svg { font-size: 2rem; }
-    .info-grid { grid-template-columns: 1fr; gap: 1rem; }
-    .codigo-input { font-size: 0.9rem; padding: 0.6rem; }
-    .copy-button { padding: 0.6rem 0.8rem; font-size: 0.8rem; }
-    .novedades-section h2 { font-size: 1.3rem; }
-    .novedad-item { padding: 0.7rem 0.2rem; gap: 0.6rem; }
+  .informacion-container {
+    padding: 1rem;
+  }
+
+  .info-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .info-header svg {
+    font-size: 2rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .codigo-input {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  .copy-button {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .novedades-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .novedad-item {
+    padding: 0.7rem 0.2rem;
+    gap: 0.6rem;
+  }
 }

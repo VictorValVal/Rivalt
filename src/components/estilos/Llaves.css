@@ -1,247 +1,153 @@
-/* Llaves.css */
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
-
-/* Estilos generales para el contenedor de las llaves */
+/* Contenedor principal de las llaves */
 .llaves-container {
   display: flex;
-  /* flex-direction: column; Opcional, si necesitas apilar elementos verticalmente antes de centrarlos */
-  justify-content: center; /* Centra el contenido (Bracket/mensaje) verticalmente */
-  align-items: center;   /* Centra el contenido (Bracket/mensaje) horizontalmente */
-  background-color: #121212; /* */
-  color: #FFFFFF; /* */
-  padding: 20px; /* */
-  /* Ajuste de altura: en lugar de min-height: 100vh, ocupa el 100% del padre (que es main con 90vh) */
+  justify-content: center;
+  align-items: center;
+  background-color: #121212;
+  color: #FFFFFF;
+  padding: 20px;
   height: 100%;
-  box-sizing: border-box; /* */
-  font-family: 'Lexend', sans-serif; /* */
-  overflow: auto; /* Añade scrollbars DENTRO de este contenedor si el bracket es muy grande */
+  box-sizing: border-box;
+  font-family: 'Lexend', sans-serif;
+  overflow: auto;
 }
 
 /* Títulos de Ronda */
 .round-title {
-  color: #FF6D14 !important; /* */
-  font-weight: bold !important; /* */
-  text-align: center !important; /* */
-  margin-bottom: 20px !important; /* */
-  font-size: 1.4em !important; /* */
+  color: #FF6D14 !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  margin-bottom: 20px !important;
+  font-size: 1.4em !important;
 }
 
 /* Estilos para cada enfrentamiento (SeedItem) */
 .SeedItem {
-  background-color: #1e1e1e !important; /* */
-  color: #FFFFFF !important; /* */
-  border: 1px solid #FF6D14 !important; /* */
-  border-radius: 8px !important; /* */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important; /* */
-  text-align: left !important; /* */
-  position: relative !important; /* */
-  margin-bottom: 15px !important; /* */
-  width: 100% !important; /* */
-  box-sizing: border-box !important; /* */
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important; /* */
+  background-color: #1e1e1e !important;
+  color: #FFFFFF !important;
+  border: 1px solid #FF6D14 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important;
+  text-align: left !important;
+  position: relative !important;
+  margin-bottom: 15px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
 }
 
 .SeedItem:hover {
-  transform: scale(1.02) !important; /* */
-  box-shadow: 0 4px 10px rgba(255, 109, 20, 0.3) !important; /* */
+  transform: scale(1.02) !important;
+  box-shadow: 0 4px 10px rgba(255, 109, 20, 0.3) !important;
 }
 
 /* Contenedor de la información de los equipos (nombre y resultado) */
 .teams-display-container {
-  padding-right: 75px;  /* */
-  background-color: #121212; /* Este fondo es igual al del .llaves-container. Considera si es necesario o si quieres un contraste. */ /* */
-  border-radius: 10px; /* */
-  /* Añadido para mejor estructura interna si los SeedTeam deben estar más contenidos */
-  padding-left: 10px; /* Ejemplo, ajusta si es necesario */
-  padding-top: 5px;   /* Ejemplo, ajusta si es necesario */
-  padding-bottom: 5px;/* Ejemplo, ajusta si es necesario */
+  padding-right: 75px;
+  background-color: #121212;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 /* Estilos para los equipos dentro de un enfrentamiento */
 .SeedTeam {
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  padding: 8px 0px; 
-  border-bottom: 1px solid #ff0000; /* This is the line */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0px;
+  border-bottom: 1px solid #ff0000;
 }
 
 .SeedTeam:last-child {
-  border-bottom: none; /* This removes the line from the second team */
+  border-bottom: none;
 }
 
 .team-name {
-  font-weight: 500; /* */
-  font-size: 0.95em; /* */
-  margin-right: 8px; /* */
-  flex-grow: 1; /* */
-  overflow: hidden; /* */
-  text-overflow: ellipsis; /* */
-  white-space: nowrap; /* */
-  color: #FFFFFF; /* */
+  font-weight: 500;
+  font-size: 0.95em;
+  margin-right: 8px;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #FFFFFF;
 }
 
 .score {
-  font-weight: bold; /* */
-  color: #FFFFFF; /* */
-  font-size: 0.95em; /* */
-  margin-left: 8px; /* */
-  white-space: nowrap; /* */
+  font-weight: bold;
+  color: #FFFFFF;
+  font-size: 0.95em;
+  margin-left: 8px;
+  white-space: nowrap;
 }
 
 /* Estilos para el equipo ganador */
-.winner-team .team-name {
-  font-weight: bold !important; /* */
-  color: #FF6D14 !important; /* */
-}
+.winner-team .team-name,
 .winner-team .score {
-  color: #FF6D14 !important; /* */
+  font-weight: bold !important;
+  color: #FF6D14 !important;
 }
 
 /* Botones de acción dentro de cada Seed/Partido */
 .seed-actions {
-  display: flex; /* */
-  flex-direction: row; /* */
-  gap: 8px; /* */
-  position: absolute; /* */
-  top: 50%; /* */
-  right: 10px; /* */
-  transform: translateY(-50%); /* */
-  z-index: 1; /* */
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  z-index: 1;
 }
 
 .modify-button,
 .add-result-button {
-  background-color: #FF6D14; /* */
-  color: #FFFFFF; /* */
-  padding: 6px 10px; /* */
-  font-size: 0.8em; /* */
-  border: none; /* */
-  border-radius: 5px; /* */
-  cursor: pointer; /* */
-  transition: background-color 0.3s ease, transform 0.1s ease; /* */
-  display: flex; /* */
-  align-items: center; /* */
-  justify-content: center; /* */
-  line-height: 1; /* */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* */
+  background-color: #FF6D14;
+  color: #FFFFFF;
+  padding: 6px 10px;
+  font-size: 0.8em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .modify-button:hover,
 .add-result-button:hover {
-  background-color: #E05A0B; /* */
-  transform: scale(1.05); /* */
+  background-color: #E05A0B;
+  transform: scale(1.05);
 }
 
 .modify-button svg,
 .add-result-button svg {
-  font-size: 1.1em; /* */
+  font-size: 1.1em;
 }
 
 /* Líneas del bracket */
-.bracket-svg-container svg path, /* Si hay un contenedor con esta clase */
-div[class*="bracket"] svg path, /* Si la clase del contenedor de bracket es dinámica pero contiene "bracket" */
-.llaves-container svg path { /* Como último recurso si el SVG está directamente en .llaves-container y no hay otros SVGs */
-  stroke: #FF6D14 !important; /* ESTA LÍNEA ESTABLECE EL COLOR NARANJA */
+.bracket-svg-container svg path,
+div[class*="bracket"] svg path,
+.llaves-container svg path {
+  stroke: #FF6D14 !important;
   stroke-width: 2px !important;
 }
 
 /* Mensajes de estado */
-.llaves-container > p {
-  color: #FFFFFF; /* */
-  text-align: center; /* */
-  width: 100%; /* */
-  font-size: 1.1em; /* */
-  padding: 30px 0; /* */
-  /* Si el mensaje se muestra cuando el Bracket no está, y el Bracket es el que se centra,
-     el mensaje también se centrará por las propiedades flex del .llaves-container */
+.llaves-container>p {
+  color: #FFFFFF;
+  text-align: center;
+  width: 100%;
+  font-size: 1.1em;
+  padding: 30px 0;
 }
 
-/* --- Media Queries para Responsividad --- */
-
-@media (max-width: 768px) {
-  .llaves-container {
-    padding: 10px; /* */
-    /* Si el bracket es muy ancho y causa scroll horizontal en móvil,
-       podrías necesitar ajustar el 'width' o 'zoom' del bracket aquí
-       o permitir scroll horizontal SÓLO en el bracket. */
-  }
-  
-
-  
-.Seed { /* Selector para el contenedor de cada partido (la "celda") */
-    /* Aquí estableces el min-width que deseas para las celdas en móvil.
-       Por ejemplo, si quieres que nunca sean más estrechas de 180px: */
-    min-width: 0px !important; /* ¡Ajusta este valor según tus necesidades! */
-
-    /* Si también necesitas controlar el width o max-width para complementar el min-width: */
-    /* width: 90% !important; */ /* Por ejemplo, que ocupen el 90% del espacio disponible, pero no menos que el min-width */
-    /* max-width: 250px !important; */ /* Por ejemplo, que no superen un cierto ancho máximo en móvil */
-
-    /* Recuerda que el !important es a menudo necesario para sobreescribir
-       los estilos de la biblioteca (styled-components). */
-  }
-  .round-title {
-    font-size: 1.2em !important; /* */
-    margin-bottom: 15px !important; /* */
-  }
-
-  .SeedItem {
-
-    margin-bottom: 10px !important; /* */
-  }
-
-  .teams-display-container {
-    padding-right: 50px; /* */
-    padding-left: 8px; /* Ajuste para móvil */
-  }
-
-  .team-name, .score {
-    font-size: 0.85em; /* */
-  }
-
-  .seed-actions {
-    right: 8px; /* */
-    gap: 5px; /* */
-  }
-
-  .modify-button,
-  .add-result-button {
-    padding: 5px 7px; /* */
-    font-size: 0.75em; /* */
-  }
-  .modify-button svg,
-  .add-result-button svg {
-    font-size: 1em; /* */
-  }
-}
-
-@media (max-width: 480px) {
-  .round-title {
-    font-size: 1.1em !important; /* */
-  }
-
-  .team-name, .score {
-    font-size: 0.8em; /* */
-  }
-
-  .modify-button,
-  .add-result-button {
-    width: 30px; /* */
-    height: 30px; /* */
-    padding: 0; /* */
-  }
-  .modify-button svg,
-  .add-result-button svg {
-    font-size: 0.9em; /* */
-  }
-
-  .teams-display-container {
-    padding-right: 40px; /* */
-    padding-left: 5px; /* Ajuste para móvil muy pequeño */
-  }
-}
-/* Llaves.css - Añadir al final */
+/* Vista de modo completo */
 .llaves-container.view-mode {
   overflow: visible !important;
   padding: 10px !important;
@@ -270,34 +176,30 @@ div[class*="bracket"] svg path, /* Si la clase del contenedor de bracket es din�
 }
 
 .llaves-container.view-mode .bracket {
-  gap: 15px !important; /* Reduce espacio entre rondas */
+  gap: 15px !important;
 }
-/* Asegúrate de que el wrapper del bracket permita scroll horizontal en móvil si es necesario */
-/* y que no esté en modo fullscreen */
+
+/* Wrapper del contenido del bracket (para scroll horizontal) */
 .llaves-container:not(.llaves-en-fullscreen-activo) .bracket-content-wrapper {
-  overflow-x: auto; /* Permite deslizar horizontalmente las rondas */
-  overflow-y: hidden; /* Evita scroll vertical innecesario para el wrapper */
-  /* width: 100%; ya debería estar por defecto o por .llaves-container flex */
-  /* height: 100%; ya debería estar por defecto o por .llaves-container flex */
-  /* display:flex; align-items:stretch; podría ser útil si Bracket no toma altura */
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
-
-/* --- ESTILOS PARA NAVEGACIÓN DE RONDAS EN MÓVIL --- */
+/* Navegación de rondas en móvil */
 .mobile-round-navigation {
-  display: none; /* Oculto por defecto */
-  position: fixed; /* O absolute si .llaves-container es el viewport relativo deseado */
+  display: none;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(34, 34, 34, 0.95); /* #222222 con opacidad */
+  background-color: rgba(34, 34, 34, 0.95);
   padding: 10px 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  z-index: 1020; /* Por encima del contenido del bracket, debajo de modales/fullscreen global */
+  z-index: 1020;
   border-top: 1px solid #FF6D14;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .mobile-round-navigation button {
@@ -331,113 +233,128 @@ div[class*="bracket"] svg path, /* Si la clase del contenedor de bracket es din�
   font-weight: 500;
 }
 
-/* Media query para mostrar los botones de navegación solo en móvil */
-@media (max-width: 768px) { /* Usa el mismo breakpoint que en tu JS para isMobileView */
-  .llaves-container .mobile-round-navigation { /* Asegura que se muestre si está dentro de .llaves-container */
-                                               /* Si lo moviste fuera, solo .mobile-round-navigation */
-    display: flex;
-  }
-
-  /* Ajusta el padding del .llaves-container o .bracket-content-wrapper
-     para dejar espacio a la barra de navegación si es fixed y superpuesta */
-  .llaves-container:not(.llaves-en-fullscreen-activo) {
-    /* Si la barra de navegación es fixed bottom, añade padding-bottom */
-    /* padding-bottom: 70px; */ /* Altura aproximada de la barra de navegación + algo de margen */
-  }
-  /* O si la barra no es fixed y está en el flujo, no se necesita padding extra */
-}
-
-
-/* ... (resto de tus estilos y media queries, incluyendo las de fullscreen) ... */
-/* Ejemplo: si el botón de fullscreen también es fixed o absolute, asegúrate que no colisione */
-.fullscreen-toggle-button {
-  /* ... tus estilos ... */
-  /* Podrías necesitar ajustar top/bottom si la barra de navegación móvil está presente */
-}
-
-/* En modo fullscreen, podrías querer ocultar la navegación de rondas móvil
-   si el bracket ya se ve completo y no hay scroll */
+/* Ocultar navegación en modo fullscreen */
 .llaves-container.llaves-en-fullscreen-activo .mobile-round-navigation {
   display: none !important;
 }
-/* ===== Correcciones para móvil (más de 4 participantes) ===== */
+
+/* Media Queries para Responsividad */
 @media (max-width: 768px) {
-  /* Contenedor principal del bracket: permite scroll horizontal */
-  .llaves-container .bracket-content-wrapper {
-    overflow-x: auto !important;
-    padding-bottom: 20px; /* Espacio para el scroll */
+  .llaves-container {
+    padding: 10px;
   }
 
-  /* Rondas: ancho mínimo basado en el número de participantes */
-  .llaves-container [class*="RoundContainer"] {
-    min-width: 180px !important; /* Ajusta según necesidad */
-    margin-right: 15px !important; /* Separación entre rondas */
-    flex-shrink: 0 !important; /* Evita que se encojan */
+  /* Ajuste para el contenedor de cada partido (la "celda") */
+  .Seed {
+    min-width: 0px !important;
   }
 
-  /* Partidos individuales (Seeds): evita compresión */
-  .llaves-container .sc-iMYVAi.jknKFS {
-    min-width: 150px !important; /* Fija un ancho mínimo */
-    width: auto !important;
+  .round-title {
+    font-size: 1.2em !important;
+    margin-bottom: 15px !important;
+  }
+
+  .SeedItem {
     margin-bottom: 10px !important;
   }
 
-  /* Equipos: ajusta el padding para más participantes */
-  .llaves-container .teams-display-container {
-    padding-right: 60px !important; /* Más espacio para botones */
+  .teams-display-container {
+    padding-right: 50px;
+    padding-left: 8px;
   }
 
-  /* Botones de acción: asegura visibilidad */
+  .team-name,
+  .score {
+    font-size: 0.85em;
+  }
+
+  .seed-actions {
+    right: 8px;
+    gap: 5px;
+  }
+
+  .modify-button,
+  .add-result-button {
+    padding: 5px 7px;
+    font-size: 0.75em;
+  }
+
+  .modify-button svg,
+  .add-result-button svg {
+    font-size: 1em;
+  }
+
+  .llaves-container .mobile-round-navigation {
+    display: flex;
+  }
+
+  /* Correcciones para más de 4 participantes en móvil */
+  .llaves-container .bracket-content-wrapper {
+    overflow-x: auto !important;
+    padding-bottom: 20px;
+    overflow-y: hidden !important;
+    max-width: 90vw !important;
+  }
+
+  .llaves-container [class*="RoundContainer"] {
+    min-width: 180px !important;
+    margin-right: 15px !important;
+    flex-shrink: 0 !important;
+    width: 180px !important;
+  }
+
+  .llaves-container .sc-iMYVAi.jknKFS {
+    min-width: 150px !important;
+    width: auto !important;
+    margin-bottom: 10px !important;
+    width: 160px !important;
+    margin: 5px 0 !important;
+    font-size: 12px !important;
+  }
+
+  .llaves-container .teams-display-container {
+    padding-right: 60px !important;
+    padding-right: 50px !important;
+  }
+
   .llaves-container .seed-actions {
     right: 8px !important;
     gap: 6px !important;
-  }
-}
-
-/* === Ajuste adicional para evitar herencia de width:100% === */
-.llaves-container .sc-aXZvQ.kZIziA > div {
-  width: max-content !important; /* Contenedor interno del bracket */
-}
-/* ========== CORRECCIONES PARA MÓVIL ========== */
-@media (max-width: 768px) {
-  /* Contenedor principal del bracket - Fuerza scroll horizontal */
-  .llaves-container .bracket-content-wrapper {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    max-width: 90vw !important;
-    padding-bottom: 15px;
+    right: 5px !important;
+    transform: translateY(-50%) scale(0.9);
   }
 
-  /* Contenedor interno de react-brackets - Evita herencia de width */
   .llaves-container .sc-aXZvQ.kZIziA {
     width: max-content !important;
     min-width: unset !important;
     padding: 0 10px !important;
   }
+}
 
-  /* Rondas individuales - Ancho fijo para móvil */
-  .llaves-container [class*="RoundContainer"] {
-    width: 180px !important; /* Ancho fijo para todas las rondas */
-    min-width: unset !important;
-    margin-right: 10px !important;
+@media (max-width: 480px) {
+  .round-title {
+    font-size: 1.1em !important;
   }
 
-  /* Celdas de partidos (Seeds) - Tamaño consistente */
-  .llaves-container .sc-iMYVAi.jknKFS {
-    width: 160px !important; /* Ancho fijo para móvil */
-    min-width: unset !important;
-    margin: 5px 0 !important;
-    font-size: 12px !important;
+  .team-name,
+  .score {
+    font-size: 0.8em;
   }
 
-  /* Equipos - Ajuste de padding para evitar desbordamiento */
-  .llaves-container .teams-display-container {
-    padding-right: 50px !important;
+  .modify-button,
+  .add-result-button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
   }
 
-  /* Botones de acción - Posición compacta */
-  .llaves-container .seed-actions {
-    right: 5px !important;
-    transform: translateY(-50%) scale(0.9);
+  .modify-button svg,
+  .add-result-button svg {
+    font-size: 0.9em;
   }
-} 
+
+  .teams-display-container {
+    padding-right: 40px;
+    padding-left: 5px;
+  }
+}

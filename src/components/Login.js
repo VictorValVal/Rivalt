@@ -1,4 +1,3 @@
-// components/Login.js
 import React, { useState, useEffect, useRef } from "react";
 import {
   signInWithEmailAndPassword,
@@ -9,11 +8,11 @@ import {
 import { googleProvider, db, app } from "../firebase";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import "./estilos/Login.css"; // Ensure this path is correct
+import "./estilos/Login.css";
 import futbolistaImg from '../img/Futbolista.png';
 
 const authInstance = getAuth(app);
-const TOTAL_REGISTRATION_STEPS = 2; // Define total steps for clarity
+const TOTAL_REGISTRATION_STEPS = 2;
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -25,7 +24,7 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
-  const [registrationStep, setRegistrationStep] = useState(1); // Start at step 1
+  const [registrationStep, setRegistrationStep] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,6 +33,7 @@ function Login() {
   const shape1Ref = useRef(null);
   const shape2Ref = useRef(null);
 
+  // Maneja el movimiento del ratón para animar las formas de fondo.
   const handleMouseMove = (event) => {
     const { clientX, clientY } = event;
     const windowWidth = window.innerWidth;
@@ -70,6 +70,7 @@ function Login() {
     };
   }, []);
 
+  // Maneja los errores de autenticación de Firebase.
   const handleAuthError = (firebaseError) => {
     switch (firebaseError.code) {
       case "auth/invalid-email": return "El formato del correo electrónico no es válido.";
@@ -81,16 +82,18 @@ function Login() {
       case "auth/popup-closed-by-user": return "El proceso de inicio de sesión con Google fue cancelado.";
       case "auth/cancelled-popup-request": return "Se canceló la solicitud de inicio de sesión con Google porque ya hay una abierta.";
       case "auth/account-exists-with-different-credential": return "Ya existe una cuenta con este correo electrónico pero con un método de inicio de sesión diferente.";
-      default: console.error("Firebase Auth Error:", firebaseError); return "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.";
+      default: console.error("Error de autenticación de Firebase:", firebaseError); return "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.";
     }
   };
 
+  // Obtiene el valor numérico de la jerarquía del plan.
   const getPlanTierValue = (planName) => {
     if (planName === 'pro') return 3;
     if (planName === 'premium') return 2;
-    return 1; // free
+    return 1;
   };
 
+  // Completa la actualización del plan de un usuario después de iniciar sesión.
   const completePlanUpgradeAfterLogin = async (userId, planToSet) => {
     if (!planToSet || planToSet === 'free') return;
     try {
@@ -100,24 +103,26 @@ function Login() {
           const currentPlanInDb = userDocSnap.data().plan || 'free';
           if (getPlanTierValue(planToSet) > getPlanTierValue(currentPlanInDb)) {
                 await updateDoc(userRef, { plan: planToSet });
-                console.log(`Plan actualizado a ${planToSet} para usuario ${userId} después del login.`);
+                console.log(`Plan actualizado a ${planToSet} para usuario ${userId} después del inicio de sesión.`);
           } else {
               console.log(`El usuario ${userId} ya tiene el plan ${currentPlanInDb} o uno superior. No se actualizó a ${planToSet}.`);
           }
       } else {
           await setDoc(userRef, { plan: planToSet }, { merge: true });
-          console.log(`Plan ${planToSet} establecido para (posiblemente nuevo) usuario ${userId} después del login.`);
+          console.log(`Plan ${planToSet} establecido para (posiblemente nuevo) usuario ${userId} después del inicio de sesión.`);
       }
     } catch (error) {
-      console.error(`Error al actualizar el plan a ${planToSet} después del login para ${userId}:`, error);
+      console.error(`Error al actualizar el plan a ${planToSet} después del inicio de sesión para ${userId}:`, error);
     }
   };
 
+  // Valida el formato del correo electrónico.
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(String(email).toLowerCase());
   };
 
+  // Valida la complejidad de la contraseña.
   const validatePassword = (password) => {
     if (password.length < 8) {
       return "La contraseña debe tener al menos 8 caracteres.";
@@ -140,13 +145,12 @@ function Login() {
     return null;
   };
 
-  // New validation for name
+  // Valida el formato del nombre.
   const validateName = (name) => {
     const trimmedName = name.trim();
     if (trimmedName.length < 3) {
       return "El nombre debe tener al menos 3 caracteres.";
     }
-    // Optional: regex to allow only letters, spaces, and specific accented characters
     const nameRegex = /^[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]+$/;
     if (!nameRegex.test(trimmedName)) {
       return "El nombre solo puede contener letras y espacios.";
@@ -154,6 +158,7 @@ function Login() {
     return null;
   };
 
+  // Maneja el avance al siguiente paso del formulario de registro.
   const handleNextStep = (e) => {
     e.preventDefault();
     setError("");
@@ -176,17 +181,17 @@ function Login() {
         setError("Las contraseñas no coinciden.");
         return;
       }
-      setRegistrationStep(2); // Move to next step
+      setRegistrationStep(2);
     }
   };
 
+  // Maneja el envío final del formulario (inicio de sesión o registro).
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     if (isLogin) {
-      // Login specific validations
       if (!email.trim() || !password) {
         setError("Correo y contraseña son obligatorios.");
         setIsLoading(false);
@@ -197,7 +202,7 @@ function Login() {
         setIsLoading(false);
         return;
       }
-    } else { // Registration - final step
+    } else {
       if (registrationStep === 2) {
         const nameError = validateName(nombre);
         if (nameError) {
@@ -213,7 +218,7 @@ function Login() {
         const userCredential = await signInWithEmailAndPassword(authInstance, email, password);
         await completePlanUpgradeAfterLogin(userCredential.user.uid, intendedPlan);
         navigate("/home");
-      } else { // Registration - final step
+      } else {
         const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
         await setDoc(doc(db, "usuarios", userCredential.user.uid), {
           nombre: nombre.trim(),
@@ -231,6 +236,7 @@ function Login() {
     }
   };
 
+  // Maneja el inicio de sesión con Google.
   const handleGoogleSignIn = async () => {
     setError("");
     setIsGoogleLoading(true);
@@ -271,10 +277,11 @@ function Login() {
     }
   };
 
+  // Cambia entre los modos de inicio de sesión y registro.
   const toggleMode = () => {
     setIsSwitching(true);
     setError("");
-    setRegistrationStep(1); // Always reset to step 1 when switching modes
+    setRegistrationStep(1);
     setNombre("");
     setEmail("");
     setPassword("");
@@ -287,10 +294,12 @@ function Login() {
 
   const progressPercent = (registrationStep / TOTAL_REGISTRATION_STEPS) * 100;
 
+  // Valida el primer paso del formulario de registro.
   const isStep1Valid = () => {
     return email.trim() !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword && validateEmail(email) && validatePassword(password) === null;
   };
 
+  // Valida el segundo paso del formulario de registro.
   const isStep2Valid = () => {
     return validateName(nombre) === null;
   };
@@ -351,7 +360,7 @@ function Login() {
             )}
 
             {error && <p className="form-error-message">{error}</p>}
-            
+
             {isLogin || registrationStep === TOTAL_REGISTRATION_STEPS ? (
               <button type="submit" className="form-button primary full-width" disabled={isLoading || isGoogleLoading || isSwitching || (!isLogin && !isStep2Valid())}>
                 {isLoading ? "Procesando..." : isLogin ? "Iniciar Sesión" : "Registrarse"}
@@ -361,14 +370,14 @@ function Login() {
                 Siguiente
               </button>
             )}
-            
+
             {!isLogin && registrationStep === TOTAL_REGISTRATION_STEPS && (
               <button type="button" onClick={() => { setRegistrationStep(1); setError(""); }} className="form-button secondary full-width" disabled={isLoading || isGoogleLoading || isSwitching} style={{ marginTop: '0.5rem' }}>
                 Volver
               </button>
             )}
           </form>
-          
+
           <div className="google-signin-container" style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>
             <p style={{ textAlign: 'center', marginBottom: '0.75rem', color: '#ccc', fontSize: '0.9em' }}>Otras opciones</p>
             <button onClick={handleGoogleSignIn} className="form-button google-logo-button" disabled={isLoading || isGoogleLoading || isSwitching} title="Continuar con Google" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px', width: '50px', height: '50px', borderRadius: '50%', margin: '0 auto', border: '1px solid #444', backgroundColor: '#2a2a2a' }}>

@@ -1,8 +1,4 @@
-/* ==================================================
-   LOGIN/REGISTRO FORMULARIO ESTILOS (MODIFICADO CON FONDO)
-   ================================================== */
-
-/* Contenedor para centrar en la página */
+/* Contenedor para centrar la página de login/registro */
 .login-page-container {
   display: flex;
   justify-content: center;
@@ -15,74 +11,97 @@
   overflow: hidden;
 }
 
-/* NUEVO: Contenedor para la tarjeta que incluye imagen y formulario */
+/* Contenedor de la tarjeta que incluye imagen y formulario */
 .login-content-wrapper {
-  display: flex; /* Para colocar imagen y formulario lado a lado */
-  align-items: stretch; /* Para que ambos hijos tengan la misma altura */
+  display: flex;
+  align-items: stretch;
   width: 90%;
-  max-width: 950px; /* Ajusta según necesites más o menos espacio total */
-  background-color: #1e1e1e; /* Estilo de la tarjeta original */
-  border-radius: 8px; /* Estilo de la tarjeta original */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); /* Estilo de la tarjeta original */
-  border: 1px solid #333; /* Estilo de la tarjeta original */
-  position: relative; /* Para el z-index */
-  z-index: 2;       /* Para estar sobre las formas animadas */
-  overflow: hidden; /* Para que la imagen no desborde los bordes redondeados */
+  max-width: 950px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid #333;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
 }
 
-/* NUEVO: Contenedor para la imagen */
+/* Contenedor para la imagen */
 .login-image-display-area {
-  flex: 1 1 45%; /* La imagen ocupa el 45% del espacio, ajustable */
+  flex: 1 1 45%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0rem; /* Sin padding para que la imagen pueda tocar los bordes si se desea */
-  background-color: #181818; /* Un color de fondo sutil si la imagen tiene transparencias */
-  overflow: hidden; /* Asegura que la imagen no desborde esta área */
+  padding: 0rem;
+  background-color: #181818;
+  overflow: hidden;
 }
 
 .futbolista-login-img {
   max-width: 95%;
-  object-fit: cover; /* Cubre el área, puede recortar la imagen */
+  object-fit: cover;
 }
 
-/* MODIFICADO: Contenedor del formulario (antes era toda la tarjeta) */
+/* Contenedor del formulario */
 .login-container {
-  flex: 1 1 55%; /* El formulario ocupa el 55% del espacio, ajustable */
-  padding: 2.5rem 3rem; /* Mantiene el padding interno */
-  color: #E0E0E0; /* Mantiene el color del texto */
+  flex: 1 1 55%;
+  padding: 2.5rem 3rem;
+  color: #E0E0E0;
   display: flex;
   flex-direction: column;
-
-  justify-content: center; /* Centra el contenido del formulario verticalmente */
+  justify-content: center;
 }
 
-/* ANIMATION: Styles for title animation */
+/* Título del login con animación */
 .login-title-animate {
   color: #FFFFFF;
   text-align: center;
   margin-bottom: 1rem;
   font-size: 1.9rem;
   font-weight: 600;
-  transition: opacity 0.25s ease-in-out; /* Animation for fade */
+  transition: opacity 0.25s ease-in-out;
 }
 
 .login-title-animate.title-fading {
   opacity: 0;
 }
 
-/* Original h2 styles, ensure these are covered by .login-title-animate or separate if needed */
-.login-container h2 { 
-  /* Base styles are now in .login-title-animate. 
-     If there were other h2 specific styles not related to title animation, keep them here.
-     For this example, most are moved.
-  */
+/* Contenedor de la barra de progreso */
+.login-container .progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #333;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+  margin-top: 1rem;
+}
+
+/* Relleno de la barra de progreso */
+.login-container .progress-bar-fill {
+  height: 100%;
+  background-color: #FF6D14;
+  border-radius: 4px;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Texto del paso de progreso */
+.login-container .progress-step-text {
+  font-size: 0.75rem;
+  color: #aaa;
+  text-align: right;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Ajustes del título para dar espacio a la barra de progreso */
+.login-container .login-title-animate {
+  margin-bottom: 0.5rem;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
- 
 }
 
 .form-group {
@@ -119,43 +138,37 @@
   box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
 }
 
-/* ANIMATION: Styles for registration fields appearance/disappearance */
+/* Animación de campos de registro */
 .registration-field-wrapper {
-  display: flex; /* Ensures it takes space in the flex column of the form */
-  flex-direction: column; /* Stacks label/input within if form-group is directly inside */
+  display: flex;
+  flex-direction: column;
   opacity: 0;
   max-height: 0;
-  transform: translateY(-15px); /* Start slightly up for a slide-down effect */
+  transform: translateY(-15px);
   transition: opacity 0.35s ease-in-out,
-              max-height 0.4s ease-in-out, /* Controls the space it takes */
-              transform 0.35s ease-in-out,
-              visibility 0s linear 0.35s, /* Delay hiding until opacity is 0 */
-              margin-top 0.4s ease-in-out; /* Animates the top margin */
+    max-height 0.4s ease-in-out,
+    transform 0.35s ease-in-out,
+    visibility 0s linear 0.35s,
+    margin-top 0.4s ease-in-out;
   overflow: hidden;
-  visibility: hidden; /* Initially hidden and not occupying interactive space */
-  margin-top: 0; /* No margin when hidden */
+  visibility: hidden;
+  margin-top: 0;
 }
 
 .registration-field-wrapper.show {
   opacity: 1;
-  max-height: 150px; /* Adjust if your form groups are taller. Enough for label + input + gap */
+  max-height: 150px;
   transform: translateY(0);
   visibility: visible;
-  margin-top: 0px; /* When shown, rely on the parent .login-form's 'gap' for spacing */
-                   /* If more specific spacing needed from item above, adjust here,
-                      but 'gap' in parent is often cleaner.
-                      If .login-form gap is 1.4rem, this doesn't need margin-top
-                      unless it's the very first item after a non-gapped element.
-                      Since it's between other gapped items, 0 is fine.
-                   */
+  margin-top: 0px;
   transition: opacity 0.35s ease-in-out,
-              max-height 0.4s ease-in-out,
-              transform 0.35s ease-in-out,
-              visibility 0s linear 0s, /* Visible immediately when starting to show */
-              margin-top 0.4s ease-in-out;
+    max-height 0.4s ease-in-out,
+    transform 0.35s ease-in-out,
+    visibility 0s linear 0s,
+    margin-top 0.4s ease-in-out;
 }
 
-
+/* Botones del formulario */
 .form-button {
   padding: 12px 25px;
   border: none;
@@ -189,6 +202,7 @@
   box-shadow: none;
   transform: none;
 }
+
 .form-button.primary:disabled {
   background-color: rgba(255, 109, 20, 0.4);
   color: rgba(255, 255, 255, 0.6);
@@ -198,6 +212,7 @@
   width: 100%;
 }
 
+/* Enlace para alternar entre login/registro */
 .toggle-link {
   background-color: transparent;
   border: none;
@@ -223,6 +238,7 @@
   text-decoration: none;
 }
 
+/* Mensaje de error del formulario */
 .form-error-message {
   color: #ff9a9a;
   background-color: rgba(255, 80, 80, 0.15);
@@ -235,10 +251,10 @@
   font-weight: 500;
 }
 
-/* --- Formas de Fondo Reactivas (Adaptadas para Login) --- */
+/* Formas de fondo reactivas */
 .animated-shape {
   position: absolute;
-  z-index: 1; 
+  z-index: 1;
   pointer-events: none;
   transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -250,7 +266,7 @@
   left: -30vw;
   background: radial-gradient(circle, rgba(255, 110, 20, 0.35) 0%, rgba(255, 110, 20, 0.15) 70%);
   border-radius: 50%;
-  filter: blur(75px); 
+  filter: blur(75px);
   transform: translate(0px, 0px) scale(1);
 }
 
@@ -261,13 +277,34 @@
   right: -15%;
   border-radius: 45% 55% 65% 35% / 55% 45% 55% 45%;
   background-color: rgba(255, 110, 20, 0.25);
-  filter: blur(90px); 
+  filter: blur(90px);
   transform: translate(0px, 0px) rotate(20deg);
   transition-duration: 1s;
 }
 
+/* Botón de Google Sign-in */
+.form-button.google {
+  background-color: #4285F4;
+  color: white;
+}
 
-/* Media query para pantallas más pequeñas (opcional) */
+.form-button.google:hover {
+  background-color: #357ae8;
+}
+
+.google-signin-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.google-signin-container p {
+  text-align: center;
+  margin-bottom: 0.75rem;
+  color: #b0b0b0;
+  font-size: 0.9em;
+}
+
+/* Media query para pantallas más pequeñas */
 @media (max-width: 768px) {
   .login-content-wrapper {
     flex-direction: column;
@@ -285,10 +322,10 @@
 
   .futbolista-login-img {
     max-width: 100%;
-    max-height: 220px; 
+    max-height: 220px;
     width: auto;
     height: auto;
-    object-fit: contain; 
+    object-fit: contain;
     display: block;
     margin: 0 auto;
     padding-top: 10px;
@@ -298,74 +335,4 @@
   .login-container {
     flex: 1 1 auto;
   }
-}
-/* En Login.css */
-.form-button.google {
-  background-color: #4285F4; /* Color de Google */
-  color: white;
-  /* Otros estilos que desees */
-}
-
-.form-button.google:hover {
-  background-color: #357ae8;
-}
-
-.google-signin-container { /* Contenedor para "O continúa con" y el botón */
-  margin-top: 1.5rem; /* Ajusta según necesites */
-  margin-bottom: 1rem;
-}
-
-.google-signin-container p {
-  text-align: center;
-  margin-bottom: 0.75rem;
-  color: #b0b0b0; /* Un gris más claro que el texto principal */
-  font-size: 0.9em;
-}
-/* ==================================================
-   LOGIN FORMULARIO ESTILOS (ADDITIONS FOR MULTI-STEP)
-   ================================================== */
-
-/* Contenedor para la barra de progreso */
-.login-container .progress-bar-container {
-  width: 100%;
-  height: 8px; /* Slightly smaller than in Nuevo.css for login */
-  background-color: #333;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.4rem; /* Reduced margin */
-  margin-top: 1rem; /* Add some top margin to separate from title */
-}
-
-/* Relleno de la barra de progreso */
-.login-container .progress-bar-fill {
-  height: 100%;
-  background-color: #FF6D14; /* Rivalt orange */
-  border-radius: 4px;
-  transition: width 0.4s ease-in-out;
-}
-
-/* Texto del paso de progreso */
-.login-container .progress-step-text {
-  font-size: 0.75rem; /* Smaller font size */
-  color: #aaa;
-  text-align: right;
-  display: block; /* Ensure it takes full width and new line */
-  margin-bottom: 1rem; /* Space below the text */
-}
-
-/* Adjustments for the login-title-animate */
-.login-container .login-title-animate {
-  margin-bottom: 0.5rem; /* Reduce margin to make space for progress bar */
-}
-
-.registration-field-wrapper {
-  /* ... */
-  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-}
-.registration-field-wrapper.show {
-  max-height: 100px; /* Adjust based on content height */
-  opacity: 1;
 }

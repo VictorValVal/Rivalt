@@ -1,18 +1,18 @@
-/* ==================================================
-   MAIN PAGE ESTILOS (CON SECCIÓN INFO MEJORADA Y BORDE ANIMADO)
-   ================================================== */
+/* Main.css */
 
-html, body {
-    overflow-x: hidden;
+html,
+body {
+  overflow-x: hidden;
 }
 
 .main-page-container {
-    position: relative;
-    overflow: hidden; /* Asegúrate que el contenedor principal no muestre overflow inesperado */
-    background-color: #121212;
-    color: #e0e0e0;
+  position: relative;
+  overflow: hidden;
+  background-color: #121212;
+  color: #e0e0e0;
 }
 
+/* Pelota voladora */
 .flying-ball {
   position: absolute;
   top: 0;
@@ -31,939 +31,1203 @@ html, body {
   display: block;
 }
 
+/* Banner principal */
 .main-banner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.2rem 1.5rem;
-    background-color: rgba(30, 30, 30, 0.8);
-    border-bottom: 1px solid #333;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(5px);
-    box-sizing: border-box;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  background-color: rgba(30, 30, 30, 0.8);
+  border-bottom: 1px solid #333;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .rivalt-logo {
-    height: 38px;
-    width: auto;
-    flex-shrink: 0;
-    margin-right: 1rem;
-    display: block;
+  height: 38px;
+  width: auto;
+  flex-shrink: 0;
+  margin-right: 1rem;
+  display: block;
 }
 
+/* Botón de inicio de sesión */
 .login-button {
-    padding: 8px 18px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-transform: none;
-    background-color: transparent;
-    color: #AAAAAA;
-    border: 1px solid #555;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-.login-button:hover {
-    background-color: #333;
-    color: #FFFFFF;
-    border-color: #777;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: none;
+  background-color: transparent;
+  color: #AAAAAA;
+  border: 1px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-/* --- Contenido Principal --- */
+.login-button:hover {
+  background-color: #333;
+  color: #FFFFFF;
+  border-color: #777;
+}
+
+/* Contenido principal */
 .main-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5rem 2rem;
-    position: relative;
-    z-index: 10;
-    box-sizing: border-box;
-    min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 2rem;
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+  min-height: 90vh;
 }
 
 .content-grid {
-    display: flex;
-    align-items: center;
-    gap: 4rem;
-    max-width: 1100px;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  max-width: 1100px;
+  width: 100%;
 }
 
 .image-container {
-    flex: 1 1 50%;
-    min-height: 300px;
-    max-height: 450px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    overflow: hidden;
+  flex: 1 1 50%;
+  min-height: 300px;
+  max-height: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .responsive-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .text-content {
-    flex: 1 1 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .text-content h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: #FFFFFF;
-    line-height: 1.3;
-    margin-bottom: 1.5rem;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
 }
 
 .text-content .highlight {
-    color: #FF6D14;
+  color: #FF6D14;
 }
 
 .features-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 2.5rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    font-size: 1.1rem;
-    color: #AAAAAA;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  font-size: 1.1rem;
+  color: #AAAAAA;
 }
 
 .features-list li {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .features-list .bullet {
-    color: #FF6D14;
-    margin-right: 10px;
-    font-weight: 700;
+  color: #FF6D14;
+  margin-right: 10px;
+  font-weight: 700;
 }
 
+/* Botón de inicio */
 .start-button {
-     padding: 14px 35px;
-     font-size: 1.1rem;
-     font-weight: 600;
-     text-transform: uppercase;
-     letter-spacing: 1px;
-     background-color: #FF6D14;
-     color: #FFFFFF;
-     border: none;
-     border-radius: 6px;
-     cursor: pointer;
-     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-     transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  padding: 14px 35px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: #FF6D14;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
 }
+
 .start-button:hover {
-     background-color: #E05A0B;
-     transform: translateY(-2px);
-     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+  background-color: #E05A0B;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
 
 
-/* --- Formas de Fondo Reactivas --- */
+/* Formas de fondo reactivas */
 .animated-shape {
-    position: absolute;
-    z-index: 1;
-    filter: blur(60px);
-    pointer-events: none;
-    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  position: absolute;
+  z-index: 1;
+  filter: blur(60px);
+  pointer-events: none;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .shape1 {
-    width: 80vw;
-    height: 80vh;
-    top: -35vh;
-    left: -30vw;
-    background: radial-gradient(circle, rgb(255, 110, 20) 0%, rgba(255, 110, 20, 0.1) 70%);
-    border-radius: 50%;
-    filter: blur(75px);
-    transform: translate(0px, 0px) scale(1);
+  width: 80vw;
+  height: 80vh;
+  top: -35vh;
+  left: -30vw;
+  background: radial-gradient(circle, rgb(255, 110, 20) 0%, rgba(255, 110, 20, 0.1) 70%);
+  border-radius: 50%;
+  filter: blur(75px);
+  transform: translate(0px, 0px) scale(1);
 }
 
 .shape2 {
-    width: 350px;
-    height: 175px;
-    bottom: 10%;
-    right: -10%;
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    background-color: rgba(255, 110, 20, 0.2);
-    filter: blur(90px);
-    transform: translate(0px, 0px) rotate(20deg);
-    transition-duration: 0.8s;
+  width: 350px;
+  height: 175px;
+  bottom: 10%;
+  right: -10%;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  background-color: rgba(255, 110, 20, 0.2);
+  filter: blur(90px);
+  transform: translate(0px, 0px) rotate(20deg);
+  transition-duration: 0.8s;
 }
 
-/* --- ESTILOS MEJORADOS para la Sección de Información --- */
+/* Sección de información */
 .info-section {
-    color: #e0e0e0;
-    padding: 6rem 2rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    z-index: 5;
-
-    opacity: 0;
-    transform: translateY(80px) scale(0.95);
-    filter: blur(5px);
-    transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                visibility 0s linear 0.7s;
-    visibility: hidden;
+  color: #e0e0e0;
+  padding: 6rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 5;
+  opacity: 0;
+  transform: translateY(80px) scale(0.95);
+  filter: blur(5px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+    filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+    visibility 0s linear 0.7s;
+  visibility: hidden;
 }
 
 .info-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0; /* Animación de izquierda a derecha */
-    height: 3px;
-    width: 0;
-    background-color: #FF6D14;
-    transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-    transition-delay: 0.4s; /* Retraso para que comience después de que la sección sea visible */
-    z-index: 6;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background-color: #FF6D14;
+  transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: 0.4s;
+  z-index: 6;
 }
 
 .info-section.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0px);
-    visibility: visible;
-    transition-delay: 0s; /* Sin retraso para la visibilidad de la sección */
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 .info-section.visible::before {
-    width: 100%;
+  width: 100%;
 }
 
-
 .info-section h2 {
-    color: #FFFFFF;
-    font-size: 2.6rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    letter-spacing: 1px;
-    position: relative;
-    z-index: 10;
+  color: #FFFFFF;
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 10;
 }
 
 .info-section p {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    max-width: 700px;
-    margin: 0 auto 3.5rem auto;
-    color: #ffffff; 
-    position: relative;
-    z-index: 10;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 700px;
+  margin: 0 auto 3.5rem auto;
+  color: #ffffff;
+  position: relative;
+  z-index: 10;
 }
 
 
-
-/* === Styles for Feature Cards (previously .info-features) === */
-/* Located within .basketball-promo-text-container */
-
+/* Tarjetas de características (dentro de .basketball-promo-text-container) */
 .info-features {
-    display: flex;
-    justify-content: center; /* This will center the cards in the available space */
-    gap: 1rem; /* Reduced gap between cards for a tighter fit */
-    flex-wrap: wrap; /* Allows wrapping if space is still insufficient or on smaller screens */
-    margin-top: 2rem;
-    position: relative;
-    z-index: 10;
-    /* text-align: center; /* Optional: can help if block itself needs centering, but justify-content should handle items */
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 10;
 }
 
-.info-features div { /* This is each individual feature card/button */
-    background-color: rgba(42, 42, 42, 0.7); /* */
-    padding: 1.2rem 1rem; /* Adjusted padding: smaller left/right padding */
-    border-radius: 12px; /* */
-    font-size: 0.9rem; /* Slightly reduced font size to help with smaller card size */
-    font-weight: 500; /* */
-    color: #d0d0d0; /* */
-    border: 1px solid rgba(255, 109, 20, 0.15); /* */
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; /* */
-    
-    display: flex; /* For internal layout of icon and text */ /* */
-    flex-direction: column; /* Keeps icon and text vertical within the card */ /* */
-    align-items: center; /* */
-    gap: 0.5rem; /* Reduced gap between icon and text inside the card */
-    
-    /* Sizing adjustments for horizontal layout: */
-    
-    flex-grow: 1;      /* Allows cards to grow and share extra space */
-    flex-shrink: 1;    /* Allows cards to shrink if necessary */
-    flex-basis: 140px; /* An ideal starting width before flexing */
-
-    text-align: center; /* */
-    backdrop-filter: blur(3px); /* */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* */
+.info-features div {
+  background-color: rgba(42, 42, 42, 0.7);
+  padding: 1.2rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #d0d0d0;
+  border: 1px solid rgba(255, 109, 20, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 140px;
+  text-align: center;
+  backdrop-filter: blur(3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.info-features div:hover { /* Styles from original .info-features div:hover */ /* */
-    transform: translateY(-10px) scale(1.04); /* */
-    background-color: rgba(255, 109, 20, 0.1); /* */
-    border-color: rgba(255, 109, 20, 0.5); /* */
-    box-shadow: 0 12px 30px rgba(255, 109, 20, 0.2), 0 0 15px rgba(255, 109, 20, 0.1); /* */
-    color: #ffffff; /* */
+.info-features div:hover {
+  transform: translateY(-10px) scale(1.04);
+  background-color: rgba(255, 109, 20, 0.1);
+  border-color: rgba(255, 109, 20, 0.5);
+  box-shadow: 0 12px 30px rgba(255, 109, 20, 0.2), 0 0 15px rgba(255, 109, 20, 0.1);
+  color: #ffffff;
 }
 
-.info-features div:hover svg, /* Styles from original .info-features div:hover svg, i */ /* */
-.info-features div:hover i { 
-    color: #ffffff;  /* */
-    transform: scale(1.1); /* */
+.info-features div:hover svg,
+.info-features div:hover i {
+  color: #ffffff;
+  transform: scale(1.1);
 }
 
-.info-features svg, /* Styles from original .info-features svg, i */ /* */
-.info-features i { 
-    color: #FF6D14; /* */
-    font-size: 2rem; /* Slightly adjusted icon size if needed */
-    margin-bottom: 0.5rem; /* */
-    transition: color 0.3s ease, transform 0.3s ease; /* */
+.info-features svg,
+.info-features i {
+  color: #FF6D14;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
+/* Formas de fondo de la sección de información */
 .info-shape {
-    position: absolute;
-    border-radius: 50%;
-    background-color: rgba(255, 109, 20, 0.28); 
-    filter: blur(85px); 
-    z-index: 1; 
-    pointer-events: none;
-    animation: subtle-float 8s ease-in-out infinite alternate;
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 109, 20, 0.28);
+  filter: blur(85px);
+  z-index: 1;
+  pointer-events: none;
+  animation: subtle-float 8s ease-in-out infinite alternate;
 }
 
 .info-shape-1 {
-    width: 400px;
-    height: 400px;
-    top: -150px;
-    left: -100px;
-    animation-delay: -2s;
+  width: 400px;
+  height: 400px;
+  top: -150px;
+  left: -100px;
+  animation-delay: -2s;
 }
 
 .info-shape-2 {
-    width: 300px;
-    height: 300px;
-    bottom: -100px;
-    right: -80px;
-    animation-delay: 0s;
+  width: 300px;
+  height: 300px;
+  bottom: -100px;
+  right: -80px;
+  animation-delay: 0s;
 }
 
 .info-shape-3 {
-    width: 200px;
-    height: 200px;
-    top: 40%;
-    right: 10%;
-    animation-duration: 10s;
-    animation-delay: -5s;
+  width: 200px;
+  height: 200px;
+  top: 40%;
+  right: 10%;
+  animation-duration: 10s;
+  animation-delay: -5s;
 }
 
 @keyframes subtle-float {
-    0% { transform: translateY(0px) translateX(0px) scale(1); }
-    50% { transform: translateY(-15px) translateX(10px) scale(1.05); }
-    100% { transform: translateY(0px) translateX(0px) scale(1); }
+  0% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+
+  50% {
+    transform: translateY(-15px) translateX(10px) scale(1.05);
+  }
+
+  100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
 }
 
-
-/* ================================================== */
-/* === ESTILOS PARA LA NUEVA SECCIÓN DE PROMOCIÓN MÓVIL === */
-/* ================================================== */
+/* Sección de promoción móvil */
 .mobile-promo-section {
-    color: #e0e0e0;
-    padding: 6rem 2rem; 
-    position: relative;
-    overflow: hidden;
-    z-index: 6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    box-sizing: border-box;
-
-    opacity: 0;
-    transform: translateY(80px) scale(0.95);
-    filter: blur(5px);
-    transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                background-color 0.7s ease, 
-                visibility 0s linear 0.7s;
-    visibility: hidden;
+  color: #e0e0e0;
+  padding: 6rem 2rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(80px) scale(0.95);
+  filter: blur(5px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+    filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+    background-color 0.7s ease,
+    visibility 0s linear 0.7s;
+  visibility: hidden;
 }
 
 .mobile-promo-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0; 
-    height: 3px;
-    width: 0; 
-    background-color: #FF6D14;
-    transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-    transition-delay: 0.4s; 
-    z-index: 7; 
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 3px;
+  width: 0;
+  background-color: #FF6D14;
+  transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: 0.4s;
+  z-index: 7;
 }
 
 .mobile-promo-section.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0px);
-    visibility: visible;
-    transition-delay: 0s;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 .mobile-promo-section.visible::before {
-    width: 100%; 
+  width: 100%;
 }
 
 .mobile-promo-content {
-    display: flex;
-    align-items: center;
-    gap: 3rem; 
-    max-width: 1000px; 
-    width: 100%;
-    position: relative;
-    z-index: 10; 
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1000px;
+  width: 100%;
+  position: relative;
+  z-index: 10;
 }
 
 .mobile-promo-image-container {
-    flex: 0 0 45%;
-    max-width: 380px;
-    opacity: 0;
-    transform: translateX(-30px); 
-    transition: opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s;
+  flex: 0 0 45%;
+  max-width: 380px;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s;
 }
 
 .mobile-promo-section.visible .mobile-promo-image-container {
-    opacity: 1;
-    transform: translateX(0);
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .mobile-promo-image-container img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px; 
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
 }
 
 .mobile-promo-text-container {
-    flex: 1;
-    text-align: left;
-    opacity: 0;
-    transform: translateX(30px); 
-    transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
+  flex: 1;
+  text-align: left;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
 }
+
 .mobile-promo-section.visible .mobile-promo-text-container {
-    opacity: 1;
-    transform: translateX(0);
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .mobile-promo-text-container h2 {
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 1rem;
-    line-height: 1.3;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  line-height: 1.3;
 }
 
 .mobile-promo-text-container p {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #ffffff; 
-    margin-bottom: 1.5rem; 
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
 }
 
 .mobile-promo-text-container .form-button.promo-button {
-    padding: 12px 30px;
-    font-size: 1rem;
-    margin-top: 1rem;
-    background-color: #FF6D14;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  padding: 12px 30px;
+  font-size: 1rem;
+  margin-top: 1rem;
+  background-color: #FF6D14;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
 }
 
 .mobile-promo-text-container .form-button.promo-button:hover {
-    background-color: #E05A0B;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+  background-color: #E05A0B;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
 
+/* Formas de fondo de la sección de promoción móvil */
 .mobile-promo-shape {
-    position: absolute;
-    border-radius: 50%;
-    background-color: rgba(255, 109, 20, 0.22); 
-    filter: blur(80px); 
-    z-index: 1; 
-    pointer-events: none;
-    animation: subtle-float-alt 9s ease-in-out infinite alternate; 
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 109, 20, 0.22);
+  filter: blur(80px);
+  z-index: 1;
+  pointer-events: none;
+  animation: subtle-float-alt 9s ease-in-out infinite alternate;
 }
 
 .mobile-promo-shape-1 {
-    width: 350px;
-    height: 350px;
-    top: -120px; 
-    right: -90px;
-    animation-delay: -1s;
+  width: 350px;
+  height: 350px;
+  top: -120px;
+  right: -90px;
+  animation-delay: -1s;
 }
 
 .mobile-promo-shape-2 {
-    width: 280px;
-    height: 280px;
-    bottom: -90px;
-    left: -70px;
-    animation-delay: -3s;
+  width: 280px;
+  height: 280px;
+  bottom: -90px;
+  left: -70px;
+  animation-delay: -3s;
 }
 
 .mobile-promo-shape-3 {
-    width: 180px;
-    height: 180px;
-    top: 50%;
-    left: 15%;
-    transform: translateY(-50%);
-    animation-duration: 11s; 
-    animation-delay: -4s;
-    background-color: rgba(255, 109, 20, 0.18); 
+  width: 180px;
+  height: 180px;
+  top: 50%;
+  left: 15%;
+  transform: translateY(-50%);
+  animation-duration: 11s;
+  animation-delay: -4s;
+  background-color: rgba(255, 109, 20, 0.18);
+}
+
+@keyframes subtle-float-alt {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+
+  50% {
+    transform: translateY(10px) translateX(-15px) scale(1.03);
+  }
+
+  100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
 }
 
 
-@keyframes subtle-float-alt { 
-    0% { transform: translateY(0px) translateX(0px) scale(1); }
-    50% { transform: translateY(10px) translateX(-15px) scale(1.03); }
-    100% { transform: translateY(0px) translateX(0px) scale(1); }
-}
-
-
-/* ================================================== */
-/* === ESTILOS PARA LA NUEVA SECCIÓN DE BALONCESTO === */
-/* ================================================== */
+/* Sección de promoción de baloncesto */
 .basketball-promo-section {
-
-    color: #e0e0e0;
-    padding: 6rem 2rem;
-    position: relative; /* This is important for the ::before pseudo-element */
-    overflow: hidden; 
-    z-index: 7; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    box-sizing: border-box;
-    opacity: 0;
-    transform: translateY(60px) scale(0.98);
-    filter: blur(3px);
-    transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
-                transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
-                filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
-                visibility 0s linear 0.8s; 
-    visibility: hidden;
-    
+  color: #e0e0e0;
+  padding: 6rem 2rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(60px) scale(0.98);
+  filter: blur(3px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
+    transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
+    filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s,
+    visibility 0s linear 0.8s;
+  visibility: hidden;
 }
 
 .basketball-promo-section.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0px);
-    visibility: visible;
-    transition-delay: 0s;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+  visibility: visible;
+  transition-delay: 0s;
 }
 
-/* ADDED: Orange line for basketball-promo-section */
-.basketball-promo-section::before { /* */
-    content: ''; /* */
-    position: absolute; /* */
-    top: 0; /* */
-    left: 0; /* */
-    height: 3px; /* */
-    width: 0; /* */
-    background-color: #FF6D14; /* */
-    transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1); /* */
-    transition-delay: 0.4s; /* */
-    z-index: 9; /* */
+.basketball-promo-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background-color: #FF6D14;
+  transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: 0.4s;
+  z-index: 9;
 }
 
-.basketball-promo-section.visible::before { /* */
-    width: 100%; /* */
+.basketball-promo-section.visible::before {
+  width: 100%;
 }
 
 
 .basketball-promo-content {
-    display: flex;
-    flex-direction: row; 
-    align-items: center;
-    gap: 1.2rem; /* REDUCIDO: Menos espacio entre texto e imagen */
-    max-width: 1300px; /* AUMENTADO: Más ancho total */
-    width: 100%;
-    position: relative;
-    z-index: 10; 
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 0;
-    padding-right: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.2rem;
+  max-width: 1300px;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .basketball-promo-text-container {
-    /* flex: 1 1 55%; OLD VALUE */
-    flex: 1 1 75%; /* MODIFIED: Increased basis to 65% to take more width */
-    text-align: left;
-    opacity: 0;
-    transform: translateX(-40px); 
-    transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s; 
-}
-/* .basketball-promo-section.visible .basketball-promo-text-container styles remain the same */
-
-
-.basketball-promo-image-container {
-    /* flex: 1 1 45%; OLD VALUE */
-    flex: 1 1 25%; /* MODIFIED: Decreased basis to 35% to take less width */
-    /* max-width: 400px; OLD VALUE */
-    max-width: 340px; /* MODIFIED: Slightly reduced max-width for the image container */
-    position: relative; 
-    opacity: 0;
-    transform: translateX(40px) scale(0.9); 
-    transition: opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s; 
-}
-.basketball-promo-section.visible .basketball-promo-text-container {
-    opacity: 1;
-    transform: translateX(0);
+  flex: 1 1 75%;
+  text-align: left;
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
 }
 
 .basketball-promo-text-container h2 {
-    font-size: 2.5rem; 
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 1.2rem;
-    line-height: 1.3;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.2rem;
+  line-height: 1.3;
 }
 
 .basketball-promo-text-container p {
-    font-size: 1.1rem;
-    line-height: 1.75;
-    color: #c0c0c0; 
-    margin-bottom: 2rem; 
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: #c0c0c0;
+  margin-bottom: 2rem;
 }
 
 .basketball-promo-image-container {
-    flex: 1 1 45%;
-    max-width: 400px; 
-    position: relative; 
-    opacity: 0;
-    transform: translateX(40px) scale(0.9); 
-    transition: opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s; 
+  flex: 1 1 25%;
+  max-width: 340px;
+  position: relative;
+  opacity: 0;
+  transform: translateX(40px) scale(0.9);
+  transition: opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s;
 }
+
+.basketball-promo-section.visible .basketball-promo-text-container {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .basketball-promo-section.visible .basketball-promo-image-container {
-    opacity: 1;
-    transform: translateX(0) scale(1);
+  opacity: 1;
+  transform: translateX(0) scale(1);
 }
 
 .basketball-player-image {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px; 
-    position: relative; 
-    z-index: 12; 
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  position: relative;
+  z-index: 12;
 }
 
 .basketball-promo-bg-shape {
-    position: absolute;
-    width: 800px;  
-    height: 400px; 
-    background-color: rgba(255, 110, 20, 0.788); 
-    border-radius: 40% 60% 70% 30% / 60% 30% 70% 40%; 
-    filter: blur(90px); 
-    z-index: 9; 
-    top: 50%;
-    right: -10%; 
-    transform: translate(20%, -50%) scale(0.8); 
-    opacity: 0;
-    transition: opacity 0.7s ease-out 0.6s, transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s; 
+  position: absolute;
+  width: 800px;
+  height: 400px;
+  background-color: rgba(255, 110, 20, 0.788);
+  border-radius: 40% 60% 70% 30% / 60% 30% 70% 40%;
+  filter: blur(90px);
+  z-index: 9;
+  top: 50%;
+  right: -10%;
+  transform: translate(20%, -50%) scale(0.8);
+  opacity: 0;
+  transition: opacity 0.7s ease-out 0.6s, transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s;
 }
 
 .basketball-promo-section.visible .basketball-promo-bg-shape {
-    opacity: 1;
-    transform: translate(0%, -50%) scale(1); 
+  opacity: 1;
+  transform: translate(0%, -50%) scale(1);
 }
 
-/* --- ESTILOS PARA LA PELOTA DE BALONCESTO FLOTANTE --- */
+/* Pelota de baloncesto flotante */
 .basketball-floating-ball {
-    position: absolute;
-    top: -35px;      /* Más negativo para sobresalir más */
-    left: -35px;     /* Más negativo para sobresalir más */
-    width: 70px;
-    height: 70px;
-    color: #FF6D14;
-    z-index: 20;     /* Asegúrate de que esté por encima del fondo */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 70px;
-    opacity: 0; 
-    transform: translate(0, 0) scale(1) rotate(-45deg); 
-    animation: 
-        appearBall 0.8s ease-out 0.7s forwards,   
-        simpleRotateBall 30s linear infinite 1.5s;
+  position: absolute;
+  top: -35px;
+  left: -35px;
+  width: 70px;
+  height: 70px;
+  color: #FF6D14;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 70px;
+  opacity: 0;
+  transform: translate(0, 0) scale(1) rotate(-45deg);
+  animation:
+    appearBall 0.8s ease-out 0.7s forwards,
+    simpleRotateBall 30s linear infinite 1.5s;
 }
 
-/* Keyframes para la rotación simple y continua */
+/* Keyframes para la rotación de la pelota */
 @keyframes simpleRotateBall {
-    0% {
-        /* El transform de rotación se aplicará aditivamente al transform final de 'appearBall'
-           si 'appearBall' también manipula 'rotate'. Para evitarlo, 'appearBall'
-           debería idealmente terminar en rotate(0deg) si la rotación continua empieza desde 0. */
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Keyframes para la animación de aparición de la pelota */
+/* Keyframes para la aparición de la pelota */
 @keyframes appearBall {
-    to {
-        opacity: 0.85;
-        /* La pelota aparecerá en su posición definida por top/left en .basketball-floating-ball */
-        transform: translate(0, 0) scale(1) rotate(0deg); 
-    }
+  to {
+    opacity: 0.85;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
 }
 
-
-/* --- Footer Styles --- */
+/* Pie de página principal */
 .main-footer {
-    padding: 2rem 2rem;
-    background-color: #0a0a0a;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #888;
-    border-top: 1px solid #222;
-    margin-top: 0; 
-    flex-shrink: 0; 
-    z-index: 5; 
-    position: relative; 
+  padding: 2rem 2rem;
+  background-color: #0a0a0a;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+  border-top: 1px solid #222;
+  margin-top: 0;
+  flex-shrink: 0;
+  z-index: 5;
+  position: relative;
 }
 
-
-/* --- Responsividad --- */
+/* Responsividad */
 @media (max-width: 992px) {
-    .info-section { padding: 5rem 1.5rem; }
-    .info-section h2 { font-size: 2.3rem; }
-    .info-features div { min-width: 200px; padding: 1.5rem; }
-    .info-shape-1 { width: 300px; height: 300px; top: -100px; left: -80px; }
-    .info-shape-2 { width: 250px; height: 250px; bottom: -80px; right: -50px; }
-    .info-shape-3 { display: none; } 
+  .info-section {
+    padding: 5rem 1.5rem;
+  }
 
-    .mobile-promo-section { padding: 5rem 1.5rem; }
-    .mobile-promo-text-container h2 { font-size: 2.2rem; }
-    .mobile-promo-image-container {
-        max-width: 320px; 
-    }
-    .mobile-promo-shape-1 { width: 300px; height: 300px; top: -100px; right: -70px;}
-    .mobile-promo-shape-2 { width: 220px; height: 220px; bottom: -70px; left: -50px;}
-    .mobile-promo-shape-3 { display: none; }
+  .info-section h2 {
+    font-size: 2.3rem;
+  }
 
-    /* Ajustes responsivos para la sección de baloncesto */
-    .basketball-promo-section { padding: 5rem 1.5rem; }
-    .basketball-promo-text-container h2 { font-size: 2.2rem; }
-    .basketball-promo-image-container { max-width: 350px; }
-    .basketball-promo-bg-shape { width: 250px; height: 230px; filter: blur(70px); }
-    .basketball-floating-ball { 
-        width: 50px; height: 50px; font-size: 50px; 
-        top: -33%; left: -8%; 
-    }
+  .info-features div {
+    min-width: 200px;
+    padding: 1.5rem;
+  }
+
+  .info-shape-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -80px;
+  }
+
+  .info-shape-2 {
+    width: 250px;
+    height: 250px;
+    bottom: -80px;
+    right: -50px;
+  }
+
+  .info-shape-3 {
+    display: none;
+  }
+
+  .mobile-promo-section {
+    padding: 5rem 1.5rem;
+  }
+
+  .mobile-promo-text-container h2 {
+    font-size: 2.2rem;
+  }
+
+  .mobile-promo-image-container {
+    max-width: 320px;
+  }
+
+  .mobile-promo-shape-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    right: -70px;
+  }
+
+  .mobile-promo-shape-2 {
+    width: 220px;
+    height: 220px;
+    bottom: -70px;
+    left: -50px;
+  }
+
+  .mobile-promo-shape-3 {
+    display: none;
+  }
+
+  .basketball-promo-section {
+    padding: 5rem 1.5rem;
+  }
+
+  .basketball-promo-text-container h2 {
+    font-size: 2.2rem;
+  }
+
+  .basketball-promo-image-container {
+    max-width: 350px;
+  }
+
+  .basketball-promo-bg-shape {
+    width: 250px;
+    height: 230px;
+    filter: blur(70px);
+  }
+
+  .basketball-floating-ball {
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+    top: -33%;
+    left: -8%;
+  }
 }
 
 @media (max-width: 768px) {
-     .content-grid {
-        flex-direction: column;
-        text-align: center;
-        gap: 2rem;
-     }
-     .text-content {
-        align-items: center;
-     }
-    .text-content h1 { font-size: 2rem; }
-    .info-section { padding: 4rem 1rem; }
-    .info-section h2 { font-size: 2rem; }
-    .info-section p { font-size: 1rem; }
-    .info-features { flex-direction: column; gap: 1.5rem; align-items: center; }
-    .info-features div { width: 90%; max-width: 350px; }
-    .info-shape-1 { width: 250px; height: 250px; top: -80px; left: -50px; filter: blur(70px); background-color: rgba(255, 109, 20, 0.3); }
-    .info-shape-2 { width: 200px; height: 200px; bottom: -50px; right: -40px; filter: blur(70px); background-color: rgba(255, 109, 20, 0.3); }
+  .content-grid {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
 
-    .mobile-promo-section { padding: 4rem 1rem; }
-    .mobile-promo-content {
-        flex-direction: column; 
-        text-align: center; 
-        gap: 2.5rem; 
-    }
-    .mobile-promo-image-container {
-        max-width: 280px; 
-        margin: 0 auto; 
-        transform: translateX(0); 
-        opacity: 1; 
-    }
-    .mobile-promo-text-container {
-        transform: translateX(0);
-        opacity: 1; 
-        text-align: center;
-    }
-    .mobile-promo-text-container h2 { font-size: 2rem; }
-    .mobile-promo-text-container p { font-size: 1rem; max-width: 500px; margin-left: auto; margin-right: auto;}
-    .mobile-promo-shape-1 { width: 250px; height: 250px; top: -80px; right: -60px;}
-    .mobile-promo-shape-2 { width: 180px; height: 180px; bottom: -60px; left: -40px;}
+  .text-content {
+    align-items: center;
+  }
 
-    /* Ajustes responsivos para la sección de baloncesto */
-    .basketball-promo-section { padding: 4rem 1rem; }
-    .basketball-promo-content {
-        flex-direction: column-reverse; 
-        text-align: center;
-        gap: 2.5rem;
-    }
-    .basketball-promo-image-container {
-        max-width: 280px; 
-        margin: 0 auto;
-        /* El transform de entrada se maneja por la animación y la clase .visible */
-    }
-    .basketball-promo-text-container {
-        text-align: center;
-         /* El transform de entrada se maneja por la animación y la clase .visible */
-    }
-    .basketball-promo-text-container h2 { font-size: 2rem; }
-    .basketball-promo-text-container p { max-width: 500px; margin-left: auto; margin-right: auto;}
+  .text-content h1 {
+    font-size: 2rem;
+  }
 
-    .basketball-promo-bg-shape {
-        width: 200px;
-        height: 180px;
-        top: 20%; 
-        right: 50%;
-        /* El transform se maneja por la animación y la clase .visible */
+  .info-section {
+    padding: 4rem 1rem;
+  }
+
+  .info-section h2 {
+    font-size: 2rem;
+  }
+
+  .info-section p {
+    font-size: 1rem;
+  }
+
+  .info-features {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .info-features div {
+    width: 90%;
+    max-width: 350px;
+  }
+
+  .info-shape-1 {
+    width: 250px;
+    height: 250px;
+    top: -80px;
+    left: -50px;
+    filter: blur(70px);
+    background-color: rgba(255, 109, 20, 0.3);
+  }
+
+  .info-shape-2 {
+    width: 200px;
+    height: 200px;
+    bottom: -50px;
+    right: -40px;
+    filter: blur(70px);
+    background-color: rgba(255, 109, 20, 0.3);
+  }
+
+  .mobile-promo-section {
+    padding: 4rem 1rem;
+  }
+
+  .mobile-promo-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 2.5rem;
+  }
+
+  .mobile-promo-image-container {
+    max-width: 280px;
+    margin: 0 auto;
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .mobile-promo-text-container {
+    transform: translateX(0);
+    opacity: 1;
+    text-align: center;
+  }
+
+  .mobile-promo-text-container h2 {
+    font-size: 2rem;
+  }
+
+  .mobile-promo-text-container p {
+    font-size: 1rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .mobile-promo-shape-1 {
+    width: 250px;
+    height: 250px;
+    top: -80px;
+    right: -60px;
+  }
+
+  .mobile-promo-shape-2 {
+    width: 180px;
+    height: 180px;
+    bottom: -60px;
+    left: -40px;
+  }
+
+  .basketball-promo-section {
+    padding: 4rem 1rem;
+  }
+
+  .basketball-promo-content {
+    flex-direction: column-reverse;
+    text-align: center;
+    gap: 2.5rem;
+  }
+
+  .basketball-promo-image-container {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .basketball-promo-text-container {
+    text-align: center;
+  }
+
+  .basketball-promo-text-container h2 {
+    font-size: 2rem;
+  }
+
+  .basketball-promo-text-container p {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .basketball-promo-bg-shape {
+    width: 200px;
+    height: 180px;
+    top: 20%;
+    right: 50%;
+  }
+
+  .basketball-floating-ball {
+    width: 45px;
+    height: 45px;
+    font-size: 45px;
+    top: -30%;
+    left: 5%;
+    transform: translateX(-50%) translateY(10px) scale(0.5) rotate(-45deg);
+    animation:
+      appearBallMobile 0.8s ease-out 0.7s forwards,
+      simpleRotateBall 30s linear infinite 1.5s;
+  }
+
+  @keyframes appearBallMobile {
+    to {
+      opacity: 0.85;
+      transform: translateX(-50%) translateY(-20px) scale(1) rotate(0deg);
     }
-     .basketball-floating-ball { 
-        width: 45px; height: 45px; font-size: 45px; 
-        top: -30%; 
-        left: 5%; 
-        /* El transform inicial se define en la clase base, y 'appearBallMobile' se encarga de la animación */
-        /* Si 'appearBallMobile' se define, debe usarse en la propiedad 'animation' para este breakpoint */
-        transform: translateX(-50%) translateY(10px) scale(0.5) rotate(-45deg); /* Estado inicial para appearBallMobile */
-        animation: 
-            appearBallMobile 0.8s ease-out 0.7s forwards,
-            simpleRotateBall 30s linear infinite 1.5s;
-    }
-    /* Keyframes para la animación de aparición de la pelota en móvil */
-    @keyframes appearBallMobile {
-        to {
-            opacity: 0.85;
-            transform: translateX(-50%) translateY(-20px) scale(1) rotate(0deg); /* Pelota "flota" encima y centrada */
-        }
-    }
+  }
 }
 
 @media (max-width: 480px) {
-    .text-content h1 { font-size: 1.8rem; }
-    .info-section { padding: 3rem 1rem; }
-    .info-section h2 { font-size: 1.8rem; }
-    .info-features div { padding: 1.5rem 1rem; }
-    .info-shape-1 { width: 200px; height: 200px; top: -50px; left: -40px; filter: blur(60px); background-color: rgba(255, 109, 20, 0.35); }
-    .info-shape-2 { display: none; } 
+  .text-content h1 {
+    font-size: 1.8rem;
+  }
 
-    .mobile-promo-section { padding: 3rem 1rem; }
-    .mobile-promo-image-container {
-         max-width: 240px; 
-    }
-    .mobile-promo-text-container h2 { font-size: 1.8rem; }
-    .mobile-promo-shape-1 { width: 200px; height: 200px; top: -60px; right: -40px;}
-    .mobile-promo-shape-2 { display: none; } 
+  .info-section {
+    padding: 3rem 1rem;
+  }
 
-    /* Ajustes responsivos para la sección de baloncesto */
-    .basketball-promo-section { padding: 3rem 1rem; }
-    .basketball-promo-image-container { max-width: 240px; }
-    .basketball-promo-text-container h2 { font-size: 1.8rem; }
-    .basketball-promo-bg-shape { display: none; } 
-    .basketball-floating-ball { 
-        width: 40px; height: 40px; font-size: 40px; 
-        top: -10%; 
-    }
+  .info-section h2 {
+    font-size: 1.8rem;
+  }
+
+  .info-features div {
+    padding: 1.5rem 1rem;
+  }
+
+  .info-shape-1 {
+    width: 200px;
+    height: 200px;
+    top: -50px;
+    left: -40px;
+    filter: blur(60px);
+    background-color: rgba(255, 109, 20, 0.35);
+  }
+
+  .info-shape-2 {
+    display: none;
+  }
+
+  .mobile-promo-section {
+    padding: 3rem 1rem;
+  }
+
+  .mobile-promo-image-container {
+    max-width: 240px;
+  }
+
+  .mobile-promo-text-container h2 {
+    font-size: 1.8rem;
+  }
+
+  .mobile-promo-shape-1 {
+    width: 200px;
+    height: 200px;
+    top: -60px;
+    right: -40px;
+  }
+
+  .mobile-promo-shape-2 {
+    display: none;
+  }
+
+  .basketball-promo-section {
+    padding: 3rem 1rem;
+  }
+
+  .basketball-promo-image-container {
+    max-width: 240px;
+  }
+
+  .basketball-promo-text-container h2 {
+    font-size: 1.8rem;
+  }
+
+  .basketball-promo-bg-shape {
+    display: none;
+  }
+
+  .basketball-floating-ball {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    top: -10%;
+  }
 }
 
-
-/* --- Estilos Globales de Botones (reutilizados) --- */
+/* Estilos Globales de Botones */
 .form-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-    text-align: center;
-    box-sizing: border-box;
-}
-.form-button.primary {
-     background-color: #FF6D14;
-     color: #FFFFFF;
-     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-.form-button.primary:hover:not(:disabled) {
-    background-color: #E05A0B;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-}
-.form-button.secondary {
-    background-color: transparent;
-    color: #aaa;
-    border: 1px solid #555;
-    font-weight: 500;
-    text-transform: none;
-}
-.form-button.secondary:hover:not(:disabled) {
-    background-color: #333;
-    color: #ccc;
-    border-color: #777;
-    transform: translateY(-1px);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+  text-align: center;
+  box-sizing: border-box;
 }
 
-/* Glow container styles */
+.form-button.primary {
+  background-color: #FF6D14;
+  color: #FFFFFF;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.form-button.primary:hover:not(:disabled) {
+  background-color: #E05A0B;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.form-button.secondary {
+  background-color: transparent;
+  color: #aaa;
+  border: 1px solid #555;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.form-button.secondary:hover:not(:disabled) {
+  background-color: #333;
+  color: #ccc;
+  border-color: #777;
+  transform: translateY(-1px);
+}
+
+/* Estilos del contenedor de brillo localizado */
 .localized-glow-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 997; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 997;
 }
 
 .screen-edge-glow-segment {
-    position: fixed;
-    background-color: rgba(255, 109, 20, 0.25);
-    box-shadow: 0 0 4px 0px rgba(255, 109, 20, 0.2); 
-    border-radius: 1px;
-    pointer-events: none;
-    z-index: 998; 
+  position: fixed;
+  background-color: rgba(255, 109, 20, 0.25);
+  box-shadow: 0 0 4px 0px rgba(255, 109, 20, 0.2);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 998;
 }
 
-/* Media Query para pantallas pequeñas (ej. menos de 768px de ancho) */
+/* Ocultar elementos en pantallas pequeñas */
 @media (max-width: 767.98px) {
-  .flying-ball {
-    display: none; 
-  }
-
-  .localized-glow-container { 
+  .flying-ball,
+  .localized-glow-container {
     display: none;
   }
+}
+.form-button.secondary.login-button {
+    /* Custom Properties for easy adjustments */
+    --primary-color: #FF6D14; /* Your desired modern orange */
+    --secondary-color: #FFFFFF; /* White for text and arrow details */
+    --hover-color: #E65C00; /* A slightly darker orange for hover */
+    --active-color: #CC5200; /* Even darker for the pressed state */
+    --arrow-width: 10px; /* Arrow width */
+    --arrow-stroke: 2px; /* Arrow thickness */
+    --border-radius: 20px; /* Slightly less rounded for smaller size */
+    --padding-x: 1.5em; /* Reduced horizontal padding */
+    --padding-y: 0.8em; /* Reduced vertical padding */
+
+    box-sizing: border-box;
+    border: none;
+    border-radius: var(--border-radius);
+    color: var(--secondary-color);
+    padding: var(--padding-y) var(--padding-x);
+    background: var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6em; /* Reduced space between text and arrow */
+    font-weight: 600;
+    font-size: 0.9rem; /* Smaller font size */
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+                transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-transform: none;
+}
+
+.form-button.secondary.login-button .arrow-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateX(0);
+    transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.form-button.secondary.login-button .arrow {
+    margin-top: 1px; /* Keep this for vertical alignment */
+    width: var(--arrow-width);
+    height: var(--arrow-stroke);
+    background: var(--primary-color); /* Starts with button color, visible on hover */
+    position: relative;
+    transition: 0.2s;
+}
+
+.form-button.secondary.login-button .arrow::before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    border: solid var(--secondary-color);
+    border-width: 0 var(--arrow-stroke) var(--arrow-stroke) 0; /* Use arrow-stroke for border width */
+    display: inline-block;
+    /* --- CRITICAL FIXES FOR ARROW SYMMETRY --- */
+    top: calc(-1 * var(--arrow-stroke)); /* Adjust top to exactly align with the stroke */
+    right: 0px; /* Start aligned with the right edge of the arrow line */
+    padding: var(--arrow-stroke); /* Make padding exactly the stroke size for symmetry */
+    /* --- END CRITICAL FIXES --- */
+    transform: rotate(-45deg);
+    transition: 0.2s;
+}
+
+/* Hover state */
+.form-button.secondary.login-button:hover {
+    background-color: var(--hover-color);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+.form-button.secondary.login-button:hover .arrow-wrapper {
+    transform: translateX(6px);
+}
+
+.form-button.secondary.login-button:hover .arrow {
+    background: var(--secondary-color); /* Arrow line becomes white on hover */
+}
+
+.form-button.secondary.login-button:hover .arrow::before {
+    right: -2px; /* Arrow head moves further right relative to its parent line */
+}
+
+/* Active state */
+.form-button.secondary.login-button:active {
+    background-color: var(--active-color);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+    transform: translateY(0);
+    transition: background-color 0.1s ease, box-shadow 0.1s ease, transform 0.1s ease;
 }

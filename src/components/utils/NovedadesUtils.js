@@ -7,8 +7,6 @@ export const agregarNovedadConDebug = async (torneoId, mensaje, tipo, dataExtra 
   console.log(`[${originComponent}] ==> Intentando agregar novedad:`, { torneoId, mensaje, tipo, dataExtra });
   if (!torneoId || !mensaje || !tipo) {
     console.error(`[${originComponent}] ERROR: Faltan datos para agregar novedad.`, { torneoId, mensaje, tipo });
-    // Considera lanzar un error aquí o retornar un estado de fallo
-    // return { success: false, error: "Datos incompletos" };
     return; // Termina la ejecución si faltan datos esenciales.
   }
 
@@ -17,7 +15,7 @@ export const agregarNovedadConDebug = async (torneoId, mensaje, tipo, dataExtra 
     const docData = {
       mensaje,
       tipo,
-      timestamp: serverTimestamp(), // Esto debe resolverse a un timestamp de servidor en Firestore.
+      timestamp: serverTimestamp(),
       origenDelEvento: originComponent, // Ayuda a identificar qué componente generó la novedad
       ...dataExtra,
     };
@@ -27,8 +25,6 @@ export const agregarNovedadConDebug = async (torneoId, mensaje, tipo, dataExtra 
   } catch (error) {
     console.error(`[${originComponent}] Error CRÍTICO al agregar novedad (Tipo: ${tipo}, Mensaje: "${mensaje}"):`, error);
     console.error(`[${originComponent}] Datos que se intentaron guardar:`, { torneoId, mensaje, tipo, dataExtra });
-    // Considera manejar el error de forma más específica, por ejemplo, reintentar o notificar al usuario.
-    // return { success: false, error: error.message };
-    // REVISA TUS REGLAS DE SEGURIDAD DE FIRESTORE si los errores son de permisos.
+
   }
 };

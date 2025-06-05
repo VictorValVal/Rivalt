@@ -1,7 +1,6 @@
-// components/Planes.js
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
-import './estilos/Planes.css'; // Asegúrate que esta ruta es correcta
+import './estilos/Planes.css';
 import {
   FaStar, FaCheckCircle, FaRocket, FaUserFriends, FaSpinner, FaTimes, FaArrowLeft
 } from 'react-icons/fa';
@@ -12,41 +11,42 @@ import { app } from "../firebase";
 const db = getFirestore(app);
 const auth = getAuth();
 
-// NUEVAS PROPS: isVisible (para control externo), onClose (para cerrar el modal/desplegable)
-// isAuthenticated: para saber si el usuario está logueado (viene de Home.js o Main.js)
-// onPlanChange: callback para notificar a Home.js del cambio de plan
+// Componente `Planes` para mostrar y gestionar los planes de suscripción.
+// `isVisible` controla la visibilidad si se usa como modal, `onClose` para cerrarlo.
+// `onPlanChange` notifica cambios de plan y `isAuthenticated` indica el estado de la sesión.
 const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const pricingSectionRef = useRef(null); // Para la animación de entrada y scroll
-  const modalContentRef = useRef(null); // Para cerrar al hacer clic fuera
+  const pricingSectionRef = useRef(null);
+  const modalContentRef = useRef(null);
 
   const [isLoading, setIsLoading] = useState({ premium: false, pro: false });
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [currentUserPlan, setCurrentUserPlan] = useState('free');
-  const [intendedPlanFromRoute, setIntendedPlanFromRoute] = useState(null); // NEW state for intended plan
+  const [intendedPlanFromRoute, setIntendedPlanFromRoute] = useState(null);
 
-  // Effect to disable/enable scroll on body when modal is visible
+  // Efecto para controlar el scroll del body cuando el modal está visible.
   useEffect(() => {
     if (isVisible) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
     }
-    // Cleanup function
     return () => {
-      document.body.style.overflow = 'auto'; // Ensure scroll is re-enabled when component unmounts
+      document.body.style.overflow = 'auto';
     };
   }, [isVisible]);
 
-
-  // Efecto para la animación de entrada de la sección (cuando no es modal)
+  // Efecto para la animación de entrada y scroll a la sección si no es un modal.
   useEffect(() => {
-    if (!isVisible) { // No aplicar IntersectionObserver si está funcionando como modal controlado por isVisible
+    if (!isVisible) {
         const observerOptions = { threshold: 0.1 };
         const observerCallback = (entries) => {
           entries.forEach(entry => {
-            entry.target.classList.toggle("visible", entry.isIntersecting);
+            if (entry.isIntersecting) { // Only add if intersecting
+              entry.target.classList.add("visible");
+            }
+            // Removed the else part to prevent removing the 'visible' class
           });
         };
         const observer = new IntersectionObserver(observerCallback, observerOptions);
@@ -60,20 +60,9 @@ const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
           }
         };
     }
-  }, [isVisible]); // Solo se ejecuta si no es un modal visible
-
-  // Efecto para scroll a la sección si el hash está presente (cuando no es modal)
-   useEffect(() => {
-    if (!isVisible && location.hash === "#planes-section" && pricingSectionRef.current) {
-      setTimeout(() => {
-        pricingSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
-    }
-
-    // NEW: Check for intendedPlan from route state
+    // Verifica si hay un plan intencionado en el estado de la ruta.
     if (location.state?.intendedPlan) {
       setIntendedPlanFromRoute(location.state.intendedPlan);
-      // Clear the state from location so it doesn't persist on subsequent visits
       navigate(location.pathname, { replace: true, state: {} });
     } else {
       setIntendedPlanFromRoute(null);
@@ -81,8 +70,7 @@ const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
 
   }, [location.hash, isVisible, location.state, navigate]);
 
-
-  // Efecto para cerrar el modal si se hace clic fuera (SOLO si isVisible y onClose están definidos)
+  // Efecto para cerrar el modal al hacer clic fuera de su contenido.
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isVisible && onClose && modalContentRef.current && !modalContentRef.current.contains(event.target)) {
@@ -97,7 +85,7 @@ const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
     };
   }, [isVisible, onClose, modalContentRef]);
 
-
+  // Efecto para obtener el plan actual del usuario.
   useEffect(() => {
     const fetchCurrentUserPlan = async () => {
       if (isAuthenticated && auth.currentUser) {
@@ -111,18 +99,17 @@ const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
       }
     };
     fetchCurrentUserPlan();
-  }, [isAuthenticated, isVisible]); // Re-fetch plan if visibility or auth changes
+  }, [isAuthenticated, isVisible]);
 
-
+  // Maneja la selección de un plan (Premium o Pro).
   const handlePlanSelection = async (selectedPlan) => {
     const currentUser = auth.currentUser;
 
-    // MODIFIED: Only navigate to login if NOT authenticated.
     if (!isAuthenticated || !currentUser) {
       setFeedbackMessage(`Para elegir el plan ${selectedPlan === 'premium' ? 'Premium' : (selectedPlan === 'pro' ? 'Pro' : selectedPlan)}, primero debes iniciar sesión o registrarte.`);
       setTimeout(() => setFeedbackMessage(""), 4000);
       navigate("/login", { state: { intendedPlan: selectedPlan, fromPage: location.pathname } });
-      if (onClose) onClose(); // Cierra el modal si estaba abierto
+      if (onClose) onClose();
       return;
     }
 
@@ -152,12 +139,12 @@ const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
       setFeedbackMessage(`¡Felicidades! Has "actualizado" al plan ${selectedPlan === 'premium' ? 'Premium' : 'Pro'}.`);
       setCurrentUserPlan(selectedPlan);
       if (onPlanChange) {
-        onPlanChange(selectedPlan); // Notifica a Home.js
+        onPlanChange(selectedPlan);
       }
-      setTimeout(() => { // Dar tiempo para leer el mensaje antes de cerrar
+      setTimeout(() => {
         if (onClose) onClose();
-        if (!onClose && isAuthenticated && currentUser) { // If not a modal (e.g., from Main.js) and authenticated
-            navigate("/home"); // Navigate to home if coming from Main.js (not modal)
+        if (!onClose && isAuthenticated && currentUser) {
+            navigate("/home");
         }
       }, 2000);
     } catch (error) {
@@ -165,53 +152,55 @@ const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
       setFeedbackMessage("Error al actualizar el plan. Inténtalo de nuevo.");
     } finally {
       setIsLoading(prev => ({ ...prev, [selectedPlan]: false }));
-      // No limpiar feedbackMessage inmediatamente si onClose va a ocurrir
       if (!onClose) setTimeout(() => setFeedbackMessage(""), 5000);
     }
   };
 
+  // Maneja la acción para el plan Gratuito.
   const handleFreePlanAction = () => {
     if (!isAuthenticated) {
       navigate("/login");
       if (onClose) onClose();
     } else {
-        // If already authenticated and clicking "Free", just navigate to home
         navigate("/home");
         if (onClose) onClose();
     }
   };
 
+  // Continúa a la página de inicio si ya se tiene un plan.
   const handleContinueWithPlan = () => {
     navigate("/home");
     if (onClose) onClose();
   };
   
+  // Verifica si un plan es el plan actual del usuario.
   const isCurrentPlan = (planName) => isAuthenticated && currentUserPlan === planName;
 
+  // Maneja el botón de volver (para modales o navegación general).
   const handleVolverClick = () => {
     if (onClose) {
       onClose();
     }
-    navigate(-1); // Navigate to the previous screen
+    navigate(-1);
   };
 
+  // Determina si el plan actual del usuario es superior al plan dado.
   const isHigherPlan = (planName) => {
       const planOrder = { 'free': 0, 'premium': 1, 'pro': 2 };
       return planOrder[currentUserPlan] > planOrder[planName];
   };
 
-  // If it's a modal/dropdown and not visible, don't render anything.
-  if (isVisible === false) { // Explicit check for false for the modal case
+  // No renderiza el componente si es un modal y no está visible.
+  if (isVisible === false) {
     return null;
   }
 
-  // Apply 'modal' class if isVisible is true (implies it's used as a modal)
   const sectionClassName = `pricing-section ${isVisible === true ? 'planes-modal-version' : ''}`;
 
   return (
     <section ref={pricingSectionRef} id="planes-section" className={sectionClassName}>
-      <div className="pricing-section-content" ref={modalContentRef}> {/* ref para click outside */}
-        {isVisible === true && onClose && ( // Botón de cerrar solo para la versión modal
+      <div className="pricing-section-content" ref={modalContentRef}>
+        {isVisible === true && onClose && (
           <button onClick={onClose} className="planes-modal-close-button" aria-label="Cerrar selector de planes">
             <FaTimes />
           </button>
@@ -313,7 +302,7 @@ const Planes = ({ isVisible, onClose, onPlanChange, isAuthenticated }) => {
           </div>
         )}
       </div>
-      {/* Las formas de fondo se ocultan si es modal para no interferir */}
+      {/* Las formas de fondo se ocultan si es un modal */}
       {isVisible !== true && (
         <>
           <div className="pricing-shape pricing-shape-1"></div>

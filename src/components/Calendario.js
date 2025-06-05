@@ -17,28 +17,30 @@ import { app } from "../firebase";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
 import { agregarNovedadConDebug } from "./utils/NovedadesUtils";
 
-// Importaciones de librerías para fecha y hora
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; // Estilos para react-datepicker
+import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from 'react-time-picker';
-import 'react-time-picker/dist/TimePicker.css'; // Estilos para react-time-picker
-import 'react-clock/dist/Clock.css'; // Dependencia de react-time-picker para el reloj
+import 'react-time-picker/dist/TimePicker.css';
+import 'react-clock/dist/Clock.css';
 
-// Importación de react-select
 import Select from 'react-select';
-import ReactModal from 'react-modal'; // IMPORTAR REACT-MODAL
+import ReactModal from 'react-modal';
 
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Configurar el elemento raíz para ReactModal (asegúrate de que tu div #root exista en index.html)
-ReactModal.setAppElement("#root"); //
+// Configura el elemento raíz para ReactModal
+ReactModal.setAppElement("#root");
 
+/**
+ * Genera la estructura de una llave de eliminación simple.
+ * Valida que el número de participantes sea una potencia de 2 y mayor o igual a 2.
+ */
 const generateBracketStructure = (numParticipants) => {
     if (!numParticipants || numParticipants < 2 || !Number.isInteger(Math.log2(numParticipants))) {
-        console.warn("[Calendario.js] Invalid number of participants for single elimination bracket generation. Must be a power of 2 (>= 2).");
         return [];
     }
+
     const matches = [];
     let currentMatchId = 1;
     let matchesInRound = numParticipants / 2;
@@ -67,13 +69,14 @@ const generateBracketStructure = (numParticipants) => {
     return matches;
 };
 
-
 function Calendario() {
     const { id: torneoId } = useParams();
+
+    // Estados para la gestión de partidos y torneos
     const [partidos, setPartidos] = useState([]);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
-    const [fechaPartido, setFechaPartido] = useState(null); // Changed to Date object for DatePicker
-    const [horaPartido, setHoraPartido] = useState("00:00"); // String HH:mm for TimePicker
+    const [fechaPartido, setFechaPartido] = useState(null);
+    const [horaPartido, setHoraPartido] = useState("00:00");
     const [equipoLocalId, setEquipoLocalId] = useState("");
     const [equipoVisitanteId, setEquipoVisitanteId] = useState("");
     const [torneoInfo, setTorneoInfo] = useState(null);
@@ -83,40 +86,39 @@ function Calendario() {
     const [numParticipantesBracket, setNumParticipantesBracket] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // NUEVOS ESTADOS PARA EL MODAL DE RESULTADO
+    // Estados para el modal de resultados
     const [isResultModalOpen, setIsResultModalOpen] = useState(false);
     const [selectedPartidoForScore, setSelectedPartidoForScore] = useState(null);
     const [localScore, setLocalScore] = useState("");
     const [visitanteScore, setVisitanteScore] = useState("");
 
-
+    // Efecto para la autenticación y carga de datos iniciales del torneo y partidos
     useEffect(() => {
         const unsubscribeAuth = auth.onAuthStateChanged((currentUser) => {
-            console.log("[Calendario.js] Auth state changed, currentUser:", currentUser ? currentUser.uid : "null");
             setUser(currentUser);
         });
 
+        // Obtiene la información del torneo desde Firestore
         const fetchTorneoInfo = async () => {
-            console.log(`[Calendario.js] Iniciando fetchTorneoInfo para torneoId: ${torneoId}`);
             const torneoDocRef = doc(db, "torneos", torneoId);
             const torneoSnapshot = await firestoreGetDoc(torneoDocRef);
             if (torneoSnapshot.exists()) {
                 const data = torneoSnapshot.data();
-                console.log("[Calendario.js] Torneo encontrado:", data);
                 setTorneoInfo(data);
 
+                // Determina el número de participantes para la llave si el torneo es de eliminación
                 if (data.tipo === "torneo") {
                     const num = Number(data.numEquipos) || 0;
                     if (num > 0 && Number.isInteger(Math.log2(num))) {
                         setNumParticipantesBracket(num);
                     } else {
                         setNumParticipantesBracket(0);
-                        console.warn(`[Calendario.js] Número de equipos inválido o no es potencia de 2 (${num}) para eliminatoria.`);
                     }
                 } else {
                     setNumParticipantesBracket(0);
                 }
 
+                // Prepara la lista de participantes para los selectores
                 const participantesRaw = data.participantes || [];
                 const seleccionablesPromises = participantesRaw.map(async (p) => {
                     if (typeof p === "object" && p !== null) {
@@ -124,7 +126,6 @@ function Calendario() {
                         const displayNombre = p.nombre || `Equipo (Cap: ${p.capitan?.substring(0, 6)}...)`;
                         return { id: String(id), displayNombre, esEquipo: true };
                     } else if (typeof p === 'string' && p) {
-                        // Fetch user data for individual participants
                         try {
                             const userDocRef = doc(db, "usuarios", p);
                             const userDocSnap = await firestoreGetDoc(userDocRef);
@@ -143,10 +144,8 @@ function Calendario() {
 
                 const seleccionables = (await Promise.all(seleccionablesPromises)).filter(p => p && p.id);
                 setParticipantesParaSeleccion(seleccionables);
-                console.log("[Calendario.js] Participantes para selección:", seleccionables);
 
             } else {
-                console.error("[Calendario.js] No se encontró el torneo con ID:", torneoId);
                 setTorneoInfo(null);
                 setParticipantesParaSeleccion([]);
             }
@@ -154,6 +153,7 @@ function Calendario() {
 
         fetchTorneoInfo();
 
+        // Suscribe a los cambios en la colección de partidos del torneo en tiempo real
         const partidosCollection = collection(db, `torneos/${torneoId}/calendario`);
         const unsubscribePartidos = onSnapshot(partidosCollection, (snapshot) => {
             const nuevosPartidos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -163,19 +163,19 @@ function Calendario() {
                 return dateA - dateB;
             });
             setPartidos(nuevosPartidos);
-            console.log("[Calendario.js] Partidos actualizados:", nuevosPartidos);
         }, (error) => {
-             console.error("[Calendario.js] Error escuchando partidos:", error);
-             setPartidos([]);
+            console.error("[Calendario.js] Error escuchando partidos:", error);
+            setPartidos([]);
         });
 
+        // Función de limpieza para desuscribirse de los listeners
         return () => {
             unsubscribeAuth();
             unsubscribePartidos();
         };
     }, [torneoId]);
 
-
+    // Genera la estructura de la llave de eliminación y la memoiza
     const initialBracketStructureCalendario = useMemo(() => {
         if (torneoInfo?.tipo === "torneo" && numParticipantesBracket > 0) {
             return generateBracketStructure(numParticipantesBracket);
@@ -183,7 +183,7 @@ function Calendario() {
         return [];
     }, [numParticipantesBracket, torneoInfo?.tipo]);
 
-
+    // Calcula los participantes eliminados en torneos de eliminación directa
     useEffect(() => {
         if (torneoInfo?.tipo === "torneo" && initialBracketStructureCalendario.length > 0 && partidos.length > 0) {
             const eliminated = new Set();
@@ -212,28 +212,29 @@ function Calendario() {
                 }
             });
             setEliminatedParticipants(eliminated);
-            console.log("[Calendario.js] Participantes eliminados (modo torneo):", Array.from(eliminated));
         } else {
             setEliminatedParticipants(new Set());
         }
     }, [partidos, torneoInfo?.tipo, numParticipantesBracket, initialBracketStructureCalendario]);
 
-
+    // Abre el formulario para añadir un partido
     const handleMostrarFormulario = () => {
         setMostrarFormulario(true);
     };
 
+    // Cierra el formulario y resetea los estados
     const handleCerrarFormulario = () => {
         setMostrarFormulario(false);
-        setFechaPartido(null); // Reset to null
-        setHoraPartido("00:00"); // Reset time
+        setFechaPartido(null);
+        setHoraPartido("00:00");
         setEquipoLocalId("");
         setEquipoVisitanteId("");
     };
 
+    // Agrega un nuevo partido al calendario (solo para torneos tipo "liga")
     const handleAgregarPartido = async (e) => {
         e.preventDefault();
-        // Validar que fechaPartido es un Date object válido
+        // Validaciones del formulario
         if (!fechaPartido || !horaPartido || !equipoLocalId || !equipoVisitanteId || !(fechaPartido instanceof Date && !isNaN(fechaPartido))) {
             alert("Por favor, rellena la fecha, hora, local y visitante correctamente.");
             return;
@@ -244,10 +245,7 @@ function Calendario() {
         }
         setIsSubmitting(true);
 
-        // Format the date to ISO-MM-DD for saving to Firestore
         const fechaFormateada = fechaPartido.toISOString().split('T')[0];
-
-        console.log("[Calendario.js] Intentando agregar partido (modo liga):", { fecha: fechaFormateada, hora: horaPartido, equipoLocalId, equipoVisitanteId });
 
         const localSeleccionado = participantesParaSeleccion.find((p) => p.id === equipoLocalId);
         const visitanteSeleccionado = participantesParaSeleccion.find((p) => p.id === equipoVisitanteId);
@@ -260,7 +258,7 @@ function Calendario() {
 
         try {
             const partidoData = {
-                fecha: fechaFormateada, // Save the formatted date
+                fecha: fechaFormateada,
                 hora: horaPartido,
                 local: localSeleccionado.displayNombre,
                 visitante: visitanteSeleccionado.displayNombre,
@@ -269,8 +267,8 @@ function Calendario() {
                 resultado: null,
             };
             const docRef = await addDoc(collection(db, `torneos/${torneoId}/calendario`), partidoData);
-            console.log("[Calendario.js] Partido de liga agregado con ID:", docRef.id);
 
+            // Agrega una novedad
             await agregarNovedadConDebug(
                 torneoId,
                 `Nuevo partido (Liga) programado: ${localSeleccionado.displayNombre} vs ${visitanteSeleccionado.displayNombre} el ${fechaFormateada} a las ${horaPartido}.`,
@@ -288,17 +286,17 @@ function Calendario() {
         }
     };
 
+    // Elimina un partido del calendario
     const handleEliminarPartido = async (partidoId, localNombre, visitanteNombre) => {
         if (!window.confirm(`¿Estás seguro de que quieres eliminar el partido "${localNombre} vs ${visitanteNombre}"? Esto puede afectar la clasificación y las llaves si es un partido de torneo.`)) {
             return;
         }
         setIsSubmitting(true);
-        console.log(`[Calendario.js] Intentando eliminar partido: ${partidoId}`);
         try {
             const partidoDocRef = doc(db, `torneos/${torneoId}/calendario`, partidoId);
             await deleteDoc(partidoDocRef);
-            console.log(`[Calendario.js] Partido ${partidoId} eliminado.`);
 
+            // Agrega una novedad
             await agregarNovedadConDebug(
                 torneoId,
                 `El partido ${localNombre} vs ${visitanteNombre} ha sido eliminado.`,
@@ -314,14 +312,13 @@ function Calendario() {
         }
     };
 
-    // MODIFICADO: Ahora abre un modal
+    // Abre el modal para añadir/editar el resultado de un partido
     const handleActualizarResultado = (partido) => {
         if (!esCreador) {
             alert("Solo el creador del torneo puede añadir resultados.");
             return;
         }
         setSelectedPartidoForScore(partido);
-        // Inicializar scores con el resultado existente si lo hay
         if (partido.resultado && partido.resultado.includes('-')) {
             const [s1, s2] = partido.resultado.split('-').map(Number);
             setLocalScore(isNaN(s1) ? "" : s1);
@@ -333,7 +330,7 @@ function Calendario() {
         setIsResultModalOpen(true);
     };
 
-    // NUEVO: Función para cerrar el modal de resultado
+    // Cierra el modal de resultado y resetea los estados relacionados
     const closeResultModal = () => {
         setIsResultModalOpen(false);
         setSelectedPartidoForScore(null);
@@ -341,7 +338,7 @@ function Calendario() {
         setVisitanteScore("");
     };
 
-    // NUEVO: Función para manejar el envío del formulario de resultado (desde el modal)
+    // Maneja el envío del formulario de resultado desde el modal
     const handleResultSubmit = async (e) => {
         e.preventDefault();
         if (!esCreador) {
@@ -360,7 +357,7 @@ function Calendario() {
             alert("Puntajes inválidos. Deben ser números no negativos.");
             return;
         }
-        // Esto es para torneos de eliminación directa. Puedes quitarlo si solo aplica a ligas y no quieres esta validación.
+        // Validación para torneos de eliminación: no se permiten empates
         if (torneoInfo?.tipo === 'torneo' && score1 === score2) {
             alert("En torneos de eliminatoria, los empates no suelen ser válidos para avanzar. Determina un ganador.");
             return;
@@ -368,16 +365,15 @@ function Calendario() {
 
         setIsSubmitting(true);
         const resultadoFinal = `${score1}-${score2}`;
-        console.log(`[Calendario.js] Intentando actualizar resultado para partido ${selectedPartidoForScore.id} a: ${resultadoFinal}`);
 
         try {
             const partidoRef = doc(db, `torneos/${torneoId}/calendario`, selectedPartidoForScore.id);
             await updateDoc(partidoRef, { resultado: resultadoFinal });
-            console.log(`[Calendario.js] Resultado actualizado para partido ${selectedPartidoForScore.id}.`);
 
             const mensajeNovedad = `Resultado actualizado para ${selectedPartidoForScore.local} vs ${selectedPartidoForScore.visitante}: ${resultadoFinal}.`;
             const bracketMatchIdInfo = selectedPartidoForScore.bracketMatchId ? ` (Llave: ${selectedPartidoForScore.bracketMatchId})` : "";
 
+            // Agrega una novedad
             await agregarNovedadConDebug(
                 torneoId,
                 `${mensajeNovedad}${bracketMatchIdInfo}`,
@@ -400,10 +396,10 @@ function Calendario() {
         }
     };
 
-
+    // Determina si el usuario actual es el creador del torneo
     const esCreador = user?.uid && torneoInfo?.creadorId && user.uid === torneoInfo.creadorId;
 
-    // Transform participants for react-select
+    // Prepara las opciones para los selectores de participantes
     const selectOptions = participantesParaSeleccion.map(p => ({
         value: p.id,
         label: p.displayNombre
@@ -412,35 +408,35 @@ function Calendario() {
     return (
         <div className="calendario-container">
             <div className="calendario-header">
+                {/* Botón para añadir partido (solo visible para el creador y en torneos tipo "liga") */}
                 {esCreador && !mostrarFormulario && torneoInfo?.tipo !== "torneo" && (
                     <button onClick={handleMostrarFormulario} className="calendario-add-button primary" disabled={isSubmitting}>
                         <FaPlus /> Añadir Partido (Liga)
                     </button>
                 )}
-                 {/* MODIFIED MESSAGE: Informs users that bracket matches are visible but managed elsewhere */}
-                 {torneoInfo?.tipo === "torneo" && (
+                {/* Mensaje informativo para torneos de eliminación */}
+                {torneoInfo?.tipo === "torneo" && (
                     <p style={{textAlign: 'center', color: '#aaa', width: '100%', padding: '1rem 0', fontStyle: 'italic'}}>
                         Los partidos de eliminatoria (llaves) se gestionan desde la sección "Clasificación / Llaves", pero se listan aquí para una vista completa.
                     </p>
                 )}
             </div>
 
-            {/* Form to add matches is still only for "liga" type tournaments */}
+            {/* Formulario para añadir nuevos partidos (solo para torneos tipo "liga") */}
             {mostrarFormulario && esCreador && torneoInfo?.tipo !== "torneo" && (
                 <div className="calendario-form">
                     <h3>Añadir Nuevo Partido (Liga)</h3>
                     <form onSubmit={handleAgregarPartido}>
                         <div className="form-group">
                             <label htmlFor="fechaPartido">Fecha:</label>
-                            {/* Componente DatePicker */}
                             <DatePicker
                                 selected={fechaPartido}
                                 onChange={(date) => setFechaPartido(date)}
                                 dateFormat="yyyy-MM-dd"
-                                className="react-datepicker-custom-input" // Clase para estilizar
+                                className="react-datepicker-custom-input"
                                 placeholderText="Selecciona una fecha"
                                 required
-                                minDate={new Date()} // No permitir fechas pasadas
+                                minDate={new Date()}
                                 peekNextMonth
                                 showMonthDropdown
                                 showYearDropdown
@@ -449,14 +445,13 @@ function Calendario() {
                         </div>
                         <div className="form-group">
                             <label htmlFor="horaPartido">Hora:</label>
-                            {/* Componente TimePicker */}
                             <TimePicker
                                 onChange={setHoraPartido}
                                 value={horaPartido}
-                                disableClock={true} // Deshabilita el reloj grande, manteniendo el desplegable
+                                disableClock={true}
                                 format="HH:mm"
-                                clearIcon={null} // Ocultar el icono de "limpiar"
-                                className="react-timepicker-custom-input" // Clase para estilizar
+                                clearIcon={null}
+                                className="react-timepicker-custom-input"
                                 required
                             />
                         </div>
@@ -470,7 +465,7 @@ function Calendario() {
                                 placeholder="Seleccionar"
                                 classNamePrefix="react-select"
                                 isClearable={true}
-                                required // react-select doesn't directly support HTML required, needs custom validation if strict
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -483,7 +478,7 @@ function Calendario() {
                                 placeholder="Seleccionar"
                                 classNamePrefix="react-select"
                                 isClearable={true}
-                                required // react-select doesn't directly support HTML required, needs custom validation if strict
+                                required
                             />
                         </div>
                         <div className="form-actions">
@@ -494,15 +489,18 @@ function Calendario() {
                 </div>
             )}
 
+            {/* Mensaje cuando no hay partidos programados */}
             {partidos.length === 0 && (
                 <p>No hay partidos programados para este torneo.</p>
             )}
 
+            {/* Lista de partidos programados */}
             {partidos.length > 0 && (
-                 <div className="calendario-partidos-grid">
+                <div className="calendario-partidos-grid">
                     {partidos.map((partido) => (
                         <div key={partido.id} className="calendario-partido-card">
-                           <div className="botones-accion-card">
+                            <div className="botones-accion-card">
+                                {/* Botones de acción (editar resultado, eliminar) solo para el creador */}
                                 {esCreador && (
                                     <>
                                         <button onClick={() => handleActualizarResultado(partido)} className="boton-resultado-partido" title="Añadir/Editar resultado" aria-label="Añadir o editar resultado" disabled={isSubmitting}>
@@ -514,20 +512,24 @@ function Calendario() {
                                     </>
                                 )}
                             </div>
+                            {/* Información de la llave si es un partido de torneo de eliminación */}
                             {partido.bracketMatchId && (
                                 <div className="partido-block bracket-info">
                                     <strong>Llave N°:</strong> <p>{partido.bracketMatchId}</p>
                                 </div>
                             )}
+                            {/* Fecha y hora del partido */}
                             <div className="partido-block fecha-hora">
                                 <strong>Fecha:</strong> <p>{partido.fecha || "Por definir"}</p>
                                 <strong>Hora:</strong> <p>{partido.hora || "Por definir"}</p>
                             </div>
+                            {/* Equipos/jugadores del partido */}
                             <div className="partido-block equipos">
                                 <span className="equipo-local">{partido.local || "Por determinar"}</span>
                                 <span className="partido-vs">vs</span>
                                 <span className="equipo-visitante">{partido.visitante || "Por determinar"}</span>
                             </div>
+                            {/* Resultado del partido */}
                             {partido.resultado ? (
                                 <div className="partido-block resultado">
                                     {partido.resultado}
@@ -541,6 +543,7 @@ function Calendario() {
                     ))}
                 </div>
             )}
+            {/* Lista de participantes eliminados (solo en torneos de eliminación) */}
             {torneoInfo?.tipo === "torneo" && eliminatedParticipants.size > 0 && (
                 <div className="eliminated-list">
                     <strong>Participantes Eliminados (en Rondas Anteriores):</strong>
@@ -548,13 +551,13 @@ function Calendario() {
                 </div>
             )}
 
-            {/* MODAL PARA AÑADIR/EDITAR RESULTADO */}
+            {/* Modal para añadir/editar el resultado de un partido */}
             <ReactModal
                 isOpen={isResultModalOpen}
                 onRequestClose={closeResultModal}
                 contentLabel="Añadir/Modificar Resultado del Partido"
-                className="ReactModal__Content" // Usar la misma clase de estilo que en Clasificacion
-                overlayClassName="ReactModal__Overlay" // Usar la misma clase de estilo para el overlay
+                className="ReactModal__Content"
+                overlayClassName="ReactModal__Overlay"
             >
                 <h3>Resultado: {selectedPartidoForScore?.local || "?"} vs {selectedPartidoForScore?.visitante || "?"}</h3>
                 <p style={{ textAlign: 'center', fontSize: '0.9em', color: '#aaa' }}>
@@ -587,6 +590,7 @@ function Calendario() {
                             className="form-input"
                         />
                     </div>
+                    {/* Mensaje de advertencia para empates en eliminatorias */}
                     {torneoInfo?.tipo === 'torneo' && localScore !== "" && visitanteScore !== "" && localScore === visitanteScore && (
                         <p style={{ color: '#FF6D14', fontSize: '0.9em', textAlign: 'center' }}>Los empates no son válidos en eliminatorias.</p>
                     )}

@@ -1,20 +1,19 @@
-// components/Unirse.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, getDocs, query, where, doc, updateDoc, arrayUnion, arrayRemove, getDoc, onSnapshot } from "firebase/firestore"; // Import onSnapshot
+import { getFirestore, collection, getDocs, query, where, doc, updateDoc, arrayUnion, arrayRemove, getDoc, onSnapshot } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { app } from "../firebase";
 import EquipoForm from "./EquipoForm";
-import "../components/estilos/Unirse.css"; // Main CSS for this component
+import "../components/estilos/Unirse.css";
 import { FaUser, FaEye, FaArrowLeft } from "react-icons/fa";
 import { agregarNovedadConDebug } from "./utils/NovedadesUtils";
-import { PLAN_LIMITS, PLAN_DISPLAY_NAMES } from './Nuevo'; // Import PLAN_LIMITS and PLAN_DISPLAY_NAMES from Nuevo.js
+import { PLAN_LIMITS, PLAN_DISPLAY_NAMES } from './Nuevo';
 
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Helper function to get user name for novelty
+// Función auxiliar para obtener el nombre de usuario para las novedades
 const getUserNameForNovelty = async (userId) => {
   const currentUser = getAuth(app).currentUser;
   if (currentUser && currentUser.uid === userId) {
@@ -28,7 +27,7 @@ const getUserNameForNovelty = async (userId) => {
       return userDocSnap.data().nombre || userDocSnap.data().email || `Usuario (${userId.substring(0, 6)}...)`;
     }
   } catch (e) {
-    console.error("Error fetching user name for novelty:", e);
+    console.error("Error al obtener el nombre de usuario para la novedad:", e);
   }
   return `Usuario (${userId.substring(0, 6)}...)`;
 };
@@ -50,11 +49,12 @@ function Unirse() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const [currentUser, setCurrentUser] = useState(null); // Current authenticated user
-  const [userPlan, setUserPlan] = useState('free'); // User's current plan
-  const [userTotalTournaments, setUserTotalTournaments] = useState(0); // Total tournaments user is in
-  const [isLoadingPlanData, setIsLoadingPlanData] = useState(true); // Loading state for user plan/tournament count
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userPlan, setUserPlan] = useState('free');
+  const [userTotalTournaments, setUserTotalTournaments] = useState(0);
+  const [isLoadingPlanData, setIsLoadingPlanData] = useState(true);
 
+  // Efecto para la autenticación del usuario y carga de datos del plan/torneos
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged(async user => {
       setCurrentUser(user);
@@ -69,13 +69,8 @@ function Unirse() {
       setIsLoadingPlanData(true);
       const userDocRef = doc(db, "usuarios", user.uid);
       const userDocSnap = await getDoc(userDocRef);
-      if (userDocSnap.exists()) {
-        setUserPlan(userDocSnap.data().plan || 'free');
-      } else {
-        setUserPlan('free');
-      }
+      setUserPlan(userDocSnap.exists() ? (userDocSnap.data().plan || 'free') : 'free');
 
-      // Setup listeners for user's tournaments
       const allUserTournamentIds = new Set();
       const unsubscribes = [];
 
@@ -84,41 +79,38 @@ function Unirse() {
           setIsLoadingPlanData(false);
       };
 
-      const qCreados = query(collection(db, "torneos"), where("creadorId", "==", user.uid));
-      unsubscribes.push(onSnapshot(qCreados, (snapshot) => {
+      // Suscripciones para contar los torneos del usuario
+      unsubscribes.push(onSnapshot(query(collection(db, "torneos"), where("creadorId", "==", user.uid)), (snapshot) => {
           snapshot.docChanges().forEach(change => {
               if (change.type === "added") allUserTournamentIds.add(change.doc.id);
               if (change.type === "removed") allUserTournamentIds.delete(change.doc.id);
           });
           updateCombinedCount();
-      }, (error) => console.error("Error fetching created tournaments in Unirse:", error)));
+      }, (error) => console.error("Error al obtener torneos creados:", error)));
 
-      const qParticipantesIndividual = query(collection(db, "torneos"), where("participantes", "array-contains", user.uid));
-      unsubscribes.push(onSnapshot(qParticipantesIndividual, (snapshot) => {
+      unsubscribes.push(onSnapshot(query(collection(db, "torneos"), where("participantes", "array-contains", user.uid)), (snapshot) => {
           snapshot.docChanges().forEach(change => {
               if (change.type === "added") allUserTournamentIds.add(change.doc.id);
               if (change.type === "removed") allUserTournamentIds.delete(change.doc.id);
           });
           updateCombinedCount();
-      }, (error) => console.error("Error fetching individual participant tournaments in Unirse:", error)));
+      }, (error) => console.error("Error al obtener torneos de participante individual:", error)));
 
-      const qParticipantesEquipoCapitan = query(collection(db, "torneos"), where("participantes", "array-contains", { capitan: user.uid }));
-      unsubscribes.push(onSnapshot(qParticipantesEquipoCapitan, (snapshot) => {
+      unsubscribes.push(onSnapshot(query(collection(db, "torneos"), where("participantes", "array-contains", { capitan: user.uid })), (snapshot) => {
           snapshot.docChanges().forEach(change => {
               if (change.type === "added") allUserTournamentIds.add(change.doc.id);
               if (change.type === "removed") allUserTournamentIds.delete(change.doc.id);
           });
           updateCombinedCount();
-      }, (error) => console.error("Error fetching team participant (captain) tournaments in Unirse:", error)));
+      }, (error) => console.error("Error al obtener torneos de participante en equipo (capitán):", error)));
 
-      const qEspectador = query(collection(db, "torneos"), where("espectadores", "array-contains", user.uid));
-      unsubscribes.push(onSnapshot(qEspectador, (snapshot) => {
+      unsubscribes.push(onSnapshot(query(collection(db, "torneos"), where("espectadores", "array-contains", user.uid)), (snapshot) => {
           snapshot.docChanges().forEach(change => {
               if (change.type === "added") allUserTournamentIds.add(change.doc.id);
               if (change.type === "removed") allUserTournamentIds.delete(change.doc.id);
           });
           updateCombinedCount();
-      }, (error) => console.error("Error fetching spectated tournaments in Unirse:", error)));
+      }, (error) => console.error("Error al obtener torneos como espectador:", error)));
 
       if (torneoEncontrado) {
         checkUserStatus(torneoEncontrado, user);
@@ -130,8 +122,9 @@ function Unirse() {
     });
 
     return () => unsubscribeAuth();
-  }, [torneoEncontrado]); // Depend on torneoEncontrado to re-check status if it changes
+  }, [torneoEncontrado]);
 
+  // Restablece el estado del componente
   const resetState = () => {
     setCodigo("");
     setFase('buscar');
@@ -142,6 +135,7 @@ function Unirse() {
     setSuccessMessage("");
   };
 
+  // Verifica el estado del usuario en el torneo
   const checkUserStatus = async (torneo, user) => {
     if (!torneo || !user) {
       setUserStatus({ esCreador: false, esParticipante: false, esEspectador: false });
@@ -153,7 +147,7 @@ function Unirse() {
     if (torneo.participantes && Array.isArray(torneo.participantes)) {
       if (torneo.modo === "equipo") {
         esParticipante = torneo.participantes.some(p => p && typeof p === 'object' && p.capitan === user.uid);
-      } else { 
+      } else {
         esParticipante = torneo.participantes.includes(user.uid);
       }
     }
@@ -167,8 +161,8 @@ function Unirse() {
     });
   };
 
+  // Maneja la búsqueda del torneo
   const handleBuscarTorneo = async () => {
-    // Current user is already set by useEffect
     if (!currentUser) {
       setError("Debes iniciar sesión para buscar un torneo.");
       return;
@@ -198,8 +192,7 @@ function Unirse() {
         const torneoDoc = querySnapshot.docs[0];
         const currentTorneoData = { id: torneoDoc.id, ...torneoDoc.data() };
 
-        // Check if user is already involved before checking overall limits
-        const isUserAlreadyInvolved = currentTorneoData.creadorId === currentUser.uid || 
+        const isUserAlreadyInvolved = currentTorneoData.creadorId === currentUser.uid ||
                                       (currentTorneoData.participantes?.includes(currentUser.uid)) ||
                                       (currentTorneoData.modo === "equipo" && currentTorneoData.participantes?.some(p => p && typeof p === 'object' && p.capitan === currentUser.uid)) ||
                                       (currentTorneoData.espectadores?.includes(currentUser.uid));
@@ -213,7 +206,6 @@ function Unirse() {
           return;
         }
 
-        // Check plan limit only if user is NOT already involved in this specific tournament
         const currentPlanLimits = PLAN_LIMITS[userPlan];
         if (!currentPlanLimits || typeof currentPlanLimits.simultaneos !== 'number') {
             setError("No se pudo determinar el límite de torneos para tu plan. Intenta recargar.");
@@ -226,7 +218,7 @@ function Unirse() {
             setIsLoading(false);
             return;
         }
-        
+
         setTorneoEncontrado(currentTorneoData);
         await checkUserStatus(currentTorneoData, currentUser);
         setFase('elegirModo');
@@ -240,8 +232,8 @@ function Unirse() {
     setIsLoading(false);
   };
 
+  // Maneja la elección de unirse como participante
   const handleElegirModoParticipante = async () => {
-    // currentUser is already set by useEffect
     if (!currentUser || !torneoEncontrado) {
       setError("Error: Usuario no autenticado o torneo no encontrado.");
       return;
@@ -275,14 +267,12 @@ function Unirse() {
         return;
       }
 
-      // Re-check plan limit before committing to join as participant
       const currentPlanLimits = PLAN_LIMITS[userPlan];
       if (userTotalTournaments >= currentPlanLimits.simultaneos) {
           setError(`No puedes unirte como participante. Has alcanzado el límite de ${currentPlanLimits.simultaneos} torneos para tu plan ${PLAN_DISPLAY_NAMES[userPlan]}.`);
           setIsLoading(false);
           return;
       }
-
 
       if (currentTorneoData.modo === "equipo") {
         const yaEsCapitan = currentTorneoData.participantes.some(p => p && typeof p === 'object' && p.capitan === currentUser.uid);
@@ -326,8 +316,8 @@ function Unirse() {
     setIsLoading(false);
   };
 
+  // Maneja la elección de unirse como espectador
   const handleElegirModoEspectador = async () => {
-    // currentUser is already set by useEffect
     if (!currentUser || !torneoEncontrado) {
       setError("Error: Usuario no autenticado o torneo no encontrado.");
       return;
@@ -345,7 +335,6 @@ function Unirse() {
       return;
     }
 
-    // Check plan limit before committing to join as spectator
     const currentPlanLimits = PLAN_LIMITS[userPlan];
     if (userTotalTournaments >= currentPlanLimits.simultaneos) {
         setError(`No puedes unirte como espectador. Has alcanzado el límite de ${currentPlanLimits.simultaneos} torneos para tu plan ${PLAN_DISPLAY_NAMES[userPlan]}.`);
@@ -387,8 +376,8 @@ function Unirse() {
     setIsLoading(false);
   };
 
+  // Maneja el envío del formulario de equipo
   const handleSubmitEquipo = async (nombreEquipo, miembros) => {
-    // currentUser is already set by useEffect
     if (!currentUser || !torneoEncontrado) {
       setError("Error: Usuario no autenticado o torneo no encontrado para registrar equipo.");
       setIsLoading(false);
@@ -440,7 +429,6 @@ function Unirse() {
         return;
       }
 
-      // Re-check plan limit before committing to join as team captain
       const currentPlanLimits = PLAN_LIMITS[userPlan];
       if (userTotalTournaments >= currentPlanLimits.simultaneos) {
           setError(`No puedes unirte con un equipo. Has alcanzado el límite de ${currentPlanLimits.simultaneos} torneos para tu plan ${PLAN_DISPLAY_NAMES[userPlan]}.`);
@@ -475,19 +463,19 @@ function Unirse() {
         { equipoNombre: nombreEquipo.trim(), capitanId: currentUser.uid, capitanNombre: capitanNombre },
         "Unirse.js (SubmitEquipo - Team)"
       );
-      
+
       if (miembros && Array.isArray(miembros)) {
         for (const miembroIdentificador of miembros) {
           if (miembroIdentificador === currentUser.uid && currentTorneoData.modo === "equipo") continue;
-          
+
           const miembroNombre = await getUserNameForNovelty(miembroIdentificador);
           await agregarNovedadConDebug(
             torneoEncontrado.id,
             `${miembroNombre} se ha unido al torneo como parte del equipo "${nombreEquipo.trim()}".`,
             'user_join',
-            { 
-              userId: miembroIdentificador, 
-              userName: miembroNombre, 
+            {
+              userId: miembroIdentificador,
+              userName: miembroNombre,
               equipoNombre: nombreEquipo.trim(),
               capitanId: currentUser.uid
             },
@@ -506,11 +494,8 @@ function Unirse() {
     setIsLoading(false);
   };
 
-  const currentSimultaneousLimit = PLAN_LIMITS[userPlan]?.simultaneos;
-
   return (
     <div className="form-container-unirse">
-      {/* Animated Shapes */}
       <div className="animated-shape shape1-unirse"></div>
       <div className="animated-shape shape2-unirse"></div>
 
@@ -529,8 +514,7 @@ function Unirse() {
           <>
             <h2 className="form-title">Buscar Torneo por Código</h2>
             <p className="form-description">Introduce el código del torneo al que deseas unirte o ver.</p>
-            {/* Tournament count display added here for context */}
-            
+
             <div className="form-field">
               <label htmlFor="codigo-torneo" className="form-label">Código del Torneo:</label>
               <input
@@ -606,7 +590,7 @@ function Unirse() {
             <h2 className="form-title">Inscripción de Equipo para "{torneoEncontrado.titulo}"</h2>
             <p className="form-description">Introduce los datos de tu equipo.</p>
             <EquipoForm
-              maxMiembros={torneoEncontrado.maxJugadoresPorEquipo} 
+              maxMiembros={torneoEncontrado.maxJugadoresPorEquipo}
               onSubmit={handleSubmitEquipo}
               onCancel={() => { setFase('elegirModo'); setError(''); setSuccessMessage(''); }}
               isLoading={isLoading || isLoadingPlanData}

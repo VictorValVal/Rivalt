@@ -1,4 +1,3 @@
-// components/DetallesParticipante.js
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
@@ -14,7 +13,7 @@ function DetallesParticipante() {
   const navigate = useNavigate();
 
   const [data, setData] = useState(null);
-  const [torneoMode, setTorneoMode] = useState(null); // <--- NEW: State to store tournament mode
+  const [torneoMode, setTorneoMode] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [estadisticasUsuario, setEstadisticasUsuario] = useState({ torneosJugados: 0 });
@@ -25,11 +24,6 @@ function DetallesParticipante() {
     navigate(`/torneo/${torneoId}`, { state: { activeTab: "participantes", fromDetails: true } });
   };
 
-  const handleVolverAlTorneoGeneral = () => {
-    navigate(`/torneo/${torneoId}`, { state: { activeTab: "componente1", fromDetails: true } });
-  };
-
-
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -37,15 +31,14 @@ function DetallesParticipante() {
       setData(null);
       setMiembrosEquipo([]);
 
-      // Fetch tournament data first to get mode
       let currentTorneoMode = null;
       if (torneoId) {
         const torneoRef = doc(db, "torneos", torneoId);
         const torneoSnap = await getDoc(torneoRef);
         if (torneoSnap.exists()) {
           setNombreTorneoActual(torneoSnap.data().titulo);
-          currentTorneoMode = torneoSnap.data().modo; // <--- Get mode
-          setTorneoMode(currentTorneoMode); // <--- Set mode state
+          currentTorneoMode = torneoSnap.data().modo;
+          setTorneoMode(currentTorneoMode);
         }
       }
 
@@ -55,7 +48,7 @@ function DetallesParticipante() {
           const usuarioSnap = await getDoc(usuarioRef);
           if (usuarioSnap.exists()) {
             const usuarioData = usuarioSnap.data();
-            setData({ ...usuarioData, id: usuarioSnap.id, tipo: "usuario" }); // <--- Ensure photoURL is included if present
+            setData({ ...usuarioData, id: usuarioSnap.id, tipo: "usuario" });
 
             const torneosQuery = query(
               collection(db, "torneos"),
@@ -70,12 +63,12 @@ function DetallesParticipante() {
         } else if (tipo === "equipo") {
           if (location.state?.equipoData) {
             const equipo = location.state.equipoData;
-            setData({ ...equipo, id: participanteId, tipo: "equipo" }); 
+            setData({ ...equipo, id: participanteId, tipo: "equipo" });
 
             if (equipo.miembros && equipo.miembros.length > 0) {
               const miembrosDataPromises = equipo.miembros.map(async (miembroIdentificador) => {
                 let miembroInfo = { identificador: miembroIdentificador, nombre: miembroIdentificador, email: "" };
-                if (typeof miembroIdentificador === 'string' && miembroIdentificador.length > 15) { 
+                if (typeof miembroIdentificador === 'string' && miembroIdentificador.length > 15) {
                     try {
                         const userRef = doc(db, "usuarios", miembroIdentificador);
                         const userSnap = await getDoc(userRef);
@@ -89,9 +82,9 @@ function DetallesParticipante() {
                         console.warn("Error buscando miembro por UID:", miembroIdentificador, e);
                         miembroInfo.nombre = `Usuario (${miembroIdentificador.substring(0,6)}...) (Error)`;
                     }
-                } else if (miembroIdentificador.includes('@')) { 
+                } else if (miembroIdentificador.includes('@')) {
                     miembroInfo.email = miembroIdentificador;
-                    miembroInfo.nombre = miembroIdentificador.split('@')[0]; 
+                    miembroInfo.nombre = miembroIdentificador.split('@')[0];
                 }
                 return miembroInfo;
               });
@@ -109,7 +102,7 @@ function DetallesParticipante() {
                 setData({ ...equipoEncontrado, id: participanteId, tipo: "equipo" });
                 if (equipoEncontrado.miembros && equipoEncontrado.miembros.length > 0) {
                     const miembrosDataPromises = equipoEncontrado.miembros.map(async (miembroId) => {
-                        const userRef = doc(db, "usuarios", miembroId); 
+                        const userRef = doc(db, "usuarios", miembroId);
                         const userSnap = await getDoc(userRef);
                         return userSnap.exists() ? {id: userSnap.id, ...userSnap.data()} : { nombre: `ID: ${miembroId}`, email: "N/A" };
                     });
@@ -141,17 +134,17 @@ function DetallesParticipante() {
     }
   }, [participanteId, tipo, torneoId, location.state]);
 
-  const getInicial = (nombre, email) => { // <--- UPDATED: Pass email for initial
+  const getInicial = (nombre, email) => {
     if (!nombre || typeof nombre !== 'string') {
         if (email && typeof email === 'string') return email.charAt(0).toUpperCase();
         return "?";
     }
     return nombre.charAt(0).toUpperCase();
   };
-  
+
   const formatDate = (timestamp) => {
     if (!timestamp) return "Fecha desconocida";
-    if (timestamp.seconds) { 
+    if (timestamp.seconds) {
       return new Date(timestamp.seconds * 1000).toLocaleDateString("es-ES", {
         year: 'numeric', month: 'long', day: 'numeric'
       });
@@ -173,8 +166,8 @@ function DetallesParticipante() {
     return (
       <div className="detalles-participante-error">
         <p>{error}</p>
-        <button onClick={handleVolverAlTorneoGeneral} className="dp-boton-volver">
-          <FaArrowLeft /> Volver al Torneo
+        <button onClick={handleVolverAParticipantes} className="dp-boton-volver">
+          <FaArrowLeft /> Volver a Participantes
         </button>
       </div>
     );
@@ -201,18 +194,18 @@ function DetallesParticipante() {
                 Detalles del {data.tipo === "usuario" ? "Jugador" : "Equipo"}
                 {nombreTorneoActual && <span className="dp-subtitulo-torneo">en {nombreTorneoActual}</span>}
             </h1>
-            <div style={{width: "40px"}}></div> 
+            <div style={{width: "40px"}}></div>
         </div>
 
       {data.tipo === "usuario" && (
         <div className="dp-card dp-usuario-card">
-          {torneoMode === "individual" && ( // <--- NEW: Conditional display for individual mode
+          {torneoMode === "individual" && (
             <div className="dp-avatar-container">
-              {data.photoURL ? ( // <--- Check if photoURL exists
+              {data.photoURL ? (
                 <img src={data.photoURL} alt={`Avatar de ${data.nombre || 'participante'}`} className="dp-avatar dp-avatar-img" />
               ) : (
-                <div className="dp-avatar dp-avatar-default"> {/* Default avatar style */}
-                  {getInicial(data.nombre, data.email)} {/* Pass email for initial if name is missing */}
+                <div className="dp-avatar dp-avatar-default">
+                  {getInicial(data.nombre, data.email)}
                 </div>
               )}
             </div>
@@ -228,7 +221,7 @@ function DetallesParticipante() {
             <FaCalendarAlt className="dp-info-icon" />
             <span>Se unió: {formatDate(data.fechaRegistro) || "No especificado"}</span>
           </div>
-          
+
           <div className="dp-seccion dp-estadisticas">
             <h3 className="dp-subtitulo-seccion"><FaChartLine /> Estadísticas</h3>
             <div className="dp-info-item">
@@ -244,7 +237,7 @@ function DetallesParticipante() {
             <FaShieldAlt className="dp-icono-titulo-equipo" />
             <h2 className="dp-nombre-equipo">{data.nombre || "Nombre de equipo no disponible"}</h2>
           </div>
-           {data.capitanNombre && ( 
+           {data.capitanNombre && (
             <div className="dp-info-item">
                 <FaUserCircle className="dp-info-icon" />
                 <span>Capitán: {data.capitanNombre} ({data.capitanEmail || data.capitan})</span>

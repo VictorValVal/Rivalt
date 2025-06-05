@@ -1,4 +1,3 @@
-// components/Nuevo.js
 import React, { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, query, where, getDoc, doc, onSnapshot } from "firebase/firestore";
@@ -13,12 +12,14 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const TOTAL_STEPS = 4;
 
-export const PLAN_DISPLAY_NAMES = { // Exported
+// Nombres de visualización para los planes de usuario.
+export const PLAN_DISPLAY_NAMES = {
   free: "Gratis",
   premium: "Premium",
   pro: "Pro"
 };
 
+// Lista de deportes predefinidos para la selección en el formulario.
 const predefinedSports = [
   "Fútbol", "Baloncesto", "Tenis", "Pádel", "Voleibol", "Balonmano", "Fútbol Sala",
   "Hockey", "Rugby", "eSports", "Ajedrez", "Atletismo", "Bádminton", "Béisbol",
@@ -26,12 +27,14 @@ const predefinedSports = [
   "Natación", "Taekwondo", "Tenis de Mesa", "Tiro con Arco",
 ];
 
-export const PLAN_LIMITS = { // Exported
+// Límites de creación de torneos por plan.
+export const PLAN_LIMITS = {
   free: { torneo: 8, liga: 10, simultaneos: 2, label: "Gratis" },
   premium: { torneo: 16, liga: 20, simultaneos: 10, label: "Premium" },
   pro: { torneo: 32, liga: 40, simultaneos: 30, label: "Pro" },
 };
 
+// Opciones de número de participantes para torneos de eliminación.
 const TORNEO_OPTIONS = [
     { value: 4, label: "4", planRequired: "free" },
     { value: 8, label: "8", planRequired: "free" },
@@ -39,6 +42,7 @@ const TORNEO_OPTIONS = [
     { value: 32, label: "32", planRequired: "pro" },
 ];
 
+// Opciones de número de participantes para torneos de liga.
 const LIGA_OPTIONS_BASE = [...Array(19)].map((_, i) => i + 2);
 const LIGA_OPTIONS = LIGA_OPTIONS_BASE.map(num => {
     let planRequired = "free";
@@ -50,6 +54,7 @@ const LIGA_OPTIONS = LIGA_OPTIONS_BASE.map(num => {
 }).filter(opt => opt.value <= PLAN_LIMITS.pro.liga);
 
 function Nuevo() {
+  // Estados para el formulario de creación de torneo.
   const [step, setStep] = useState(1);
   const [titulo, setTitulo] = useState("");
   const [deporte, setDeporte] = useState("");
@@ -60,22 +65,24 @@ function Nuevo() {
   const [numEquipos, setNumEquipos] = useState('');
   const navigate = useNavigate();
 
+  // Estados relacionados con el usuario y su plan de suscripción.
   const [currentUser, setCurrentUser] = useState(null);
   const [userPlan, setUserPlan] = useState('free');
   const [userTotalTournaments, setUserTotalTournaments] = useState(0);
   const [isLoadingPlan, setIsLoadingPlan] = useState(true);
   const [formError, setFormError] = useState("");
 
+  // Estados para el modal de plan requerido.
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [modalRequiredPlan, setModalRequiredPlan] = useState("");
   const [modalSelectedOptionLabel, setModalSelectedOptionLabel] = useState("");
 
+  // Efecto para inicializar ReactModal y gestionar el estado de autenticación del usuario.
+  // También establece listeners para contar el total de torneos a los que pertenece el usuario.
   useEffect(() => {
     const appRoot = document.getElementById('root');
     if (appRoot) {
       ReactModal.setAppElement('#root');
-    } else {
-      console.warn("ReactModal: App element #root not found. Accessibility features may be impaired. Please ensure your root element has id='root' or set appElement appropriately.");
     }
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
@@ -91,7 +98,6 @@ function Nuevo() {
           setUserPlan('free');
         }
 
-        // MODIFIED: Centralized tournament tracking
         const allUserTournamentIds = new Set();
         const unsubscribes = [];
 
@@ -100,7 +106,6 @@ function Nuevo() {
             setIsLoadingPlan(false);
         };
 
-        // Listener for tournaments where user is creator
         const qCreados = query(collection(db, "torneos"), where("creadorId", "==", user.uid));
         unsubscribes.push(onSnapshot(qCreados, (snapshot) => {
             snapshot.docChanges().forEach(change => {
@@ -108,9 +113,8 @@ function Nuevo() {
                 if (change.type === "removed") allUserTournamentIds.delete(change.doc.id);
             });
             updateCombinedCount();
-        }, (error) => console.error("Error fetching created tournaments:", error)));
+        }));
 
-        // Listener for tournaments where user is an individual participant
         const qParticipantesIndividual = query(collection(db, "torneos"), where("participantes", "array-contains", user.uid));
         unsubscribes.push(onSnapshot(qParticipantesIndividual, (snapshot) => {
             snapshot.docChanges().forEach(change => {
@@ -118,14 +122,8 @@ function Nuevo() {
                 if (change.type === "removed") allUserTournamentIds.delete(change.doc.id);
             });
             updateCombinedCount();
-        }, (error) => console.error("Error fetching individual participant tournaments:", error)));
+        }));
 
-        // Listener for tournaments where user is a team captain or member (if `participantes` includes UIDs for members)
-        // This query is a bit more complex as `array-contains-any` with objects isn't direct.
-        // A common approach is to listen to all tournaments and then filter client-side for team participation.
-        // For simplicity, let's query where `participantes` array contains team objects where `capitan` is the user's UID.
-        // If `miembros` field of team objects also contains UIDs, and you want to count them as "belonging",
-        // you would need another query or more complex client-side filtering.
         const qParticipantesEquipoCapitan = query(collection(db, "torneos"), where("participantes", "array-contains", { capitan: user.uid }));
         unsubscribes.push(onSnapshot(qParticipantesEquipoCapitan, (snapshot) => {
             snapshot.docChanges().forEach(change => {
@@ -133,10 +131,8 @@ function Nuevo() {
                 if (change.type === "removed") allUserTournamentIds.delete(change.doc.id);
             });
             updateCombinedCount();
-        }, (error) => console.error("Error fetching team participant (captain) tournaments:", error)));
+        }));
 
-
-        // Listener for tournaments where user is a spectator
         const qEspectador = query(collection(db, "torneos"), where("espectadores", "array-contains", user.uid));
         unsubscribes.push(onSnapshot(qEspectador, (snapshot) => {
             snapshot.docChanges().forEach(change => {
@@ -144,7 +140,7 @@ function Nuevo() {
                 if (change.type === "removed") allUserTournamentIds.delete(change.doc.id);
             });
             updateCombinedCount();
-        }, (error) => console.error("Error fetching spectated tournaments:", error)));
+        }));
 
         return () => {
           unsubscribes.forEach(unsub => unsub());
@@ -161,7 +157,7 @@ function Nuevo() {
     return () => unsubscribeAuth();
   }, []);
 
-
+  // Efecto para mostrar u ocultar el input de "Otro Deporte".
   useEffect(() => {
     if (deporte === "Otro") {
       setShowOtroDeporteInput(true);
@@ -171,6 +167,7 @@ function Nuevo() {
     }
   }, [deporte]);
 
+  // Verifica si el usuario puede crear más torneos según su plan.
   const canCreateMoreTorneos = () => {
     if (isLoadingPlan) return false;
     const limit = PLAN_LIMITS[userPlan]?.simultaneos;
@@ -180,6 +177,7 @@ function Nuevo() {
     return false;
   };
 
+  // Maneja el envío final del formulario para crear un torneo.
   const handleSubmit = async () => {
     if (!currentUser) {
       setFormError("Debes iniciar sesión para crear un torneo.");
@@ -189,7 +187,6 @@ function Nuevo() {
     const currentPlanLimits = PLAN_LIMITS[userPlan];
     if (!currentPlanLimits || typeof currentPlanLimits.simultaneos !== 'number' || typeof currentPlanLimits.label === 'undefined') {
         setFormError("No se pudo determinar el límite de torneos para tu plan actual. Intenta recargar.");
-        console.error("Error: Plan de usuario no encontrado o mal configurado en PLAN_LIMITS:", userPlan);
         return;
     }
 
@@ -247,11 +244,14 @@ function Nuevo() {
     }
   };
 
+  // Funciones para navegar entre los pasos del formulario.
   const handleNextStep = () => setStep(prev => prev + 1);
   const handlePrevStep = () => setStep(prev => prev - 1);
 
+  // Calcula el porcentaje de progreso del formulario.
   const progressPercent = (step / TOTAL_STEPS) * 100;
 
+  // Valida el primer paso del formulario.
   const isStep1Valid = () => {
     if (!titulo.trim()) return false;
     if (deporte === "Otro") {
@@ -260,15 +260,17 @@ function Nuevo() {
     return deporte !== "";
   };
 
+  // Obtiene el valor numérico de un plan para comparaciones.
   const getPlanTierValue = (planName) => {
     if (planName === 'pro') return 3;
     if (planName === 'premium') return 2;
-    return 1; // free
+    return 1;
   };
 
   const currentUserPlanTier = getPlanTierValue(userPlan);
   const optionsForSelect = tipo === 'torneo' ? TORNEO_OPTIONS : LIGA_OPTIONS;
 
+  // Maneja el cambio en el número de equipos, abriendo un modal si el plan es insuficiente.
   const handleNumEquiposChange = (e) => {
     const selectedValue = e.target.value;
     const option = optionsForSelect.find(opt => opt.value.toString() === selectedValue);
@@ -286,12 +288,14 @@ function Nuevo() {
     }
   };
 
+  // Cierra el modal de plan requerido.
   const closePlanModal = () => {
     setIsPlanModalOpen(false);
     setModalRequiredPlan("");
     setModalSelectedOptionLabel("");
   };
 
+  // Navega a la sección de planes desde el modal.
   const handleUpgradePlanFromModal = () => {
     closePlanModal();
     navigate('/#planes-section');
@@ -311,6 +315,7 @@ function Nuevo() {
       </div>
 
       <div className="nuevo-torneo-container">
+        {/* Barra de progreso del formulario */}
         <div className="progress-bar-container">
           <div
             className="progress-bar-fill"
@@ -321,10 +326,12 @@ function Nuevo() {
             Paso {step} de {TOTAL_STEPS}
         </span>
 
+        {/* Mensajes de error y carga */}
         {formError && <p className="form-error-message-nuevo">{formError}</p>}
         {isLoadingPlan && <p className="loading-plan-message">Cargando datos del plan...</p>}
 
         <div className="form-step-content">
+          {/* Paso 1: Información básica del torneo */}
           {step === 1 && (
             <div className="form-step">
               <h2>Información básica</h2>
@@ -373,6 +380,7 @@ function Nuevo() {
             </div>
           )}
 
+          {/* Paso 2: Tipo de participación (individual/equipo) */}
           {step === 2 && (
             <div className="form-step">
               <h2>Tipo de participación</h2>
@@ -396,6 +404,7 @@ function Nuevo() {
             </div>
           )}
 
+          {/* Paso 3: Formato del torneo (liga/eliminatoria) */}
           {step === 3 && (
             <div className="form-step">
               <h2>Formato del torneo</h2>
@@ -419,6 +428,7 @@ function Nuevo() {
             </div>
           )}
 
+          {/* Paso 4: Número de equipos/participantes */}
           {step === 4 && (
             <div className="form-step">
               <h2>Número de {modo === "equipo" ? "equipos" : "participantes"}</h2>
@@ -441,7 +451,7 @@ function Nuevo() {
                     } else if (opt.planRequired === "pro") {
                         labelSuffix = ` (requiere Pro`;
                     }
-                    if (labelSuffix) labelSuffix += ")"; // Add closing parenthesis if labelSuffix exists
+                    if (labelSuffix) labelSuffix += ")";
                   }
 
                   return (
@@ -480,6 +490,7 @@ function Nuevo() {
         </div>
       </div>
 
+      {/* Modal para indicar la necesidad de mejorar el plan */}
       <ReactModal
         isOpen={isPlanModalOpen}
         onRequestClose={closePlanModal}

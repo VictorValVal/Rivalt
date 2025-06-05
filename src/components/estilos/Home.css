@@ -1,64 +1,63 @@
-/* components/estilos/Home.css */
-
-/* Banner para Home (con centrado de bienvenida si se usa) */
+/* Banner de la página de inicio */
 .home-banner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.5rem;
-    background-color: #1e1e1e;
-    border-bottom: 1px solid #333;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    box-sizing: border-box;
-    height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+  height: 65px;
 }
 
 .rivalt-logo-home {
-    height: 35px;
-    width: auto;
-    flex-shrink: 0;
+  height: 35px;
+  width: auto;
+  flex-shrink: 0;
 }
 
+/* Controles de usuario en el banner */
 .user-controls {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 0; /* Permite que los hijos usen overflow correctamente */
+  min-width: 0;
 }
 
 .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-    border: 2px solid #FF6D14;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #3a3a3a;
-    color: #eee;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid #FF6D14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3a3a3a;
+  color: #eee;
 }
 
 .user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .user-avatar-default {
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-transform: uppercase;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
-/* --- User Welcome Text styles (Desktop Only) --- */
+/* Texto de bienvenida al usuario (solo escritorio) */
 .user-welcome-text {
-  max-width: 160px; /* Ajusta este valor según tu diseño */
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -66,274 +65,464 @@
   color: white;
 }
 
-/* --- Logout Button Adaptations --- */
+/* Botón de cerrar sesión */
 .logout-button-home {
-    padding: 8px 15px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    background-color: #FF6D14;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    white-space: nowrap;
-    flex-shrink: 0;
+  padding: 8px 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: #FF6D14;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .logout-button-home:hover {
-    background-color: #E05A0B;
-    transform: translateY(-1px);
+  background-color: #E05A0B;
+  transform: translateY(-1px);
 }
 
 .logout-button-home svg {
-    color: #FFFFFF;
-    font-size: 1rem;
+  color: #FFFFFF;
+  font-size: 1rem;
 }
 
 .logout-button-home .logout-text {
-    display: inline;
+  display: inline;
 }
 
 /* Botones flotantes principales (+ / ->) */
 .main-buttons {
-    position: fixed;
-    top: calc(65px + 30px);
-    right: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    z-index: 1001;
+  position: fixed;
+  top: calc(65px + 30px);
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1001;
 }
 
 .main-buttons button {
-    background-color: #FF6D14;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 26px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  background-color: #FF6D14;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .main-buttons button:hover {
-    background-color: #E05A0B;
-    transform: scale(1.08) translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  background-color: #E05A0B;
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Contenedor de la parrilla de tarjetas */
+/* Ocultar el botón de alternancia móvil en escritorio */
+.main-buttons .toggle-button-mobile {
+  display: none;
+}
+
+/* Contenedor para los botones de acción (añadir y unirse) */
+.main-buttons .action-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Contenedor de la cuadrícula de tarjetas */
 .card-grid-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-    padding: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  padding: 20px 0;
 }
 
-/* Estilos para la nueva tarjeta (card-v2) */
+/* Estilos para la tarjeta (card-v2) */
 .card-v2 {
-    width: 300px;
-    height: 320px;
-    perspective: 1000px;
-    cursor: pointer;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 300px;
+  height: 320px;
+  perspective: 1000px;
+  cursor: pointer;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .card-v2-content {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .card-v2:hover .card-v2-content {
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
 .card-v2-front,
 .card-v2-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    color: #e0e0e0;
-    border: 1px solid #333;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #e0e0e0;
+  border: 1px solid #333;
 }
 
-/* Cara Frontal */
+/* Cara frontal de la tarjeta */
 .card-v2-front {
-    background-color: #242424;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    text-align: center;
-    overflow: hidden;
-    background-image: linear-gradient(to bottom right, #242424, #1e1e1e);
+  background-color: #242424;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  overflow: hidden;
+  background-image: linear-gradient(to bottom right, #242424, #1e1e1e);
 }
 
 .card-v2-front-header-icons {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
-    z-index: 2;
-    pointer-events: none;
-    gap: 10px;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  z-index: 2;
+  pointer-events: none;
+  gap: 10px;
 }
 
 .status-icon {
-    font-size: 1.5rem;
-    transition: color 0.2s ease, transform 0.2s ease;
-    cursor: pointer;
-    pointer-events: auto;
-    color: #FF6D14;
+  font-size: 1.5rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  pointer-events: auto;
+  color: #FF6D14;
 }
 
 .card-v2-front-trophy {
-    font-size: 4.5em;
-    color: #FF6D14;
-    margin-bottom: 15px;
-    filter: drop-shadow(0 0 8px rgba(255, 109, 20, 0.5));
+  font-size: 4.5em;
+  color: #FF6D14;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 0 8px rgba(255, 109, 20, 0.5));
 }
 
 .card-v2-front-title {
-    font-size: 1.6em;
-    font-weight: 600;
-    color: #ffffff;
-    margin: 0 0 8px 0;
-    line-height: 1.3;
+  font-size: 1.6em;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
 }
 
 .card-v2-front-subtitle {
-    font-size: 0.95em;
-    color: #aaaaaa;
-    margin: 0;
-    text-transform: capitalize;
+  font-size: 0.95em;
+  color: #aaaaaa;
+  margin: 0;
+  text-transform: capitalize;
 }
 
 .card-v2-front-footer {
-    position: absolute;
-    bottom: 15px;
-    left: 0;
-    right: 0;
-    font-size: 0.8em;
-    color: #777;
-    font-style: italic;
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  font-size: 0.8em;
+  color: #777;
+  font-style: italic;
 }
 
-/* Cara Trasera */
+/* Cara trasera de la tarjeta */
 .card-v2-back {
-    background-color: #2c2c2e;
-    transform: rotateY(180deg);
-    padding: 20px;
-    justify-content: space-between;
+  background-color: #2c2c2e;
+  transform: rotateY(180deg);
+  padding: 20px;
+  justify-content: space-between;
 }
 
 .card-v2-back-title {
-    font-size: 1.3em;
-    font-weight: 600;
-    color: #FF6D14;
-    margin: 0 0 15px 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #444;
-    text-align: center;
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #FF6D14;
+  margin: 0 0 15px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #444;
+  text-align: center;
 }
 
 .card-v2-back-details {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-    overflow-y: auto;
-    max-height: calc(100% - 100px);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: calc(100% - 100px);
 }
 
-/* Estilo para scrollbar */
-.card-v2-back-details::-webkit-scrollbar { width: 5px; }
-.card-v2-back-details::-webkit-scrollbar-track { background: transparent; }
-.card-v2-back-details::-webkit-scrollbar-thumb { background-color: #555; border-radius: 3px; }
+/* Estilo para la barra de desplazamiento */
+.card-v2-back-details::-webkit-scrollbar {
+  width: 5px;
+}
+
+.card-v2-back-details::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card-v2-back-details::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 3px;
+}
 
 .card-v2-back-details li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    font-size: 0.9em;
-    color: #c0c0c0;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  color: #c0c0c0;
 }
 
 .card-v2-back-details li .detail-icon {
-    color: #FF6D14;
-    margin-right: 10px;
-    font-size: 1.1em;
-    min-width: 20px;
-    text-align: center;
+  color: #FF6D14;
+  margin-right: 10px;
+  font-size: 1.1em;
+  min-width: 20px;
+  text-align: center;
 }
 
 .card-v2-back-details li div {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
 }
 
 .card-v2-back-details li strong {
-    color: #f0f0f0;
-    margin-right: 5px;
-    font-weight: 500;
+  color: #f0f0f0;
+  margin-right: 5px;
+  font-weight: 500;
 }
 
 .join-code-v2 {
-    background-color: #1e1e1e;
-    color: #FFC107;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    border: 1px solid #404040;
+  background-color: #1e1e1e;
+  color: #FFC107;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  border: 1px solid #404040;
 }
 
 .card-v2-back-footer {
-    font-size: 0.8em;
-    color: #777;
-    text-align: center;
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid #444;
-    font-style: italic;
+  font-size: 0.8em;
+  color: #777;
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #444;
+  font-style: italic;
 }
 
-/* Ajustes responsivos */
+/* Ajustes para el contenido principal y padding */
 main[style*="paddingTop: 80px"] {
+  position: relative;
+  z-index: 1;
   padding-bottom: 40px;
 }
 
+/* Contenedor de formas de fondo animadas */
+.home-background-shapes-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.home-animated-shape {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.home-shape-1 {
+  width: 450px;
+  height: 450px;
+  top: 5vh;
+  left: 10vw;
+  background-color: rgba(255, 110, 20, 0.404);
+  filter: blur(90px);
+  animation: move-shape-1 45s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.home-shape-2 {
+  width: 350px;
+  height: 350px;
+  bottom: 10vh;
+  right: 15vw;
+  background-color: rgba(255, 110, 20, 0.473);
+  filter: blur(100px);
+  animation: move-shape-2 50s ease-in-out infinite;
+  animation-delay: -1s;
+}
+
+.home-shape-3 {
+  width: 250px;
+  height: 250px;
+  top: 50%;
+  left: 50%;
+  background-color: rgba(255, 110, 20, 0.404);
+  filter: blur(110px);
+  animation: move-shape-3 40s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+/* Animaciones individuales para cada forma */
+@keyframes move-shape-1 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(60vw, 70vh) scale(1.2) rotate(45deg);
+  }
+
+  50% {
+    transform: translate(70vw, -10vh) scale(0.9) rotate(-30deg);
+  }
+
+  75% {
+    transform: translate(-5vw, 60vh) scale(1.1) rotate(20deg);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes move-shape-2 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(-65vw, -75vh) scale(1.15) rotate(-25deg);
+  }
+
+  50% {
+    transform: translate(-70vw, 15vh) scale(0.8) rotate(50deg);
+  }
+
+  75% {
+    transform: translate(10vw, -60vh) scale(1.2) rotate(-10deg);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes move-shape-3 {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(calc(-50% + 30vw), calc(-50% - 30vh)) scale(1.1) rotate(60deg);
+  }
+
+  50% {
+    transform: translate(calc(-50% - 25vw), calc(-50% + 20vh)) scale(0.9) rotate(-45deg);
+  }
+
+  75% {
+    transform: translate(calc(-50% + 10vw), calc(-50% + 35vh)) scale(1.05) rotate(30deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+/* Estilos para mostrar el plan del usuario en el banner */
+.user-plan-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #FFD700;
+  margin-right: 10px;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.user-plan-display:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.tournament-count-display {
+  font-size: 1.1rem;
+  color: #FF6D14;
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ajustes responsivos */
 @media (max-width: 768px) {
-  .card-grid-container { gap: 20px; }
-  .card-v2 { width: calc(50% - 20px); min-width: 280px; height: 300px; }
-  .card-v2-front-title { font-size: 1.4em; }
-  .card-v2-front-trophy { font-size: 4em; }
-  .card-v2-back-title { font-size: 1.2em; }
-  .card-v2-back-details li { font-size: 0.85em; }
+  .card-grid-container {
+    gap: 20px;
+  }
+
+  .card-v2 {
+    width: calc(50% - 20px);
+    min-width: 280px;
+    height: 300px;
+  }
+
+  .card-v2-front-title {
+    font-size: 1.4em;
+  }
+
+  .card-v2-front-trophy {
+    font-size: 4em;
+  }
+
+  .card-v2-back-title {
+    font-size: 1.2em;
+  }
+
+  .card-v2-back-details li {
+    font-size: 0.85em;
+  }
 
   .home-banner {
     padding: 0 1rem;
@@ -342,7 +531,6 @@ main[style*="paddingTop: 80px"] {
   .user-controls {
     gap: 10px;
   }
-  
 
   .user-welcome-text {
     display: none;
@@ -356,7 +544,7 @@ main[style*="paddingTop: 80px"] {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: center; /* <-- Añade esto para centrar el icono */
+    justify-content: center;
   }
 
   .logout-button-home .logout-text {
@@ -367,401 +555,132 @@ main[style*="paddingTop: 80px"] {
     font-size: 1.2rem;
     margin: 0;
   }
-}
-/* components/estilos/Home.css */
 
-/* ... (existing styles for home-banner, user-controls, user-avatar, logout-button-home, card-grid-container, card-v2, etc.) ... */
+  /* Botones flotantes principales - Posicionamiento y diseño específico para móvil */
+  .main-buttons {
+    top: auto;
+    bottom: 30px;
+    right: 20px;
+    align-items: flex-end;
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
 
-/* Botones flotantes principales (+ / ->) */
-.main-buttons {
-    position: fixed;
-    top: calc(65px + 30px); /* Default desktop position: below banner */
-    right: 30px;
+  .main-buttons button {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Mostrar el botón de alternancia en móvil */
+  .main-buttons .toggle-button-mobile {
     display: flex;
-    flex-direction: column; /* Stacked by default on desktop */
-    gap: 15px;
-    z-index: 1001;
-}
-
-.main-buttons button { /* Styles for all buttons (add, join, and toggle) */
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
     background-color: #FF6D14;
     color: white;
-    border: none;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 26px;
-    display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-}
-
-.main-buttons button:hover {
-    background-color: #E05A0B;
-    transform: scale(1.08) translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-
-/* Specific button styles */
-/* Hide the mobile toggle button on desktop */
-.main-buttons .toggle-button-mobile {
-    display: none;
-}
-
-/* Container for the Add and Join buttons (always visible on desktop) */
-.main-buttons .action-buttons-container {
-    display: flex;
-    flex-direction: column; /* Stack them */
-    gap: 15px; /* Match main-buttons gap */
-}
-
-
-/* --- Responsive Adjustments (Mobile) --- */
-@media (max-width: 768px) {
-  /* General responsive adjustments */
-  .card-grid-container { gap: 20px; }
-  .card-v2 { width: calc(50% - 20px); min-width: 280px; height: 300px; }
-  .card-v2-front-title { font-size: 1.4em; }
-  .card-v2-front-trophy { font-size: 4em; }
-  .card-v2-back-title { font-size: 1.2em; }
-  .card-v2-back-details li { font-size: 0.85em; }
-
-  .home-banner { padding: 0 1rem; }
-  .user-controls { gap: 10px; }
-  .user-welcome-text { display: none; } /* Hide welcome text on mobile */
-
-  .logout-button-home { /* Make logout button a circle icon */
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .logout-button-home .logout-text { display: none; }
-  .logout-button-home .logout-icon { font-size: 1.2rem; margin: 0; }
-
-
-  /* Main Floating Buttons - Mobile specific positioning and layout */
-  .main-buttons {
-    top: auto; /* Override desktop top position */
-    bottom: 30px; /* Position at the bottom-right */
-    right: 20px; /* Slightly smaller right margin */
-    align-items: flex-end; /* Align items to the right edge */
-    flex-direction: column-reverse; /* Puts the toggle button below the action buttons */
-    gap: 10px; /* Smaller gap between buttons */
+    cursor: pointer;
+    transition: transform 0.3s ease;
   }
 
-  .main-buttons button { /* Smaller size for all floating buttons on mobile */
-      width: 50px;
-      height: 50px;
-      font-size: 22px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); /* Smaller shadow */
-  }
-
-  /* Make the toggle button visible on mobile */
-  .main-buttons .toggle-button-mobile {
-      display: flex; /* Show the toggle button */
-      width: 50px; /* Slightly larger for the primary toggle */
-      height: 50px;
-      font-size: 24px;
-      background-color: #FF6D14; /* Keep original color */
-      color: white;
-      border-radius: 50%;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
-      cursor: pointer;
-      transition: transform 0.3s ease; /* For rotation animation */
-  }
-
-  /* Rotate the toggle button when the menu is active (open) */
+  /* Rotar el botón de alternancia cuando el menú está activo */
   .main-buttons.active .toggle-button-mobile {
-      transform: rotate(180deg); /* Arrow points up when open */
+    transform: rotate(180deg);
   }
+
   .main-buttons.active .toggle-button-mobile svg {
-      transform: rotate(180deg); /* Arrow points up when open */
+    transform: rotate(180deg);
   }
 
-  /* Container for the Add and Join buttons - Hidden by default on mobile */
+  /* Contenedor de botones de acción - Oculto por defecto en móvil */
   .main-buttons .action-buttons-container {
-      max-height: 0; /* Hide by setting max-height to 0 */
-      overflow: hidden; /* Hide overflow content */
-      opacity: 0; /* Start fully transparent */
-      transform: translateY(10px); /* Start slightly offset */
-      transition: max-height 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out; /* Smooth transition */
-      pointer-events: none; /* Disable clicks when hidden */
-      display: flex; /* Keep flex for column layout when visible */
-      flex-direction: column;
-      gap: 10px; /* Match main-buttons gap */
-  }
-
-  /* When main-buttons has the 'active' class, show the action buttons */
-  .main-buttons.active .action-buttons-container {
-      max-height: 200px; /* A value large enough to display buttons */
-      opacity: 1; /* Fully opaque */
-      transform: translateY(0); /* Return to original position */
-      pointer-events: auto; /* Enable clicks when visible */
-  }
-}/* components/estilos/Home.css */
-
-/* ... (otros estilos como .home-banner, .card-grid-container, etc. se mantienen) ... */
-/* components/estilos/Home.css */
-
-/* ... (otros estilos como .home-banner, .card-grid-container, etc. se mantienen) ... */
-
-.home-background-shapes-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    max-height: 0;
     overflow: hidden;
-    z-index: 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: max-height 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out;
     pointer-events: none;
-}
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.home-animated-shape { /* Clase base para estilos comunes, pero sin la animación principal */
-    position: absolute;
-    border-radius: 50%;
-    /* background-color ya se define en las clases específicas .home-shape-X */
-    pointer-events: none;
-    /* La animación se definirá por cada shape individualmente */
-}
+  /* Cuando main-buttons tiene la clase 'active', mostrar los botones de acción */
+  .main-buttons.active .action-buttons-container {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
 
-.home-shape-1 {
-    width: 450px; /* Tamaño original */
-    height: 450px;
-    top: 5vh;    /* Posición inicial original */
-    left: 10vw;
-    background-color: rgba(255, 110, 20, 0.404);
-    filter: blur(90px); /* Ajusta el blur como prefieras */
-    animation: move-shape-1 45s ease-in-out infinite; /* Duración larga para movimientos amplios */
-    animation-delay: -3s; /* Retraso inicial */
-}
-
-.home-shape-2 {
-    width: 350px;
-    height: 350px;
-    bottom: 10vh; /* Posición inicial original */
-    right: 15vw;
-    background-color: rgba(255, 110, 20, 0.473);
-    filter: blur(100px);
-    animation: move-shape-2 50s ease-in-out infinite; /* Duración y animación diferentes */
-    animation-delay: -1s;
-}
-
-.home-shape-3 {
-    width: 250px;
-    height: 250px;
-    top: 50%;     /* Posición inicial original (centrada) */
-    left: 50%;
-    /* transform: translate(-50%, -50%); Ya no es necesario si el 0% de la animación lo resetea */
-    background-color: rgba(255, 110, 20, 0.404);
-    filter: blur(110px);
-    animation: move-shape-3 40s ease-in-out infinite; /* Duración y animación diferentes */
-    animation-delay: -5s;
-}
-
-/* --- Animaciones Individuales para cada Shape --- */
-
-/* Animación para .home-shape-1 (ej: recorre las esquinas) */
-@keyframes move-shape-1 {
-    0% {
-        transform: translate(0, 0) scale(1) rotate(0deg); /* Punto de partida relativo a su pos inicial */
-    }
-    25% {
-        /* Mover hacia abajo a la derecha (relativo a su inicio en top-left) */
-        transform: translate(60vw, 70vh) scale(1.2) rotate(45deg);
-    }
-    50% {
-        /* Mover hacia arriba a la derecha */
-        transform: translate(70vw, -10vh) scale(0.9) rotate(-30deg);
-    }
-    75% {
-        /* Mover hacia abajo a la izquierda */
-        transform: translate(-5vw, 60vh) scale(1.1) rotate(20deg);
-    }
-    100% {
-        transform: translate(0, 0) scale(1) rotate(0deg); /* Volver al inicio */
-    }
-}
-
-/* Animación para .home-shape-2 (ej: un patrón diferente, empezando desde bottom-right) */
-@keyframes move-shape-2 {
-    0% {
-        transform: translate(0, 0) scale(1) rotate(0deg); /* Punto de partida relativo a su pos inicial */
-    }
-    25% {
-        /* Mover hacia arriba a la izquierda (relativo a su inicio en bottom-right) */
-        transform: translate(-65vw, -75vh) scale(1.15) rotate(-25deg);
-    }
-    50% {
-        /* Mover hacia abajo a la izquierda */
-        transform: translate(-70vw, 15vh) scale(0.8) rotate(50deg);
-    }
-    75% {
-        /* Mover hacia arriba a la derecha */
-        transform: translate(10vw, -60vh) scale(1.2) rotate(-10deg);
-    }
-    100% {
-        transform: translate(0, 0) scale(1) rotate(0deg); /* Volver al inicio */
-    }
-}
-
-/* Animación para .home-shape-3 (ej: un movimiento más central y circular, empezando desde el centro) */
-@keyframes move-shape-3 {
-    0% {
-        /* Ajustamos el translate inicial para compensar el top:50% left:50% si no se usa el transform original */
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
-    }
-    25% {
-        transform: translate(calc(-50% + 30vw), calc(-50% - 30vh)) scale(1.1) rotate(60deg);
-    }
-    50% {
-        transform: translate(calc(-50% - 25vw), calc(-50% + 20vh)) scale(0.9) rotate(-45deg);
-    }
-    75% {
-        transform: translate(calc(-50% + 10vw), calc(-50% + 35vh)) scale(1.05) rotate(30deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
-    }
-}
-
-
-/* Ajust main content z-index if necessary */
-main[style*="paddingTop: 80px"] {
-  position: relative;
-  z-index: 1;
-  padding-bottom: 40px;
-}
-
-
-/* --- Responsive Adjustments for Home Shapes --- */
-@media (max-width: 992px) {
-    .home-shape-1 { width: 400px; height: 400px; filter: blur(80px); }
-    .home-shape-2 { width: 300px; height: 300px; filter: blur(90px); }
-    .home-shape-3 { width: 200px; height: 200px; filter: blur(100px); }
-    /* Las animaciones usan vw/vh, por lo que se adaptarán, pero el tamaño de la shape cambia */
-}
-
-@media (max-width: 768px) {
+  /* Ajustes para formas de fondo en móvil */
   .home-shape-1 {
     width: 300px;
     height: 300px;
     filter: blur(70px);
-    /* Podrías considerar animaciones menos intensas en móvil si el rendimiento se ve afectado */
   }
+
   .home-shape-2 {
     width: 250px;
     height: 250px;
     filter: blur(80px);
   }
-  .home-shape-3 { /* Ocultar la tercera en pantallas más pequeñas si es demasiado */
-      display: none;
+
+  .home-shape-3 {
+    display: none;
   }
-}
 
-@media (max-width: 480px) {
-    .home-shape-1 {
-        width: 250px;
-        height: 250px;
-        filter: blur(60px);
-    }
-    .home-shape-2 { /* Ocultar o hacer aún más pequeña la segunda */
-        width: 180px;
-        height: 180px;
-        filter: blur(70px);
-    }
-}
-
-/* ... (resto de tus estilos de Home.css) ... */
-/* components/estilos/Home.css */
-
-/* ... (estilos existentes) ... */
-
-/* Estilos para mostrar el plan del usuario en el banner */
-.user-plan-display {
-  display: flex;
-  align-items: center;
-  gap: 6px; /* Espacio entre icono y texto del plan */
-  padding: 4px 10px;
-  background-color: rgba(255, 255, 255, 0.1); /* Fondo sutil */
-  border-radius: 15px; /* Bordes redondeados */
-  font-size: 0.8rem; /* Tamaño de fuente pequeño */
-  font-weight: 500;
-  color: #FFD700; /* Color dorado para Premium/Pro, o ajusta según plan */
-  margin-right: 10px; /* Espacio antes del avatar */
-  white-space: nowrap;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: background-color 0.3s ease;
-}
-
-.user-plan-display:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.user-plan-display .user-plan-label {
-  /* Estilos específicos para el texto si es necesario */
-}
-
-/* Ajustes para que el plan y el nombre de usuario no se oculten tan rápido en móvil */
-.user-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Ajustado el gap un poco */
-  min-width: 0; /* Permite que los hijos usen overflow correctamente */
-}
-
-/* El user-welcome-text ya se oculta en móvil por una media query existente. */
-/* Modificamos user-plan-display para móvil */
-@media (max-width: 768px) {
+  /* Ajustes del plan de usuario en móvil */
   .home-banner {
-    padding: 0 0.8rem; /* Un poco menos de padding en el banner */
+    padding: 0 0.8rem;
   }
+
   .user-controls {
-    gap: 8px; /* Reducir gap un poco más */
+    gap: 8px;
   }
+
   .user-plan-display {
     padding: 3px 8px;
     font-size: 0.75rem;
     margin-right: 8px;
   }
-  .user-plan-display .user-plan-label {
-    display: none; /* Ocultar solo el texto del plan en pantallas muy pequeñas si es necesario */
+
+  /* Ocultar solo el texto del plan en pantallas muy pequeñas */
+  @media (max-width: 480px) {
+    .user-plan-display .user-plan-label {
+      display: none;
+    }
+
+    .user-plan-display {
+      padding: 5px;
+    }
+
+    .home-shape-1 {
+      width: 250px;
+      height: 250px;
+      filter: blur(60px);
+    }
+
+    .home-shape-2 {
+      width: 180px;
+      height: 180px;
+      filter: blur(70px);
+    }
   }
-  /* Mostrar solo icono del plan en pantallas muy pequeñas */
-   @media (max-width: 480px) { /* O un breakpoint más adecuado */
-     .user-plan-display .user-plan-label {
-        display: none;
-     }
-     .user-plan-display {
-        padding: 5px; /* Para que sea más cuadrado con solo el icono */
-     }
-   }
 
   .logout-button-home {
-    width: 38px; /* Ajustar según necesidad */
+    width: 38px;
     height: 38px;
   }
+
   .user-avatar {
     width: 38px;
     height: 38px;
   }
-}
-
-
-
-.tournament-count-display {
-    font-size: 1.1rem;
-    color: #FF6D14;
-    font-weight: bold;
-    width: 100%; /* Ensure it takes full available width within the wrapper */
-    box-sizing: border-box; /* Include padding/border in the width calculation */
 }

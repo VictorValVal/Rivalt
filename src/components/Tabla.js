@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import "../components/estilos/Tabla.css";
 
 function Tabla({ rawPartidos }) {
+    // Memoiza el cálculo de la tabla de clasificación para optimizar el rendimiento.
     const leagueStandings = useMemo(() => {
         const standingsMap = new Map();
         const getTeamStats = (teamName, teamId) => {
@@ -22,6 +23,7 @@ function Tabla({ rawPartidos }) {
             return standingsMap.get(teamName);
         };
 
+        // Itera sobre los partidos para calcular las estadísticas de cada equipo.
         rawPartidos.forEach(partido => {
             if (partido.resultado && partido.resultado.includes('-')) {
                 const [score1, score2] = partido.resultado.split("-").map(Number);
@@ -54,12 +56,11 @@ function Tabla({ rawPartidos }) {
 
                     localStats.goalDifference = localStats.goalsFor - localStats.goalsAgainst;
                     visitanteStats.goalDifference = visitanteStats.goalsFor - visitanteStats.goalsAgainst;
-                } else {
-                    console.warn(`Invalid result format for partido: ${partido.local} vs ${partido.visitante}, result: ${partido.resultado}`);
                 }
             }
         });
 
+        // Ordena los equipos en la tabla de clasificación.
         const sortedStandings = Array.from(standingsMap.values()).sort((a, b) => {
             if (b.points !== a.points) return b.points - a.points;
             if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;

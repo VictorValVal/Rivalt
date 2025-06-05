@@ -1,108 +1,102 @@
 .tutorial-overlay-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10000;
-    /* The darkness is created by the spotlight's boxShadow */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  /* The darkness is created by the spotlight's boxShadow */
 }
 
 .tutorial-text-box {
-    background-color: #2c2c2e; 
-    color: #e0e0e0;
-    padding: 18px 22px;
-    border-radius: 10px;
-    min-width: 280px;
-    max-width: 320px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
-    border: 1px solid #FF6D14;
-    text-align: center;
-    font-size: 0.9rem;
-    line-height: 1.5;
+  background-color: #2c2c2e;
+  color: #e0e0e0;
+  padding: 18px 22px;
+  border-radius: 10px;
+  min-width: 280px;
+  max-width: 320px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid #FF6D14;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .tutorial-text-box p {
-    margin: 0 0 18px 0;
-    font-size: 1rem;
+  margin: 0 0 18px 0;
+  font-size: 1rem;
 }
 
 .tutorial-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
 .tutorial-navigation button {
-    padding: 10px 18px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    font-size: 0.9rem;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  font-size: 0.9rem;
 }
 
 .tutorial-skip-button {
-    background-color: transparent;
-    color: #b0b0b0;
-    border: 1px solid #555;
+  background-color: transparent;
+  color: #b0b0b0;
+  border: 1px solid #555;
 }
 .tutorial-skip-button:hover {
-    background-color: #3a3a3a;
-    color: #ffffff;
-    border-color: #666;
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border-color: #666;
 }
 
 .tutorial-next-button {
-    background-color: #FF6D14;
-    color: white;
-    flex-grow: 1; /* Allow it to take more space if needed */
+  background-color: #FF6D14;
+  color: white;
+  flex-grow: 1;
 }
 .tutorial-next-button:hover {
-    background-color: #E05A0B;
-    transform: translateY(-1px);
+  background-color: #E05A0B;
+  transform: translateY(-1px);
 }
 
-@media (max-width: 480px) {
-    .tutorial-text-box {
-        min-width: auto;
-        width: calc(100vw - 40px); /* Full width minus some padding */
-        max-width: calc(100vw - 40px);
-        font-size: 0.85rem;
-    }
-    .tutorial-text-box p {
-        font-size: 0.95rem;
-    }
-    .tutorial-navigation {
-        flex-direction: column;
-    }
-    .tutorial-navigation button {
-        width: 100%;
-    }
-}
 .tutorial-arrow-line {
-    /* Los estilos principales son aplicados dinámicamente desde JS:
-       position, left, top, width, height, backgroundColor, 
-       transformOrigin, transform, zIndex, pointerEvents, --arrow-color */
-    /* Podríamos añadir una transición si quisiéramos animar la aparición de la flecha */
-    transition: width 0.2s ease-out; 
+  /* Los estilos principales son aplicados dinámicamente desde JS */
+  transition: width 0.2s ease-out;
 }
 
 .tutorial-arrow-line::after {
-    content: '';
-    position: absolute;
-    right: -1px; /* Posicionar la punta al final de la línea (el -1px ayuda a un mejor empalme) */
-    top: 50%;   /* Centrar verticalmente la punta con respecto a la línea */
-    
-    width: 0; 
-    height: 0;
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 9px solid var(--arrow-color, rgba(255, 109, 20, 0.65));
+  transform: translateY(-50%);
+}
 
-    /* Triángulo usando bordes transparentes y uno de color */
-    border-top: 6px solid transparent;       /* Mitad de la altura deseada de la punta */
-    border-bottom: 6px solid transparent;    /* Mitad de la altura deseada de la punta */
-    border-left: 9px solid var(--arrow-color, rgba(255, 109, 20, 0.65)); /* Longitud y color de la punta */
-    
-    transform: translateY(-50%); /* Ajuste fino para centrar verticalmente la punta */
+@media (max-width: 480px) {
+  .tutorial-text-box {
+    min-width: auto;
+    width: calc(100vw - 40px);
+    max-width: calc(100vw - 40px);
+    font-size: 0.85rem;
+  }
+  .tutorial-text-box p {
+    font-size: 0.95rem;
+  }
+  .tutorial-navigation {
+    flex-direction: column;
+  }
+  .tutorial-navigation button {
+    width: 100%;
+  }
 }

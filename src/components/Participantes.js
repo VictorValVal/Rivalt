@@ -1,4 +1,3 @@
-// components/Participantes.js
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -23,6 +22,7 @@ function Participantes() {
   const { id: torneoId } = useParams();
   const navigate = useNavigate();
 
+  // Estados para la información del torneo, el usuario actual y la carga.
   const [torneo, setTorneo] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +32,7 @@ function Participantes() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [individualParticipantDetails, setIndividualParticipantDetails] = useState({});
 
+  // Efecto principal para cargar la información del torneo y los detalles de los participantes.
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -53,6 +54,7 @@ function Participantes() {
             const currentTorneoData = { id: torneoDoc.id, ...torneoDoc.data() };
             setTorneo(currentTorneoData);
 
+            // Si es un torneo individual, se obtienen los detalles de los participantes por UID.
             if (currentTorneoData.modo === "individual" && Array.isArray(currentTorneoData.participantes)) {
               const UIDsToFetch = currentTorneoData.participantes.filter(uid =>
                 typeof uid === 'string' && !individualParticipantDetails[uid]
@@ -84,7 +86,6 @@ function Participantes() {
               }
             }
           } else {
-            console.log("No se encontró el torneo con ID:", torneoId);
             setError("El torneo no existe o fue eliminado.");
             setTorneo(null);
           }
@@ -103,7 +104,6 @@ function Participantes() {
 
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       if (isMounted) {
-        console.log("[Participantes.js] Auth state changed, currentUser:", currentUser ? currentUser.uid : "null");
         setUser(currentUser);
         authAttempted = true;
         if (fetchAttempted) {
@@ -125,15 +125,17 @@ function Participantes() {
     };
   }, [torneoId, individualParticipantDetails]);
 
-
+  // Determina si el usuario actual es el creador del torneo.
   const esCreador = useMemo(() => {
     return user?.uid && torneo?.creadorId && user.uid === torneo.creadorId;
   }, [user, torneo]);
 
+  // Memoiza la lista de participantes para evitar recálculos innecesarios.
   const participantesArray = useMemo(() => {
     return Array.isArray(torneo?.participantes) ? torneo.participantes : [];
   }, [torneo]);
 
+  // Verifica si el usuario actual ya está inscrito en el torneo.
   const estaInscritoElUsuarioActual = useMemo(() => {
     if (!user?.uid || !torneo || participantesArray.length === 0) {
       return false;
@@ -146,16 +148,16 @@ function Participantes() {
     );
   }, [user, torneo, participantesArray]);
 
+  // Determina si el usuario actual puede inscribirse en el torneo.
   const puedeUsuarioActualInscribirse = useMemo(() => {
     if (!user || !torneo || estaInscritoElUsuarioActual) {
       return false;
     }
-    // Asegurarse de que numEquipos existe y es un número antes de la comparación
     const maxParticipantes = typeof torneo.numEquipos === 'number' ? torneo.numEquipos : Infinity;
     return !estaInscritoElUsuarioActual && (participantesArray.length || 0) < maxParticipantes;
   }, [user, torneo, estaInscritoElUsuarioActual, participantesArray]);
 
-
+  // Maneja la inscripción directa de un usuario individual.
   const handleInscripcionDirecta = async () => {
     if (!user?.uid || !torneoId || torneo?.modo !== "individual") {
       setError("No se puede realizar la inscripción individual.");
@@ -167,7 +169,6 @@ function Participantes() {
     setError(null);
     const torneoRef = doc(db, "torneos", torneoId);
 
-    console.log("[Participantes.js] handleInscripcionDirecta - Usuario actual:", user ? user.uid : "null");
     const nombreUsuario = user.displayName || user.email || `Usuario (${user.uid.substring(0, 6)}...)`;
 
     try {
@@ -195,16 +196,16 @@ function Participantes() {
     }
   };
 
+  // Muestra el formulario para inscribir un equipo.
   const handleMostrarFormEquipo = () => {
     if (torneo?.modo === "equipo") {
       setMostrarEquipoForm(true);
     }
   };
 
-
+  // Maneja el envío del formulario para inscribir un equipo.
   const handleInscripcionEquipoSubmit = async (nombreEquipo, miembrosEquipo) => {
     if (!user?.uid || !torneoId || !nombreEquipo || !miembrosEquipo) {
-      console.error("Datos incompletos para inscripción de equipo.");
       setError("Datos incompletos para la inscripción del equipo.");
       return;
     }
@@ -220,9 +221,7 @@ function Participantes() {
       miembros: miembrosEquipo,
     };
 
-    console.log("[Participantes.js] handleInscripcionEquipoSubmit - Usuario (Capitán) actual:", user ? user.uid : "null");
     const capitanNombre = user.displayName || user.email || `Cap. (${user.uid.substring(0, 6)}...)`;
-    console.log("[Participantes.js] handleInscripcionEquipoSubmit - Nombre capitán para novedad:", capitanNombre);
 
     try {
       await updateDoc(torneoRef, {
@@ -281,7 +280,7 @@ function Participantes() {
     }
   };
 
-
+  // Navega a la página de detalles de un participante o equipo.
   const handleVerDetalles = (participante) => {
     if (!torneoId || !participante) return;
 
@@ -294,6 +293,7 @@ function Participantes() {
     }
   };
 
+  // Elimina un participante o equipo del torneo.
   const handleEliminarParticipante = async (participanteParaEliminar) => {
     if (!esCreador || !torneo) return;
 
@@ -346,14 +346,18 @@ function Participantes() {
       setIsSubmitting(false);
     }
   };
+
+  // Verifica si el usuario actual es un espectador.
   const esEspectador = useMemo(() => {
     return Array.isArray(torneo?.espectadores) && user?.uid && torneo.espectadores.includes(user.uid);
   }, [torneo, user]);
 
+  // Alterna la visibilidad del menú de opciones de un participante.
   const toggleMenuParticipante = (index) => {
     setMenuParticipante(menuParticipante === index ? null : index);
   };
 
+  // Muestra un mensaje de carga mientras se obtienen los datos.
   if (loading) {
     return (
       <div className="componente-participantes loading">
@@ -363,6 +367,7 @@ function Participantes() {
     );
   }
 
+  // Muestra mensajes de error si no se pudo cargar el torneo.
   if (error && !torneo) {
     return <div className="componente-participantes error-message">Error: {error}</div>;
   }
@@ -376,7 +381,7 @@ function Participantes() {
     errorDisplay = <p className="form-error-message" style={{ marginBottom: '1rem' }}>{error}</p>;
   }
 
-
+  // Lógica para mostrar el botón de inscripción principal.
   let botonInscripcionPrincipal = null;
   if (user && puedeUsuarioActualInscribirse && !esEspectador) {
     if (torneo.modo === "individual") {
@@ -402,7 +407,6 @@ function Participantes() {
     }
   }
 
-
   return (
     <div className="componente-participantes">
       {errorDisplay}
@@ -413,12 +417,13 @@ function Participantes() {
 
       {botonInscripcionPrincipal}
 
+      {/* Formulario para inscripción de equipos, si aplica */}
       {mostrarEquipoForm && torneo.modo === "equipo" && (
-        <div className="equipo-form-container"> {/* Envolver EquipoForm en su contenedor */}
+        <div className="equipo-form-container">
           <EquipoForm
             onSubmit={handleInscripcionEquipoSubmit}
             onCancel={() => { setMostrarEquipoForm(false); setError(""); }}
-            maxMiembros={torneo.maxMiembrosPorEquipo || 10} // Asumiendo que tienes esta propiedad
+            maxMiembros={torneo.maxMiembrosPorEquipo || 10}
           />
         </div>
       )}
@@ -465,7 +470,6 @@ function Participantes() {
                   </div>
                 )}
                 <span className="nombre-participante">{nombreMostrar}</span>
-                {/* Mostrar el menú de opciones para todos los usuarios */}
                 <div className="opciones-participante">
                   <button
                     className="boton-opciones"
@@ -487,8 +491,6 @@ function Participantes() {
                       >
                         <FaUser /> Ver Detalles
                       </button>
-                      {/* El botón de eliminar solo se muestra si el usuario actual es el creador */}
-                      {/* y no está intentando eliminarse a sí mismo (si es un participante individual) */}
                       {esCreador && (user?.uid !== idParaMenuYAcciones || esObjEquipo) && (
                         <button
                           className="menu-item eliminar"

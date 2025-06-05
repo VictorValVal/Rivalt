@@ -7,7 +7,7 @@ function Tutorial({ targetRect, text, onNext, onClose, isLastStep, spotlightPadd
     const textBoxRef = useRef(null);
     const [arrowStyle, setArrowStyle] = useState({});
 
-    // Memo para el estilo del texto
+    // Estilo del cuadro de texto del tutorial
     const textBoxStyle = useMemo(() => {
         if (!targetRect) {
             return { display: 'none' };
@@ -53,7 +53,7 @@ function Tutorial({ targetRect, text, onNext, onClose, isLastStep, spotlightPadd
         return style;
     }, [targetRect, spotlightPadding]);
 
-    // useEffect para la flecha
+    // Calcula el estilo de la flecha que apunta al elemento objetivo
     useEffect(() => {
         if (targetRect && textBoxRef.current && textBoxStyle.display !== 'none') {
             const buttonRect = targetRect;
@@ -100,7 +100,7 @@ function Tutorial({ targetRect, text, onNext, onClose, isLastStep, spotlightPadd
         }
     }, [targetRect, spotlightPadding, textBoxStyle]);
 
-    // Spotlight
+    // Estilo para el efecto de "spotlight"
     const spotlightDiameter = targetRect
         ? Math.max(targetRect.width, targetRect.height) + (spotlightPadding * 2)
         : 0;

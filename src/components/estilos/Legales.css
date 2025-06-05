@@ -1,48 +1,51 @@
-/* estilos/Legales.css */
+/* Contenedor principal de la página legal */
 .legal-container {
   padding: 20px;
   max-width: 800px;
-  margin: 40px auto; /* Aumentado el margen superior e inferior */
-  background-color: #1F1F1F; /* Un fondo ligeramente gris para destacar el contenido (NO es blanco) */
-  border-radius: 8px; /* Bordes redondeados para suavizar */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para dar profundidad */
+  margin: 40px auto;
+  background-color: #1F1F1F;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: #DADADA;
 }
 
+/* Título principal */
 .legal-container h1 {
-  color: #ffffff; /* Color oscuro para el título principal */
+  color: #ffffff;
   text-align: center;
-  margin-bottom: 30px; /* Más espacio debajo del título */
-  border-bottom: 2px solid #e0e0e0; /* Línea separadora sutil */
-  padding-bottom: 15px; /* Espacio para la línea separadora */
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 15px;
 }
 
+/* Subtítulos */
 .legal-container h2 {
-  color: #FF6D14; /* NARANJA CORRECTO */
-  margin-top: 30px; /* Espacio antes de los subtítulos */
+  color: #FF6D14;
+  margin-top: 30px;
   margin-bottom: 15px;
 }
 
+/* Texto legal general */
 .legal-text {
-  line-height: 1.8; /* Mayor interlineado para facilitar la lectura */
-  color: #555; /* Color de texto ligeramente más suave que el negro puro */
-  text-align: justify; /* Texto justificado para un aspecto más formal */
+  line-height: 1.8;
+  color: #555;
+  text-align: justify;
 }
 
 .legal-text p {
-  margin-bottom: 15px; /* Espacio entre párrafos */
+  margin-bottom: 15px;
 }
 
 .legal-text strong {
-  color: #333; /* Destacar los elementos strong */
+  color: #333;
 }
 
-/* Botón de "Volver" o similar */
+/* Botón de "Volver" */
 .btn-volver {
   display: inline-block;
   margin-top: 30px;
   padding: 12px 25px;
-  background-color: #FF6D14; /* NARANJA CORRECTO */
+  background-color: #FF6D14;
   color: white;
   text-decoration: none;
   border-radius: 5px;
@@ -53,5 +56,5 @@
 }
 
 .btn-volver:hover {
-  background-color: #e05a0f; /* Un tono de NARANJA CORRECTO más oscuro para el hover (ajustado desde #FF6D14) */
+  background-color: #e05a0f;
 }

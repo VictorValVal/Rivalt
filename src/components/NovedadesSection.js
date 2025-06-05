@@ -1,18 +1,19 @@
-// components/NovedadesSection.js
 import React, { useState, useEffect } from "react";
 import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { app } from "../firebase"; 
-import { FaBell,FaUsers, FaSpinner, FaUserPlus, FaUserSlash, FaPlusSquare, FaClipboardList, FaTrashAlt, FaSignOutAlt, FaEye } from "react-icons/fa"; // IMPORT FaEye
+import { app } from "../firebase";
+import { FaBell, FaUsers, FaSpinner, FaUserPlus, FaUserSlash, FaPlusSquare, FaClipboardList, FaTrashAlt, FaSignOutAlt, FaEye } from "react-icons/fa";
 
 const db = getFirestore(app);
-const authInstance = getAuth(); // Use a different name to avoid conflict if auth is also from 'firebase/auth'
+const authInstance = getAuth();
 
 function NovedadesSection({ torneoId, onUnreadStatusChange }) {
   const [novedades, setNovedades] = useState([]);
   const [loadingNovedades, setLoadingNovedades] = useState(true);
   const [errorNovedades, setErrorNovedades] = useState("");
 
+  // Efecto para la suscripción en tiempo real a las novedades del torneo.
+  // También gestiona el estado de "no leídas" basándose en la última visita del usuario.
   useEffect(() => {
     if (!torneoId) {
       setErrorNovedades("ID de torneo no disponible para cargar novedades.");
@@ -22,17 +23,14 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
     }
     setLoadingNovedades(true);
     setErrorNovedades("");
-    console.log(`[NovedadesSection.js] Suscribiéndose a novedades para torneoId: ${torneoId}`);
 
     const currentUser = authInstance.currentUser;
-    console.log("[NovedadesSection.js] useEffect - currentUser:", currentUser ? currentUser.uid : "null", "TorneoID:", torneoId);
 
     const novedadesRef = collection(db, `torneos/${torneoId}/novedades`);
     const q = query(novedadesRef, orderBy("timestamp", "desc"));
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const nuevasNovedades = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log(`[NovedadesSection.js] Novedades CRUDAS recibidas (${nuevasNovedades.length}):`, JSON.stringify(nuevasNovedades.map(n => ({id: n.id, tipo: n.tipo, msg: n.mensaje?.substring(0,30), ts: n.timestamp?.seconds, dataExtra: n.dataExtra})), null, 2) );
       setNovedades(nuevasNovedades);
 
       let algunaNoLeida = false;
@@ -40,50 +38,38 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
         const ultimaVisitaKey = `ultimaVisitaNovedades_${torneoId}_${currentUser.uid}`;
         const ultimaVisitaTimestampString = localStorage.getItem(ultimaVisitaKey);
         const ultimaVisitaTimestamp = ultimaVisitaTimestampString ? parseInt(ultimaVisitaTimestampString, 10) : null;
-        console.log(`[NovedadesSection.js] Para user ${currentUser.uid} en torneo ${torneoId} - Ultima Visita TS (localStorage):`, ultimaVisitaTimestamp);
 
         algunaNoLeida = nuevasNovedades.some(novedad => {
           if (!novedad.timestamp || !novedad.timestamp.toMillis) {
-            console.warn(`[NovedadesSection.js] Novedad ${novedad.id} (Tipo: ${novedad.tipo}) sin timestamp válido. Mensaje: ${novedad.mensaje}`);
             return false;
           }
           const novedadMillis = novedad.timestamp.toMillis();
           if (!ultimaVisitaTimestamp) {
-            console.log(`[NovedadesSection.js] Novedad ${novedad.id} (${novedad.tipo}, TS: ${novedadMillis}) es NO LEÍDA (sin visita previa).`);
             return true;
           }
-          const esNoLeida = novedadMillis > ultimaVisitaTimestamp;
-          if (esNoLeida) {
-            console.log(`[NovedadesSection.js] Novedad ${novedad.id} (${novedad.tipo}, TS: ${novedadMillis}) es NO LEÍDA (comparada con ${ultimaVisitaTimestamp}).`);
-          }
-          return esNoLeida;
+          return novedadMillis > ultimaVisitaTimestamp;
         });
-      } else {
-        console.log("[NovedadesSection.js] No hay currentUser, no se puede determinar 'no leídas'.");
       }
-      console.log(`[NovedadesSection.js] ¿Alguna novedad no leída para ${currentUser ? currentUser.uid : 'anon'}? ${algunaNoLeida}`);
       
       if (onUnreadStatusChange) {
         onUnreadStatusChange(algunaNoLeida);
       }
       setLoadingNovedades(false);
     }, (err) => {
-      console.error("[NovedadesSection.js] Error al obtener novedades:", err);
+      console.error("Error al obtener novedades:", err);
       setErrorNovedades("Error al cargar las novedades.");
       setLoadingNovedades(false);
       if (onUnreadStatusChange) onUnreadStatusChange(false);
     });
 
     return () => {
-      console.log(`[NovedadesSection.js] Desuscribiéndose de novedades para torneoId: ${torneoId}`);
       unsubscribe();
     };
   }, [torneoId, onUnreadStatusChange]);
 
-
+  // Formatea el timestamp de las novedades a un formato legible.
   const formatNovedadTimestamp = (timestamp) => {
-    if (!timestamp || typeof timestamp.seconds !== 'number') { 
-      console.warn(`[NovedadesSection.js] Timestamp inválido o sin propiedad .seconds numérica:`, timestamp);
+    if (!timestamp || typeof timestamp.seconds !== 'number') {
       return "Fecha pendiente...";
     }
     try {
@@ -92,18 +78,19 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
             hour: '2-digit', minute: '2-digit'
         });
     } catch (e) {
-        console.error("[NovedadesSection.js] Error formateando timestamp:", timestamp, e);
+        console.error("Error formateando timestamp:", timestamp, e);
         return "Fecha inválida";
     }
   };
 
+  // Asigna un icono a cada tipo de novedad para una mejor representación visual.
   const getNovedadIcon = (tipo) => {
     switch (tipo) {
       case 'user_join':
         return <FaUserPlus style={{ color: '#2ecc71' }} title="Nuevo participante" />;
-      case 'team_join': // Icon for team joining
-        return <FaUsers style={{ color: '#3498db' }} title="Nuevo equipo" />; // Example icon
-      case 'spectator_join': // Icon for spectator joining
+      case 'team_join':
+        return <FaUsers style={{ color: '#3498db' }} title="Nuevo equipo" />;
+      case 'spectator_join':
         return <FaEye style={{ color: '#9b59b6' }} title="Nuevo espectador" />;
       case 'user_leave':
         return <FaUserSlash style={{ color: '#e74c3c' }} title="Participante salió/eliminado por creador" />;
@@ -122,7 +109,6 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
       case 'tournament_deleted':
         return <FaTrashAlt style={{ color: '#7f8c8d' }} title="Torneo eliminado" />;
       default:
-        console.warn(`[NovedadesSection.js] Tipo de novedad desconocido en getNovedadIcon: "${tipo}"`);
         return <FaBell style={{ color: '#f39c12' }} title={`Novedad: ${tipo || 'general'}`} />;
     }
   };
@@ -130,6 +116,7 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
   return (
     <div className="novedades-section">
       <h2><FaBell /> Novedades y Alertas</h2>
+      {/* Muestra un spinner de carga, un mensaje de error o la lista de novedades */}
       {loadingNovedades ? (
         <div className="loading-novedades">
           <FaSpinner className="spinner-icon" />
@@ -142,14 +129,6 @@ function NovedadesSection({ torneoId, onUnreadStatusChange }) {
       ) : (
         <ul className="novedades-list">
           {novedades.map(novedad => {
-            console.log("[NovedadesSection.js] Renderizando novedad:", { 
-              id: novedad.id, 
-              tipo: novedad.tipo, 
-              mensaje: novedad.mensaje,
-              timestamp_obj: novedad.timestamp, 
-              dataExtra: novedad.dataExtra 
-            });
-            
             const mensajeRenderizar = typeof novedad.mensaje === 'string' ? novedad.mensaje : "Mensaje no disponible";
 
             return (

@@ -1,43 +1,39 @@
-/* ==================================================
-   NUEVO TORNEO FORMULARIO ESTILOS (MODIFICADO PARA MÓVIL)
-   ================================================== */
-
 /* Contenedor para centrar en la página */
 .nuevo-torneo-page-container {
   margin-left: auto;
   margin-right: auto;
-  min-height: calc(100vh - 65px); /* Usa 100vh para asegurar que al menos ocupe la pantalla, ajusta 65px si tienes un header global */
-  padding: 2rem 1rem; /* Padding base ajustado */
+  min-height: calc(100vh - 65px);
+  padding: 2rem 1rem;
   box-sizing: border-box;
-  background-color: #121212; 
+  background-color: #121212;
   max-width: 700px;
-  display: flex; /* Para centrar el contenido */
-  flex-direction: column; /* Apilar elementos hijos verticalmente */
-  align-items: center; /* Centrar el .nuevo-torneo-container si es más estrecho que max-width */
-  overflow-x: hidden; /* Prevenir scroll horizontal innecesario */
-  overflow-y: auto;   /* PERMITIR SCROLL VERTICAL */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Contenedor principal del formulario */
 .nuevo-torneo-container {
   width: 100%;
   max-width: 550px;
-  background-color: #1e1e1e; 
-  padding: 2rem; /* Padding base */
+  background-color: #1e1e1e;
+  padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   color: #E0E0E0;
   display: flex;
   flex-direction: column;
   border: 1px solid #333;
-  margin-top: 1rem; /* Espacio superior en la página */
-  margin-bottom: 2rem; /* Espacio inferior para asegurar que el scroll no corte el final */
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 /* Barra de Progreso */
 .progress-bar-container {
   width: 100%;
-  height: 10px; 
+  height: 10px;
   background-color: #333;
   border-radius: 5px;
   overflow: hidden;
@@ -46,7 +42,7 @@
 
 .progress-bar-fill {
   height: 100%;
-  background-color: #FF6D14; 
+  background-color: #FF6D14;
   border-radius: 5px;
   transition: width 0.4s ease-in-out;
 }
@@ -55,9 +51,8 @@
   font-size: 0.85rem;
   color: #aaa;
   text-align: right;
-  margin-bottom: 1.5rem; /* Reducido desde 2.5rem */
+  margin-bottom: 1.5rem;
 }
-
 
 /* Contenido del paso */
 .form-step-content {
@@ -67,15 +62,15 @@
 .form-step {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem; /* Reducido desde 1.8rem */
+  gap: 1.2rem;
 }
 
 .form-step h2 {
   color: #FFFFFF;
-  margin-bottom: 0.8rem; /* Reducido desde 1rem */
+  margin-bottom: 0.8rem;
   text-align: center;
   font-weight: 600;
-  font-size: 1.5rem; /* Reducido desde 1.6rem */
+  font-size: 1.5rem;
 }
 
 /* Estilos para Inputs y Select */
@@ -83,9 +78,9 @@
   background-color: #2a2a2a;
   border: 1px solid #444444;
   color: #E0E0E0;
-  padding: 10px 15px; /* Padding base reducido */
+  padding: 10px 15px;
   border-radius: 6px;
-  font-size: 0.95rem; /* Font size base reducida */
+  font-size: 0.95rem;
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
@@ -96,15 +91,15 @@
 }
 
 .form-input:hover:not(:disabled) {
-  border-color: #666; 
-  background-color: #333; 
+  border-color: #666;
+  background-color: #333;
 }
 
 .form-input:focus {
   outline: none;
   border-color: #FF6D14;
   box-shadow: 0 0 0 3px rgba(255, 109, 20, 0.3);
-  background-color: #2c2c2c; 
+  background-color: #2c2c2c;
 }
 
 select.form-input {
@@ -114,33 +109,56 @@ select.form-input {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23FF6D14' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 15px center;
-  background-size: 16px 12px; 
-  padding-right: 40px; 
+  background-size: 16px 12px;
+  padding-right: 40px;
 }
 
 select.form-input::-ms-expand {
-  display: none; 
+  display: none;
 }
 
 select.form-input option {
-  background-color: #2a2a2a; 
-  color: #E0E0E0;          
-  padding: 8px 10px;        
+  background-color: #2a2a2a;
+  color: #E0E0E0;
+  padding: 8px 10px;
+}
+
+/* Opciones de select deshabilitadas por plan */
+.form-input option.option-disabled-premium {
+  color: #888;
+}
+.form-input option.option-disabled-premium:hover {
+  background-color: #f0f0f0; /* Esto parece una contradicción, ya que el fondo es oscuro. Mantengo el original para no alterar el diseño. */
+}
+/* Esto es más un hack y puede no funcionar en todos los navegadores para <option> */
+.form-input option.option-disabled-premium::after {
+  content: " ✨";
+  font-size: 0.8em;
+  color: #FF6D14;
+}
+
+.form-input option.option-disabled-by-plan {
+  color: #888;
+}
+.option-plan-indicator {
+  font-size: 0.9em;
+  margin-left: 5px;
+  opacity: 0.8;
 }
 
 /* Grupo de botones (para opciones) */
 .form-button-group {
   display: flex;
-  gap: 0.8rem; /* Reducido desde 1rem */
+  gap: 0.8rem;
   justify-content: center;
 }
 
 /* Estilos generales de botones */
 .form-button {
-  padding: 10px 20px; /* Padding base reducido */
+  padding: 10px 20px;
   border: none;
   border-radius: 6px;
-  font-size: 0.95rem; /* Font size base reducida */
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
@@ -152,11 +170,11 @@ select.form-input option {
 /* Botones de opción (Individual/Equipo, Liga/Torneo) */
 .form-button.choice {
   flex-grow: 1;
-  background-color: #444; 
+  background-color: #444;
   color: #ccc;
   border: 1px solid #666;
-  font-weight: 500; 
-  text-transform: none; 
+  font-weight: 500;
+  text-transform: none;
 }
 
 .form-button.choice:hover:not(.selected) {
@@ -166,10 +184,10 @@ select.form-input option {
 }
 
 .form-button.choice.selected {
-  background-color: #FF6D14; 
+  background-color: #FF6D14;
   color: #FFFFFF;
   border-color: #FF6D14;
-  font-weight: 600; 
+  font-weight: 600;
   box-shadow: 0 0 10px rgba(255, 109, 20, 0.3);
 }
 
@@ -177,8 +195,8 @@ select.form-input option {
 .form-navigation {
   display: flex;
   justify-content: space-between;
-  margin-top: 1.5rem; /* Reducido desde 2rem */
-  gap: 1rem; 
+  margin-top: 1.5rem;
+  gap: 1rem;
 }
 
 .form-navigation > :only-child {
@@ -203,7 +221,7 @@ select.form-input option {
   background-color: transparent;
   color: #aaa;
   border: 1px solid #555;
-  font-weight: 500; 
+  font-weight: 500;
   text-transform: none;
 }
 
@@ -222,15 +240,15 @@ select.form-input option {
   opacity: 0.7;
   box-shadow: none;
   transform: none;
-  border-color: transparent; 
+  border-color: transparent;
 }
 .form-button.primary:disabled {
-  background-color: rgba(255, 109, 20, 0.4); 
+  background-color: rgba(255, 109, 20, 0.4);
   color: rgba(255, 255, 255, 0.6);
 }
 .form-button.choice:disabled {
-  background-color: #444; 
-  color: #777; 
+  background-color: #444;
+  color: #777;
   opacity: 0.6;
   border-color: #666;
 }
@@ -240,91 +258,15 @@ select.form-input option {
   border-color: #444;
 }
 
-/* === Media Query para Móviles === */
-@media (max-width: 768px) {
-  .nuevo-torneo-page-container {
-    padding-top: 1.5rem; /* Menos padding superior en móviles */
-    padding-bottom: 1.5rem; /* Menos padding inferior en móviles */
-    min-height: 0; /* Permitir que el contenido defina la altura */
-  }
-
-  .nuevo-torneo-container {
-    padding: 1.5rem; /* Padding más pequeño para la tarjeta en móviles */
-    margin-top: 0.5rem;
-  }
-
-  .progress-step-text {
-    margin-bottom: 1.2rem; /* Más compacto */
-    font-size: 0.8rem;
-  }
-
-  .form-step h2 {
-    font-size: 1.3rem; /* Títulos de paso más pequeños */
-    margin-bottom: 0.6rem;
-  }
-
-  .form-step {
-    gap: 1rem; /* Espacio entre elementos del formulario más compacto */
-  }
-
-  .form-input, select.form-input {
-    padding: 10px 12px; /* Inputs un poco más compactos */
-    font-size: 0.9rem;
-  }
-  select.form-input {
-    padding-right: 35px; /* Asegurar espacio para la flecha custom */
-    background-size: 14px 10px;
-    background-position: right 12px center;
-  }
-
-  .form-button {
-    padding: 10px 18px; /* Botones un poco más compactos */
-    font-size: 0.9rem;
-  }
-  
-  .form-button-group {
-    flex-direction: column; /* Apilar botones de elección (Individual/Equipo, etc.) */
-    gap: 0.8rem;
-  }
-  .form-button.choice {
-    width: 100%; /* Que ocupen todo el ancho al apilarse */
-  }
-
-  .form-navigation {
-    margin-top: 1.2rem; /* Más compacto */
-  }
-}
-/* ==================================================
-   NUEVO TORNEO FORMULARIO ESTILOS (MODIFICADO PARA MÓVIL Y PLANES)
-   ================================================== */
-
-/* ... (estilos existentes) ... */
-
-.form-input option.option-disabled-premium {
-  color: #888; /* Color de texto para opciones deshabilitadas */
-}
-.form-input option.option-disabled-premium:hover {
-  background-color: #f0f0f0; /* Evitar cambio de fondo en hover */
-}
-
-/* Para navegadores que soportan ::before o ::after en option (limitado) */
-/* Esto es más un hack y puede no funcionar en todos los navegadores para <option> */
-/* Considerar una librería de select custom si se necesita un estilo más robusto */
-.form-input option.option-disabled-premium::after {
-  content: " ✨"; /* O el icono que quieras */
-  font-size: 0.8em;
-  color: #FF6D14; /* Naranja Rivalt */
-}
-
-/* Estilo para mensajes de error específicos del formulario de Nuevo.js */
+/* Estilo para mensajes de error */
 .form-error-message-nuevo {
-  color: #ff9a9a; /* Un rojo claro */
-  background-color: rgba(220, 53, 69, 0.1); /* Fondo rojo muy sutil */
-  border: 1px solid rgba(220, 53, 69, 0.3); /* Borde rojo sutil */
+  color: #ff9a9a;
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
   padding: 10px 15px;
   border-radius: 6px;
-  margin-top: 1rem; /* Espacio antes del mensaje */
-  margin-bottom: 1rem; /* Espacio después del mensaje */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   text-align: center;
   font-size: 0.9rem;
   font-weight: 500;
@@ -338,63 +280,42 @@ select.form-input option {
   font-size: 0.9rem;
 }
 
-
-/* ... (resto de los estilos y media queries) ... */
-
 /* Ajuste para el botón de volver y título en el header de unirse/nuevo */
-.unirse-header { /* Esta clase ya existe en Unirse.css, asegúrate que sea consistente o renómbrala */
+.unirse-header {
   width: 100%;
-  max-width: 550px; /* Coincide con nuevo-torneo-container */
+  max-width: 550px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  position: relative; /* Para el posicionamiento absoluto del botón de volver */
-  padding: 0 1rem; /* Asegurar que el botón de volver no se pegue al borde en móviles */
+  position: relative;
+  padding: 0 1rem;
   box-sizing: border-box;
 }
 
-.unirse-header .torneo-header-home-button { /* Estilo del botón de volver */
+.unirse-header .torneo-header-home-button {
   color: #E0E0E0;
   background: transparent;
   border: none;
-  font-size: 1.5rem; /* Tamaño del icono */
+  font-size: 1.5rem;
   cursor: pointer;
   padding: 0.5rem;
-  position: absolute; /* Lo posiciona a la izquierda del contenedor */
-  left: 1rem; /* Espacio desde el borde del .unirse-header */
+  position: absolute;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 5;
 }
 
-/* Si tienes un título en .unirse-header */
 .unirse-header h1 {
   color: #E0E0E0;
-  font-size: 1.5rem; /* Ajusta según el diseño */
+  font-size: 1.5rem;
   text-align: center;
-  flex-grow: 1; /* Permite que el título ocupe el espacio y se centre */
-  margin: 0; /* Quitar márgenes por defecto del h1 */
-  padding: 0 3rem; /* Espacio para que el título no se solape con el botón de volver */
+  flex-grow: 1;
+  margin: 0;
+  padding: 0 3rem;
 }
-/* components/estilos/Nuevo.css */
-
-/* components/estilos/Nuevo.css */
-
-/* ... (otros estilos existentes de Nuevo.css) ... */
-
-/* Estilo para las opciones de select deshabilitadas por plan, si se quiere diferenciar */
-.form-input option.option-disabled-by-plan {
-  color: #888; /* Texto más claro para indicar que no es la opción ideal ahora */
-  /* Considerar no cambiar el fondo para que la selección no parezca tan "final" visualmente */
-}
-.option-plan-indicator {
-  font-size: 0.9em;
-  margin-left: 5px; /* Un pequeño espacio antes del icono/texto del plan */
-  opacity: 0.8;
-}
-
 
 /* --- ESTILOS PARA REACT MODAL --- */
 .ReactModal__Overlay {
@@ -403,8 +324,8 @@ select.form-input option {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(18, 18, 18, 0.9) !important; /* Fondo oscuro semi-transparente */
-  z-index: 1050; /* Asegurar que esté por encima de otro contenido */
+  background-color: rgba(18, 18, 18, 0.9) !important;
+  z-index: 1050;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -421,24 +342,24 @@ select.form-input option {
 }
 
 .ReactModal__Content {
-  background: #2a2a2e !important; /* Fondo del modal ligeramente más claro que el overlay */
+  background: #2a2a2e !important;
   color: #E0E0E0 !important;
   padding: 2rem 2.5rem !important;
   border-radius: 10px !important;
-  border: 1px solid #484848 !important; /* Borde sutil */
-  max-width: 500px; /* Ancho máximo del modal */
-  width: calc(100% - 40px); /* Ancho responsivo con padding */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65) !important; /* Sombra más pronunciada */
+  border: 1px solid #484848 !important;
+  max-width: 500px;
+  width: calc(100% - 40px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65) !important;
   position: relative !important;
-  top: auto !important; /* Resetea posicionamiento por defecto de react-modal */
+  top: auto !important;
   left: auto !important;
   right: auto !important;
   bottom: auto !important;
-  margin: 20px; /* Para evitar que toque los bordes en pantallas muy pequeñas */
+  margin: 20px;
   outline: none;
-  transform: scale(0.95) translateY(15px); /* Estado inicial para animación */
+  transform: scale(0.95) translateY(15px);
   opacity: 0;
-  transition: transform 350ms cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 300ms ease-in-out; /* Animación de entrada "pop" */
+  transition: transform 350ms cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 300ms ease-in-out;
 }
 
 .ReactModal__Content--after-open {
@@ -449,7 +370,7 @@ select.form-input option {
 .ReactModal__Content--before-close {
   transform: scale(0.95) translateY(15px);
   opacity: 0;
-  transition: transform 300ms cubic-bezier(0.6, -0.28, 0.74, 0.05), opacity 250ms ease-in-out; /* Animación de salida */
+  transition: transform 300ms cubic-bezier(0.6, -0.28, 0.74, 0.05), opacity 250ms ease-in-out;
 }
 
 .ReactModal__Content h3 {
@@ -458,8 +379,8 @@ select.form-input option {
   margin-top: 0;
   margin-bottom: 1.5rem;
   font-weight: 600;
-  font-size: 1.6rem; /* Título del modal un poco más grande */
-  border-bottom: 2px solid #FF6D14; /* Línea de acento */
+  font-size: 1.6rem;
+  border-bottom: 2px solid #FF6D14;
   padding-bottom: 1rem;
 }
 
@@ -470,37 +391,37 @@ select.form-input option {
   margin-bottom: 1rem;
 }
 .ReactModal__Content p strong {
-  color: #FFBE8A; /* Un color naranja más claro para destacar texto */
+  color: #FFBE8A;
   font-weight: 600;
 }
 
-.ReactModal__Content .modal-plan-icon { /* Estilo para el icono de advertencia en el modal */
+.ReactModal__Content .modal-plan-icon {
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
-  color: #FFC107; /* Amarillo/Naranja para advertencia */
+  color: #FFC107;
   font-size: 2.5rem;
 }
 
 .ReactModal__Content .modal-actions {
   display: flex;
-  justify-content: space-around; /* Botones distribuidos */
+  justify-content: space-around;
   gap: 1rem;
   margin-top: 2.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #3a3a3a; /* Separador sutil */
+  border-top: 1px solid #3a3a3a;
 }
 
 .ReactModal__Content .modal-actions .form-button {
-  padding: 12px 25px; /* Botones más grandes y cómodos */
-  min-width: 150px; /* Ancho mínimo para que se vean bien */
+  padding: 12px 25px;
+  min-width: 150px;
   font-size: 1rem;
-  text-transform: uppercase; /* Para consistencia con otros botones primarios */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .ReactModal__Content .modal-actions .form-button.secondary {
-  background-color: #555; /* Gris oscuro para el botón "Más tarde" */
+  background-color: #555;
   color: #ddd;
   border: 1px solid #6f6f6f;
 }
@@ -511,12 +432,66 @@ select.form-input option {
 }
 
 .ReactModal__Content .modal-actions .form-button.primary {
-  /* Ya debería heredar estilos de .form-button.primary */
-  /* Se pueden añadir aquí si es necesario específicamente para el modal */
+  /* Hereda estilos de .form-button.primary */
 }
 
 .ReactModal__Content .modal-actions .form-button.primary svg,
 .ReactModal__Content .modal-actions .form-button.secondary svg {
-  margin-right: 8px; /* Espacio entre icono y texto del botón */
-  font-size: 1.1em; /* Ajusta el tamaño del icono si es necesario */
+  margin-right: 8px;
+  font-size: 1.1em;
+}
+
+/* === Media Query para Móviles === */
+@media (max-width: 768px) {
+  .nuevo-torneo-page-container {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    min-height: 0;
+  }
+
+  .nuevo-torneo-container {
+    padding: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .progress-step-text {
+    margin-bottom: 1.2rem;
+    font-size: 0.8rem;
+  }
+
+  .form-step h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .form-step {
+    gap: 1rem;
+  }
+
+  .form-input, select.form-input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  select.form-input {
+    padding-right: 35px;
+    background-size: 14px 10px;
+    background-position: right 12px center;
+  }
+
+  .form-button {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .form-button-group {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .form-button.choice {
+    width: 100%;
+  }
+
+  .form-navigation {
+    margin-top: 1.2rem;
+  }
 }

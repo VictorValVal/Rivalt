@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { FaUsers, FaUserPlus, FaTrash, FaSave, FaTimes } from 'react-icons/fa'; // Iconos
-import "./estilos/EquipoForm.css"; // Crearemos este archivo CSS
+import { FaUsers, FaUserPlus, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
+import "./estilos/EquipoForm.css";
 
-function EquipoForm({ onSubmit, onCancel, maxMiembros }) { // Añadimos maxMiembros opcional
+function EquipoForm({ onSubmit, onCancel, maxMiembros }) {
   const [nombreEquipo, setNombreEquipo] = useState("");
-  const [miembros, setMiembros] = useState([""]); // Empezar con un miembro (el capitán)
-  const [error, setError] = useState(""); // Para mensajes de error
+  const [miembros, setMiembros] = useState([""]);
+  const [error, setError] = useState("");
 
   const handleChangeNombreEquipo = (e) => {
     setNombreEquipo(e.target.value);
     if (error && e.target.value.trim()) {
-      setError(""); // Limpiar error si el usuario empieza a escribir
+      setError("");
     }
   };
 
@@ -19,7 +19,7 @@ function EquipoForm({ onSubmit, onCancel, maxMiembros }) { // Añadimos maxMiemb
     nuevosMiembros[index] = value;
     setMiembros(nuevosMiembros);
     if (error && value.trim()) {
-        setError(""); // Limpiar error
+        setError("");
     }
   };
 
@@ -29,11 +29,11 @@ function EquipoForm({ onSubmit, onCancel, maxMiembros }) { // Añadimos maxMiemb
         return;
     }
     setMiembros([...miembros, ""]);
-    setError(""); // Limpiar error si se pudo añadir
+    setError("");
   };
 
   const eliminarMiembro = (index) => {
-    if (miembros.length <= 1) { // No permitir eliminar al último miembro (capitán)
+    if (miembros.length <= 1) {
         setError("El equipo debe tener al menos un miembro.");
         return;
     }
@@ -43,7 +43,7 @@ function EquipoForm({ onSubmit, onCancel, maxMiembros }) { // Añadimos maxMiemb
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevenir el comportamiento por defecto del form
+    e.preventDefault();
     if (!nombreEquipo.trim()) {
       setError("El nombre del equipo no puede estar vacío.");
       return;
@@ -56,19 +56,12 @@ function EquipoForm({ onSubmit, onCancel, maxMiembros }) { // Añadimos maxMiemb
         setError("El equipo debe tener al menos un miembro.");
         return;
     }
-    // Validar emails si es necesario (ejemplo simple)
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (miembros.some(m => !emailRegex.test(m.trim()))) {
-    //   setError("Asegúrate de que todos los miembros sean correos válidos.");
-    //   return;
-    // }
 
-    setError(""); // Limpiar errores si todo está bien
+    setError("");
     onSubmit(nombreEquipo, miembros);
   };
 
   return (
-    // Usamos <form> para semántica y manejo de submit
     <form onSubmit={handleSubmit} className="equipo-form-container">
       <div className="form-header">
         <FaUsers className="header-icon" />
@@ -94,13 +87,13 @@ function EquipoForm({ onSubmit, onCancel, maxMiembros }) { // Añadimos maxMiemb
         {miembros.map((miembro, index) => (
           <div key={index} className="miembro-input-group">
             <input
-              type="text" // Cambiar a type="email" si siempre serán correos
+              type="text"
               placeholder={`Email o Nick del Miembro ${index + 1}`}
               value={miembro}
               onChange={(e) => handleChangeMiembro(index, e.target.value)}
               className="form-input"
             />
-            {miembros.length > 1 && ( // Mostrar botón de eliminar si hay más de un miembro
+            {miembros.length > 1 && (
               <button
                 type="button"
                 onClick={() => eliminarMiembro(index)}
@@ -128,13 +121,13 @@ function EquipoForm({ onSubmit, onCancel, maxMiembros }) { // Añadimos maxMiemb
         <button
           type="button"
           onClick={onCancel}
-          className="form-button secondary" // Estilo de botón secundario
+          className="form-button secondary"
         >
           <FaTimes /> Cancelar
         </button>
         <button
           type="submit"
-          className="form-button primary" // Estilo de botón primario
+          className="form-button primary"
         >
           <FaSave /> Guardar Equipo
         </button>

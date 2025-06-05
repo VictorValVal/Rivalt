@@ -1,8 +1,7 @@
-// src/components/Torneo.js
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth"; // Ensure getAuth is imported correctly
+import { getAuth } from "firebase/auth";
 import { app } from "../firebase";
 import Informacion from "./Información";
 import Participantes from "./Participantes";
@@ -13,7 +12,7 @@ import { FaInfoCircle, FaUsers, FaCalendarAlt, FaChartBar, FaQuestionCircle, FaE
 import { motion, AnimatePresence } from "framer-motion";
 
 const db = getFirestore(app);
-const authInstance = getAuth(app); // Use a distinct name if auth is also from 'firebase/auth'
+const authInstance = getAuth(app);
 
 function Torneo() {
   const { id } = useParams();
@@ -23,25 +22,23 @@ function Torneo() {
   const [componenteActivo, setComponenteActivo] = useState(null);
   const [tituloTorneo, setTituloTorneo] = useState("");
   const [hayNotificacionesInfoNoLeidas, setHayNotificacionesInfoNoLeidas] = useState(false);
-  const [creadorId, setCreadorId] = useState(null); // State to store creator ID
-  const [currentUserId, setCurrentUserId] = useState(null); // State for current user ID
-  const [isCreator, setIsCreator] = useState(false); // State to determine if current user is creator
+  const [creadorId, setCreadorId] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [isCreator, setIsCreator] = useState(false);
 
+  // Efecto para la autenticación del usuario actual
   useEffect(() => {
     const unsubscribe = authInstance.onAuthStateChanged(user => {
-      if (user) {
-        setCurrentUserId(user.uid);
-      } else {
-        setCurrentUserId(null);
-      }
+      setCurrentUserId(user ? user.uid : null);
     });
     return () => unsubscribe();
   }, []);
 
+  // Efecto para cargar la información del torneo
   useEffect(() => {
     const fetchTorneo = async () => {
       if (!id) {
-        console.error("[Torneo.js] No tournament ID provided.");
+        console.error("[Torneo.js] No se proporcionó ID de torneo.");
         setTituloTorneo("Torneo no encontrado");
         setCreadorId(null);
         return;
@@ -53,9 +50,8 @@ function Torneo() {
         if (torneoSnapshot.exists()) {
           const torneoData = torneoSnapshot.data();
           setTituloTorneo(torneoData.titulo);
-          setCreadorId(torneoData.creadorId); // Set creatorId from fetched data
+          setCreadorId(torneoData.creadorId);
 
-          // Initial active component logic
           if (location.state?.activeTab && location.state?.fromDetails) {
             setComponenteActivo(location.state.activeTab);
             navigate(location.pathname, { replace: true, state: {} });
@@ -63,13 +59,12 @@ function Torneo() {
             setComponenteActivo("componente1");
           }
         } else {
-          console.log("[Torneo.js] Torneo no encontrado");
           setTituloTorneo("Torneo no encontrado");
           setCreadorId(null);
           if (componenteActivo === null && !location.state?.activeTab) setComponenteActivo(null);
         }
       } catch (error) {
-          console.error("[Torneo.js] Error fetching tournament:", error);
+          console.error("[Torneo.js] Error al cargar el torneo:", error);
           setTituloTorneo("Error al cargar");
           setCreadorId(null);
           if (componenteActivo === null && !location.state?.activeTab) setComponenteActivo(null);
@@ -80,14 +75,10 @@ function Torneo() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, location.state]);
 
+  // Determina si el usuario actual es el creador del torneo
   useEffect(() => {
-    if (currentUserId && creadorId) {
-      setIsCreator(currentUserId === creadorId);
-    } else {
-      setIsCreator(false);
-    }
+    setIsCreator(currentUserId && creadorId && currentUserId === creadorId);
   }, [currentUserId, creadorId]);
-
 
   const handleGoToHome = () => {
     navigate("/home");
@@ -107,6 +98,7 @@ function Torneo() {
     }
   };
 
+  // Renderiza el componente activo según la navegación
   const renderComponente = () => {
     switch (componenteActivo) {
       case "componente1":
@@ -116,7 +108,6 @@ function Torneo() {
       case "calendario":
         return <Calendario torneoId={id} isCreator={isCreator} />;
       case "clasificacion":
-        // Pass torneoId and isCreator to Clasificacion
         return <Clasificacion torneoIdProp={id} isCreatorProp={isCreator} />;
       default:
         if (tituloTorneo === "Torneo no encontrado" || tituloTorneo === "Error al cargar") {
@@ -138,6 +129,7 @@ function Torneo() {
     }
   };
 
+  // Animaciones para la transición entre componentes
   const pageVariants = {
     initial: { opacity: 0 },
     in: { opacity: 1 },

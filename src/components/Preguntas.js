@@ -1,9 +1,8 @@
-// components/FAQ.js
 import React, { useState, useRef, useEffect } from 'react';
-import './estilos/Preguntas.css'; // Asegúrate de que este archivo CSS exista y esté actualizado
-import Footer from './Footer'; // Asumiendo que quieres el footer en esta página
+import './estilos/Preguntas.css';
+import Footer from './Footer';
 
-// DATOS DE FAQ (reestructurados por categoría)
+// Datos de preguntas frecuentes categorizadas.
 const faqDataCategorized = [
     {
         id: 'general',
@@ -137,7 +136,7 @@ const faqDataCategorized = [
     }
 ];
 
-
+// Componente individual para mostrar una pregunta y su respuesta.
 const FAQItem = ({ item, isOpen, onClick }) => {
     return (
         <div className="faq-item" id={item.id}>
@@ -154,36 +153,35 @@ const FAQItem = ({ item, isOpen, onClick }) => {
     );
 };
 
+// Componente principal para la página de Preguntas Frecuentes.
 const Preguntas = () => {
+     useEffect(() => {
+            window.scrollTo(0, 0);
+        }, []);
     const [openQuestionId, setOpenQuestionId] = useState(null);
-    const categoryRefs = useRef({}); // Para almacenar referencias a los elementos de categoría
+    const categoryRefs = useRef({});
 
+    // Alterna la visibilidad de la respuesta de una pregunta.
     const handleItemClick = (questionId) => {
         setOpenQuestionId(openQuestionId === questionId ? null : questionId);
     };
 
+    // Desplaza la vista a la categoría seleccionada en el menú.
     const handleCategoryLinkClick = (categoryId) => {
         const element = categoryRefs.current[categoryId];
         if (element) {
-            // Ajustar el valor de 'block' o añadir un offset si tienes un header fijo
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
 
-     // Efecto para hacer scroll si se accede con un hash en la URL
+     // Efecto para hacer scroll a una categoría específica si se accede con un hash en la URL.
     useEffect(() => {
         const hash = window.location.hash.substring(1);
         if (hash) {
-            // Esperar un breve momento para asegurar que los refs estén asignados
             setTimeout(() => {
                 const element = categoryRefs.current[hash];
                 if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                     // Opcional: Abrir la primera pregunta de la categoría anclada
-                    const categoryData = faqDataCategorized.find(cat => cat.id === hash);
-                    if (categoryData && categoryData.questions.length > 0) {
-                        // setOpenQuestionId(categoryData.questions[0].id); // Descomentar si se desea este comportamiento
-                    }
                 }
             }, 100);
         }
@@ -198,6 +196,7 @@ const Preguntas = () => {
                     Encuentra respuestas a las preguntas más comunes sobre RIVALT. Navega por las categorías o desplázate para ver todas las preguntas.
                 </p>
 
+                {/* Menú de categorías para una navegación rápida */}
                 <nav className="faq-category-menu" aria-label="Índice de categorías de FAQ">
                     <ul>
                         {faqDataCategorized.map((category) => (
@@ -213,12 +212,13 @@ const Preguntas = () => {
                     </ul>
                 </nav>
 
+                {/* Lista de preguntas frecuentes por categoría */}
                 <div className="faq-list-container">
                     {faqDataCategorized.map((category) => (
                         <section
                             key={category.id}
-                            id={category.id} // ID para el anclaje del enlace
-                            ref={el => categoryRefs.current[category.id] = el} // Asignar ref
+                            id={category.id}
+                            ref={el => categoryRefs.current[category.id] = el}
                             className="faq-category-section"
                             aria-labelledby={`${category.id}-title`}
                         >

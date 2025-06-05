@@ -1,10 +1,8 @@
-/* tabla.css (MODIFICADO) */
-
 .clasificacion-container {
-  margin: 20px auto; /* Centrar contenedor si tiene max-width */
-  max-width: 900px; /* O el ancho que prefieras */
-  color: #E0E0E0; /* Texto claro por defecto */
-  background-color: #1e1e1e; /* Fondo para el contenedor si es necesario */
+  margin: 20px auto;
+  max-width: 900px;
+  color: #E0E0E0;
+  background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
@@ -13,81 +11,80 @@
 
 .standings-table {
   width: 100%;
-  border-collapse: collapse; /* Mantiene bordes limpios */
-  background-color: transparent; /* El contenedor ya tiene fondo */
+  border-collapse: collapse;
+  background-color: transparent;
   color: #E0E0E0;
-  /* Quitar box-shadow y border-radius si el contenedor los maneja */
-  /* overflow: hidden; */
 }
 
 .standings-table thead th {
-  background-color: #333333; /* Fondo cabecera oscuro */
-  color: #FF6D14; /* Color de acento para texto cabecera */
-  padding: 14px 15px; /* Más padding vertical */
+  background-color: #333333;
+  color: #FF6D14;
+  padding: 14px 15px;
   text-align: left;
   font-weight: 600;
-  text-transform: uppercase; /* Moderno */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 2px solid #FF6D14; /* Línea de acento inferior */
+  border-bottom: 2px solid #FF6D14;
 }
 
 .standings-table tbody tr {
-  border-bottom: 1px solid #444444; /* Separador de filas */
+  border-bottom: 1px solid #444444;
   transition: background-color 0.2s ease;
 }
 
 .standings-table tbody tr:last-child {
-  border-bottom: none; /* Sin borde en la última fila */
+  border-bottom: none;
 }
 
 .standings-table tbody tr:nth-child(even) {
-  background-color: #2a2a2a; /* Rayado sutil */
+  background-color: #2a2a2a;
 }
 
 .standings-table tbody td {
-  padding: 12px 15px; /* Padding celdas */
+  padding: 12px 15px;
   text-align: left;
 }
 
 /* Celda de Puntos destacada */
 .standings-table tbody td strong {
   font-weight: 700;
-  color: #FFFFFF; /* Puntos en blanco para destacar sobre fondos oscuros */
+  color: #FFFFFF;
 }
 
 .standings-table tbody tr:hover {
-  background-color: #383838; /* Resaltado al pasar el ratón */
+  background-color: #383838;
 }
 
 /* Alineación específica de columnas */
-.standings-table th:first-child, /* Pos */
+.standings-table th:first-child,
 .standings-table td:first-child {
   text-align: center;
-  width: 50px; /* Ancho fijo para posición */
+  width: 50px;
 }
 
-.standings-table th:nth-child(2), /* Equipo */
+.standings-table th:nth-child(2),
 .standings-table td:nth-child(2) {
-  font-weight: 500; /* Nombre de equipo normal */
+  font-weight: 500;
   text-align: left;
 }
 
 /* Columnas numéricas (centradas o derechas) */
-.standings-table th:nth-child(n+3):nth-child(-n+10), /* PJ a Pts */
+.standings-table th:nth-child(n+3):nth-child(-n+10),
 .standings-table td:nth-child(n+3):nth-child(-n+10) {
-  text-align: center; /* Centrar datos numéricos */
-  width: 60px; /* Ancho más o menos fijo */
+  text-align: center;
+  width: 60px;
 }
 
 .clasificacion-container p {
   margin-top: 15px;
   font-style: italic;
-  color: #999999; /* Texto secundario para notas */
+  color: #999999;
   text-align: center;
   font-size: 0.9em;
 }
-@media (max-width: 600px) { /* Ajusta el ancho según tus necesidades */
-    .hide-on-mobile {
-        display: none;
-    }
+
+@media (max-width: 600px) {
+  .hide-on-mobile {
+    display: none;
+  }
 }

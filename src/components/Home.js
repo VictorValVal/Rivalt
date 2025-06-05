@@ -1,6 +1,5 @@
-// components/Home.js
 import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // No se necesita Link aquí
+import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, collection, query, where, onSnapshot, getDoc, doc } from "firebase/firestore";
 import { app } from "../firebase";
@@ -13,7 +12,7 @@ import "./estilos/Home.css";
 import logoRivalt from "../img/logoRivaltN.png";
 import Tutorial from "./Tutorial";
 import Planes from './Planes';
-import { PLAN_LIMITS } from './Nuevo'; // Import PLAN_LIMITS for Home.js
+import { PLAN_LIMITS } from './Nuevo';
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -45,8 +44,8 @@ function Home() {
   const [userName, setUserName] = useState("");
   const [userPlan, setUserPlan] = useState('free');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [userTotalTournaments, setUserTotalTournaments] = useState(0); //
-  const [isLoadingUserPlanData, setIsLoadingUserPlanData] = useState(true); // Loading state for user plan/tournament count
+  const [userTotalTournaments, setUserTotalTournaments] = useState(0);
+  const [isLoadingUserPlanData, setIsLoadingUserPlanData] = useState(true);
 
   const addTournamentButtonRef = useRef(null);
   const joinTournamentButtonRef = useRef(null);
@@ -73,7 +72,7 @@ function Home() {
           setUserPlan('free');
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error al obtener datos de usuario:", error);
         setUserName(currentUser.email);
         setUser(currentUser);
         setUserPlan('free');
@@ -91,6 +90,14 @@ function Home() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    if (showTutorial && isMobileView) {
+      setIsMobileMenuOpen(true);
+    } else if (!showTutorial && isMobileView) {
+      setIsMobileMenuOpen(false);
+    }
+  }, [showTutorial, isMobileView]);
 
   useEffect(() => {
     const tutorialSeen = localStorage.getItem('homeTutorialSeen_v1');
@@ -124,7 +131,7 @@ function Home() {
 
       if (!currentUser) return;
 
-      setIsLoadingUserPlanData(true); // Set loading state for plan data
+      setIsLoadingUserPlanData(true);
 
       const processAndSetTorneos = (listenersResults) => {
         const allFetchedTorneos = listenersResults.flat();
@@ -133,19 +140,18 @@ function Home() {
         torneosToProcess.forEach(t => { if (!uniqueTorneosMap.has(t.id)) uniqueTorneosMap.set(t.id, t); });
         setTorneos(Array.from(uniqueTorneosMap.values()));
 
-        // Update total tournaments count for the user's plan limits
         setUserTotalTournaments(uniqueTorneosMap.size);
-        setIsLoadingUserPlanData(false); // Done loading plan data
+        setIsLoadingUserPlanData(false);
       };
       const qCreados = query(collection(db, "torneos"), where("creadorId", "==", currentUser.uid));
       const qParticipantesIndividual = query(collection(db, "torneos"), where("participantes", "array-contains", currentUser.uid));
       const qTodos = collection(db, "torneos");
       const qEspectador = query(collection(db, "torneos"), where("espectadores", "array-contains", currentUser.uid));
       let creadosData = [], individualData = [], equipoData = [], espectadorData = [];
-      const unsubCreados = onSnapshot(qCreados, (s) => { creadosData = s.docs.map(d => ({ id: d.id, ...d.data(), origen: 'creados' })); processAndSetTorneos([creadosData, individualData, equipoData, espectadorData]); }, e => console.error("Err creados:", e));
-      const unsubIndividual = onSnapshot(qParticipantesIndividual, (s) => { individualData = s.docs.map(d => ({ id: d.id, ...d.data(), origen: 'individual' })).filter(t => t.creadorId !== currentUser.uid); processAndSetTorneos([creadosData, individualData, equipoData, espectadorData]); }, e => console.error("Err individual:", e));
-      const unsubEquipos = onSnapshot(qTodos, (s) => { equipoData = s.docs.map(d => ({ id: d.id, ...d.data(), origen: 'equipo' })).filter(t => t.creadorId !== currentUser.uid && !individualData.some(ind => ind.id === t.id) && t.modo === "equipo" && Array.isArray(t.participantes) && t.participantes.some(p => typeof p === 'object' && p?.capitan === currentUser.uid)); processAndSetTorneos([creadosData, individualData, equipoData, espectadorData]); }, e => console.error("Err equipos:", e));
-      const unsubEspectador = onSnapshot(qEspectador, (s) => { espectadorData = s.docs.map(d => ({ id: d.id, ...d.data(), origen: 'espectador' })).filter(t => t.creadorId !== currentUser.uid && !individualData.some(ind => ind.id === t.id) && !equipoData.some(eq => eq.id === t.id)); processAndSetTorneos([creadosData, individualData, equipoData, espectadorData]); }, e => console.error("Err espectador:", e));
+      const unsubCreados = onSnapshot(qCreados, (s) => { creadosData = s.docs.map(d => ({ id: d.id, ...d.data(), origen: 'creados' })); processAndSetTorneos([creadosData, individualData, equipoData, espectadorData]); }, e => console.error("Error en creados:", e));
+      const unsubIndividual = onSnapshot(qParticipantesIndividual, (s) => { individualData = s.docs.map(d => ({ id: d.id, ...d.data(), origen: 'individual' })).filter(t => t.creadorId !== currentUser.uid); processAndSetTorneos([creadosData, individualData, equipoData, espectadorData]); }, e => console.error("Error en individual:", e));
+      const unsubEquipos = onSnapshot(qTodos, (s) => { equipoData = s.docs.map(d => ({ id: d.id, ...d.data(), origen: 'equipo' })).filter(t => t.creadorId !== currentUser.uid && !individualData.some(ind => ind.id === t.id) && t.modo === "equipo" && Array.isArray(t.participantes) && t.participantes.some(p => typeof p === 'object' && p?.capitan === currentUser.uid)); processAndSetTorneos([creadosData, individualData, equipoData, espectadorData]); }, e => console.error("Error en equipos:", e));
+      const unsubEspectador = onSnapshot(qEspectador, (s) => { espectadorData = s.docs.map(d => ({ id: d.id, ...d.data(), origen: 'espectador' })).filter(t => t.creadorId !== currentUser.uid && !individualData.some(ind => ind.id === t.id) && !equipoData.some(eq => eq.id === t.id)); processAndSetTorneos([creadosData, individualData, equipoData, espectadorData]); }, e => console.error("Error en espectador:", e));
       return () => { unsubCreados(); unsubIndividual(); unsubEquipos(); unsubEspectador(); };
     });
     return () => unsubscribeAuth();
@@ -205,7 +211,7 @@ function Home() {
 
   const handlePlanBannerClick = () => {
     if (userPlan !== 'pro') {
-      navigate("/#planes-section"); // CAMBIO AQUÍ: Añadir el hash
+      navigate("/#planes-section");
     }
   };
 
@@ -257,7 +263,6 @@ function Home() {
           </button>
         </div>
 
-        {/* New container for the tournament count and the card grid to manage layout */}
         <div className="tournament-content-wrapper">
           {!isLoadingUserPlanData && user && currentSimultaneousLimit !== undefined && (
               <div className="tournament-count-display">

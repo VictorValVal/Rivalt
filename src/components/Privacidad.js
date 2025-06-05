@@ -1,7 +1,10 @@
+// components/Privacidad.js
 import React, { useEffect } from 'react';
-import './estilos/Legales.css'; // Usaremos el mismo CSS
+import './estilos/Legales.css';
 
+// Componente para la página de Política de Privacidad.
 const Privacidad = () => {
+    // Efecto para desplazar la ventana al inicio de la página al cargar el componente.
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);

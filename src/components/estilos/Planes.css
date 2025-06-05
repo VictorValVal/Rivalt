@@ -1,348 +1,220 @@
-/* components/estilos/Planes.css */
-
-/* ================================================== */
-/* === ESTILOS PARA LA SECCIÓN DE PLANES PREMIUM === */
-/* ================================================== */
 .pricing-section {
-    color: #e0e0e0;
-    padding: 6rem 2rem;
-    position: relative; /* Mantenemos relative para otros elementos internos si los hubiera */
-    overflow: visible; /* CAMBIO: De hidden a visible para no cortar las formas fijas si tuvieran un origen visual "dentro" pero se mueven fuera */
-                       /* Ojo: Si pricing-section NO debe mostrar nada que se desborde de sus propios límites (excepto estas formas fijas), 
-                          entonces overflow:hidden estaba bien, ya que las formas position:fixed no se ven afectadas por el overflow de su "padre" en el DOM.
-                          Lo dejo en visible por si acaso, pero si ves problemas de layout, podría volverse a hidden. */
-    z-index: 8; /* z-index existente */
-    background-color: #181818;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    box-sizing: border-box;
-
-    opacity: 0;
-    transform: translateY(80px) scale(0.95);
-    filter: blur(5px);
-    transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
-                visibility 0s linear 0.7s;
-    visibility: hidden;
+  color: #e0e0e0;
+  padding: 6rem 2rem;
+  position: relative;
+  overflow: visible;
+  z-index: 8;
+  background-color: #181818;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(80px) scale(0.95);
+  filter: blur(5px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+              transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+              filter 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+              visibility 0s linear 0.7s;
+  visibility: hidden;
 }
 
 .pricing-section.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0px);
-    visibility: visible;
-    transition-delay: 0s;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 /* Línea naranja superior animada */
 .pricing-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 3px;
-    width: 0;
-    background-color: #FF6D14;
-    transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-    transition-delay: 0.4s;
-    z-index: 11; 
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background-color: #FF6D14;
+  transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: 0.4s;
+  z-index: 11;
 }
 
 .pricing-section.visible::before {
-    width: 100%;
+  width: 100%;
 }
 
-
 .pricing-section-content {
-    max-width: 1100px;
-    width: 100%;
-    text-align: center;
-    position: relative;
-    z-index: 10; /* Asegura que el contenido esté sobre las formas fijas */
+  max-width: 1100px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 10;
 }
 
 .pricing-section h2 {
-    font-size: 2.6rem;
-    font-weight: 700;
-    color: #FFFFFF;
-    margin-bottom: 1rem;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 1rem;
 }
 
 .pricing-subtitle {
-    font-size: 1.1rem;
-    color: #AAAAAA;
-    margin-bottom: 3.5rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
+  font-size: 1.1rem;
+  color: #AAAAAA;
+  margin-bottom: 3.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
 }
 
 .pricing-plans-container {
-    display: flex;
-    justify-content: center;
-    align-items: stretch; /* Para que las tarjetas tengan la misma altura */
-    gap: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 3.5rem;
 }
 
 .plan-card {
-    background-color: #1f1f1f;
-    padding: 2.5rem 2rem;
-    border-radius: 12px;
-    border: 1px solid #333;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    flex: 1 1 300px; /* Permite que las tarjetas crezcan y se encojan */
-    max-width: 350px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Asegura que el botón quede abajo */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #1f1f1f;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  border: 1px solid #333;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  flex: 1 1 300px;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .plan-card:hover {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
 }
 
 .plan-icon-container {
-    background-color: rgba(255, 109, 20, 0.1);
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem auto;
-    border: 2px solid rgba(255, 109, 20, 0.3);
+  background-color: rgba(255, 109, 20, 0.1);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  border: 2px solid rgba(255, 109, 20, 0.3);
 }
 
 .plan-icon {
-    font-size: 2.5rem;
-    color: #FF6D14;
+  font-size: 2.5rem;
+  color: #FF6D14;
 }
 
 .plan-card h3 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #FFFFFF;
-    margin-bottom: 0.8rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 0.8rem;
 }
 
 .plan-price {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #FF6D14;
-    margin-bottom: 0.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #FF6D14;
+  margin-bottom: 0.5rem;
 }
 
 .price-period {
-    font-size: 0.9rem;
-    font-weight: 400;
-    color: #AAAAAA;
-    margin-left: 5px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #AAAAAA;
+  margin-left: 5px;
 }
 
 .plan-features {
-    list-style: none;
-    padding: 0;
-    margin: 1.5rem 0;
-    text-align: left;
-    flex-grow: 1; /* Permite que esta sección crezca si hay espacio */
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  text-align: left;
+  flex-grow: 1;
 }
 
 .plan-features li {
-    font-size: 0.95rem;
-    color: #c0c0c0;
-    margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
+  font-size: 0.95rem;
+  color: #c0c0c0;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
 }
 
 .plan-features li svg {
-    color: #FF6D14;
-    margin-right: 10px;
-    font-size: 1.1rem;
-    flex-shrink: 0;
+  color: #FF6D14;
+  margin-right: 10px;
+  font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 .plan-button {
-    padding: 12px 25px;
-    font-size: 1rem;
-    font-weight: 600;
-    width: 100%;
-    margin-top: 1rem; /* Empuja el botón hacia abajo si .plan-features no llena el espacio */
-    /* Se asume que .form-button, .primary, .secondary están definidos globalmente o en otro CSS importado */
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  margin-top: 1rem;
 }
 
-
-/* Formas de fondo con animación dinámica (estilo Home) */
+/* Formas de fondo con animación dinámica */
 .pricing-shape {
-    position: fixed; /* CAMBIO CLAVE: Ahora las formas son fijas al viewport */
-    pointer-events: none;
-    z-index: 0;      /* CAMBIO CLAVE: Detrás de casi todo (detrás de .pricing-section que tiene z-index: 8) */
-    /* El border-radius y la animación se definen en las clases específicas */
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .pricing-shape-1 {
-    width: 40vw;
-    height: 40vw;
-    top: -15vh;    /* Relativo al viewport */
-    left: -10vw;   /* Relativo al viewport */
-    background-color: rgba(255, 109, 20, 0.25);
-    filter: blur(85px);
-    animation: move-planes-bg-shape-1 40s ease-in-out infinite alternate;
-    animation-delay: -2s;
-    border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
+  width: 40vw;
+  height: 40vw;
+  top: -15vh;
+  left: -10vw;
+  background-color: rgba(255, 109, 20, 0.25);
+  filter: blur(85px);
+  animation: move-planes-bg-shape-1 40s ease-in-out infinite alternate;
+  animation-delay: -2s;
+  border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
 }
 
 .pricing-shape-2 {
-    width: 35vw;
-    height: 35vw;
-    bottom: -10vh; /* Relativo al viewport */
-    right: -12vw;  /* Relativo al viewport */
-    background-color: rgba(255, 109, 20, 0.2);
-    filter: blur(95px);
-    animation: move-planes-bg-shape-2 45s ease-in-out infinite alternate;
-    animation-delay: -5s;
-    border-radius: 60% 40% 45% 55% / 50% 55% 45% 50%;
+  width: 35vw;
+  height: 35vw;
+  bottom: -10vh;
+  right: -12vw;
+  background-color: rgba(255, 109, 20, 0.2);
+  filter: blur(95px);
+  animation: move-planes-bg-shape-2 45s ease-in-out infinite alternate;
+  animation-delay: -5s;
+  border-radius: 60% 40% 45% 55% / 50% 55% 45% 50%;
 }
 
-/* --- Nuevas Keyframes para las formas de la sección de Planes --- */
+/* Keyframes para las formas de la sección de Planes */
 @keyframes move-planes-bg-shape-1 {
-    0% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-    50% {
-        transform: translate(20vw, 15vh) scale(1.1) rotate(30deg);
-    }
-    100% {
-        transform: translate(-5vw, -10vh) scale(0.9) rotate(-15deg);
-    }
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(20vw, 15vh) scale(1.1) rotate(30deg); }
+  100% { transform: translate(-5vw, -10vh) scale(0.9) rotate(-15deg); }
 }
 
 @keyframes move-planes-bg-shape-2 {
-    0% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-    50% {
-        transform: translate(-15vw, -20vh) scale(1.05) rotate(-25deg);
-    }
-    100% {
-        transform: translate(10vw, 5vh) scale(0.95) rotate(20deg);
-    }
-}
-
-
-/* --- Responsividad para Pricing Section --- */
-@media (max-width: 992px) {
-    .pricing-section {
-        padding: 5rem 1.5rem;
-    }
-    .pricing-section h2 {
-        font-size: 2.3rem;
-    }
-    .pricing-subtitle {
-        font-size: 1rem;
-        margin-bottom: 3rem;
-    }
-    .pricing-plans-container {
-        gap: 2rem;
-    }
-    .plan-card {
-        padding: 2rem 1.5rem;
-        flex-basis: calc(50% - 1rem); /* Ajuste para dos tarjetas por fila */
-        max-width: none; /* Permitir que se expanda si solo hay 2 */
-    }
-    /* Ajuste de formas de fondo para tablets */
-    .pricing-shape-1 {
-        width: 45vw; height: 45vw; top: -10vh; left: -15vw; filter: blur(75px);
-    }
-    .pricing-shape-2 {
-        width: 40vw; height: 40vw; bottom: -15vh; right: -15vw; filter: blur(85px);
-    }
-}
-
-@media (max-width: 768px) {
-    .pricing-section {
-        padding: 4rem 1rem;
-    }
-    .pricing-section h2 {
-        font-size: 2rem;
-    }
-    .pricing-plans-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 2rem;
-    }
-    .plan-card {
-        flex-basis: 100%; /* Una tarjeta por fila */
-        max-width: 400px; /* Limitar ancho máximo en móvil */
-    }
-    .plan-price {
-        font-size: 2rem;
-    }
-    .plan-features li {
-        font-size: 0.9rem;
-    }
-    /* Ajuste de formas de fondo para móviles */
-    .pricing-shape-1 {
-        width: 60vw; height: 60vw; 
-        filter: blur(70px);
-    }
-    .pricing-shape-2 {
-        width: 50vw; height: 50vw;
-        filter: blur(80px);
-    }
-}
-
-@media (max-width: 480px) {
-    .pricing-section {
-        padding: 3rem 1rem;
-    }
-    .pricing-section h2 {
-        font-size: 1.8rem;
-    }
-    .pricing-subtitle {
-        font-size: 0.9rem;
-        margin-bottom: 2.5rem;
-    }
-    .plan-card {
-        padding: 1.5rem;
-    }
-    .plan-icon-container {
-        width: 60px; height: 60px; margin-bottom: 1.2rem;
-    }
-    .plan-icon {
-        font-size: 2rem;
-    }
-    .plan-card h3 {
-        font-size: 1.6rem;
-    }
-    .plan-price {
-        font-size: 1.8rem;
-    }
-    .plan-button {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-    /* Ajuste de formas de fondo para móviles pequeños */
-    .pricing-shape-1 {
-        width: 70vw; height: 70vw;
-        filter: blur(60px);
-    }
-    .pricing-shape-2 { 
-        display: none; /* Ocultar la segunda forma si es demasiado */
-    }
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(-15vw, -20vh) scale(1.05) rotate(-25deg); }
+  100% { transform: translate(10vw, 5vh) scale(0.95) rotate(20deg); }
 }
 
 /* Mensajes de Feedback */
 .plan-feedback-message {
   padding: 10px 15px;
-  margin-bottom: 1.5rem; /* Ajusta el margen si está dentro de .pricing-section-content */
+  margin-bottom: 1.5rem;
   border-radius: 6px;
   font-weight: 500;
   text-align: center;
@@ -350,9 +222,8 @@
   color: #ffffff;
   background-color: rgba(76, 175, 80, 0.2);
   border: 1px solid rgba(76, 175, 80, 0.4);
-  /* Asegurar que esté por encima de las formas de fondo pero debajo de los modales */
-  position: relative; 
-  z-index: 15; /* Por encima de .pricing-section-content (z-index: 10) */
+  position: relative;
+  z-index: 15;
 }
 
 .plan-feedback-message.error {
@@ -381,110 +252,212 @@
   bottom: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(24, 24, 24, 0.9); /* Fondo semi-transparente oscuro */
-  z-index: 1000; /* Por encima de otro contenido */
+  background-color: rgba(24, 24, 24, 0.9);
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  opacity: 1; /* Asegurar que sea visible si la clase .visible no se aplica */
-  transform: none; /* Resetear transform de entrada */
-  filter: none; /* Resetear filtro de entrada */
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .planes-modal-version .pricing-section-content {
-    max-width: 90%; /* Ajustar para que no sea tan ancho en modal */
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 2rem;
-    background-color: #1e1e1e; /* Fondo sólido para el contenido del modal */
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
 }
 
 .planes-modal-close-button {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: transparent;
-    border: none;
-    color: #aaa;
-    font-size: 1.8rem;
-    cursor: pointer;
-    padding: 5px;
-    line-height: 1;
-    z-index: 1001; /* Encima del contenido del modal */
-    transition: color 0.2s ease;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  z-index: 1001;
+  transition: color 0.2s ease;
 }
 .planes-modal-close-button:hover {
-    color: #FF6D14;
+  color: #FF6D14;
 }
 
 /* Ocultar las formas de fondo fijas si el modal está activo */
 .planes-modal-version .pricing-shape {
-    display: none;
+  display: none;
 }
 /* Asegurar que la línea superior no aparezca en el modo modal */
 .planes-modal-version::before {
-    display: none;
+  display: none;
 }
 
 /* Adaptar las plan-card para el modal */
 .planes-modal-version .plan-card {
-    flex-basis: auto; /* Dejar que el contenido defina el tamaño */
-    max-width: 320px; /* Mantener un tamaño razonable para las tarjetas */
+  flex-basis: auto;
+  max-width: 320px;
 }
 .planes-modal-version .pricing-plans-container {
-    gap: 1.5rem; /* Menos espacio entre tarjetas en modal */
-    flex-wrap: wrap; /* Permitir que se envuelvan si no caben */
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
-/* Ajuste para el plan activo en modal (opcional, si el contraste es un problema) */
+/* Ajuste para el plan activo en modal */
 .current-plan-active {
-    border-color: #FF6D14;
-    box-shadow: 0 0 15px rgba(255, 109, 20, 0.3), 0 8px 25px rgba(0, 0, 0, 0.5);
+  border-color: #FF6D14;
+  box-shadow: 0 0 15px rgba(255, 109, 20, 0.3), 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
 .planes-modal-later-button {
-    margin-top: 2rem;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    background-color: #555;
-    color: #ccc;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  margin-top: 2rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: #555;
+  color: #ccc;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .planes-modal-later-button:hover {
-    background-color: #666;
-    color: #fff;
+  background-color: #666;
+  color: #fff;
 }
 .plan-button.disabled-by-plan {
-    background-color: #4a4a4a !important; /* Darker gray background */
-    color: #a0a0a0 !important; /* Lighter text color */
-    cursor: not-allowed !important; /* No-go cursor */
-    opacity: 0.7; /* Slightly faded */
-    box-shadow: none !important; /* Remove shadow */
-    transform: none !important; /* No hover/active transform */
-    border: 1px solid #666 !important; /* A subtle border */
+  background-color: #4a4a4a !important;
+  color: #a0a0a0 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+  box-shadow: none !important;
+  transform: none !important;
+  border: 1px solid #666 !important;
 }
 
 /* Ensure current active plan button looks active, not disabled */
 .current-plan-active .plan-button.secondary {
-    background-color: #5a5a5a; /* A slightly different gray for active secondary button */
-    color: #e0e0e0; /* Active text color */
-    cursor: pointer; /* Pointer cursor for active button */
-    opacity: 1; /* Fully opaque */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Keep a subtle shadow */
-    transform: none; /* No transform */
-    border-color: #777; /* Subtle border */
+  background-color: #5a5a5a;
+  color: #e0e0e0;
+  cursor: pointer;
+  opacity: 1;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transform: none;
+  border-color: #777;
 }
 
 .current-plan-active .plan-button.secondary:hover {
-    background-color: #666; /* Darker on hover */
-    color: #fff;
-    border-color: #999;
+  background-color: #666;
+  color: #fff;
+  border-color: #999;
+}
+
+/* --- Responsividad para Pricing Section --- */
+@media (max-width: 992px) {
+  .pricing-section {
+    padding: 5rem 1.5rem;
+  }
+  .pricing-section h2 {
+    font-size: 2.3rem;
+  }
+  .pricing-subtitle {
+    font-size: 1rem;
+    margin-bottom: 3rem;
+  }
+  .pricing-plans-container {
+    gap: 2rem;
+  }
+  .plan-card {
+    padding: 2rem 1.5rem;
+    flex-basis: calc(50% - 1rem);
+    max-width: none;
+  }
+  /* Ajuste de formas de fondo para tablets */
+  .pricing-shape-1 {
+    width: 45vw; height: 45vw; top: -10vh; left: -15vw; filter: blur(75px);
+  }
+  .pricing-shape-2 {
+    width: 40vw; height: 40vw; bottom: -15vh; right: -15vw; filter: blur(85px);
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-section {
+    padding: 4rem 1rem;
+  }
+  .pricing-section h2 {
+    font-size: 2rem;
+  }
+  .pricing-plans-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .plan-card {
+    flex-basis: 100%;
+    max-width: 400px;
+  }
+  .plan-price {
+    font-size: 2rem;
+  }
+  .plan-features li {
+    font-size: 0.9rem;
+  }
+  /* Ajuste de formas de fondo para móviles */
+  .pricing-shape-1 {
+    width: 60vw; height: 60vw;
+    filter: blur(70px);
+  }
+  .pricing-shape-2 {
+    width: 50vw; height: 50vw;
+    filter: blur(80px);
+  }
+}
+
+@media (max-width: 480px) {
+  .pricing-section {
+    padding: 3rem 1rem;
+  }
+  .pricing-section h2 {
+    font-size: 1.8rem;
+  }
+  .pricing-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 2.5rem;
+  }
+  .plan-card {
+    padding: 1.5rem;
+  }
+  .plan-icon-container {
+    width: 60px; height: 60px; margin-bottom: 1.2rem;
+  }
+  .plan-icon {
+    font-size: 2rem;
+  }
+  .plan-card h3 {
+    font-size: 1.6rem;
+  }
+  .plan-price {
+    font-size: 1.8rem;
+  }
+  .plan-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  /* Ajuste de formas de fondo para móviles pequeños */
+  .pricing-shape-1 {
+    width: 70vw; height: 70vw;
+    filter: blur(60px);
+  }
+  .pricing-shape-2 {
+    display: none;
+  }
 }
