@@ -23,7 +23,7 @@ import JugadorBaloncestoPNG from '../img/JugadorBaloncesto.png';
 
 const authInstance = getAuth(app);
 
-// Constantes para la animación de pelotas y efectos visuales.
+// Constantes para la animación de pelotas y efectos visuales.  
 const RIVALT_ORANGE_RGB = '255, 109, 20';
 const TENNIS_BALL_ICON = FaBaseballBall;
 const TENNIS_BALL_SIZE = 28;
@@ -79,50 +79,16 @@ function Main() {
     });
     return () => unsubscribe();
   }, []);
-  const handleScroll = useCallback(() => {
-    if (window.scrollY > 300) { // Mostrar el botón después de 300px de scroll
-      setShowScrollToTopButton(true);
-    } else {
-      setShowScrollToTopButton(false);
-    }
-  }, []);
-  // Maneja el movimiento del ratón para animar las formas de fondo.
-  const handleMouseMove = useCallback((event) => {
-    const { clientX, clientY } = event;
-    const windowWidth = window.innerWidth; const windowHeight = window.innerHeight;
-    const centerX = windowWidth / 2; const centerY = windowHeight / 2;
-    const normalizedDeltaX = (clientX - centerX) / centerX;
-    const normalizedDeltaY = (clientY - centerY) / centerY;
-
-    if (shape1Ref.current) {
-      const moveX1 = normalizedDeltaX * -30; const moveY1 = normalizedDeltaY * -20;
-      const baseRadius = 50; const radiusVariation = 15;
-      const r1 = Math.min(baseRadius + radiusVariation, Math.max(baseRadius - radiusVariation, baseRadius - normalizedDeltaX * radiusVariation));
-      const r2 = Math.min(baseRadius + radiusVariation, Math.max(baseRadius - radiusVariation, baseRadius + normalizedDeltaX * radiusVariation));
-      const r3 = Math.min(baseRadius + radiusVariation, Math.max(baseRadius - radiusVariation, baseRadius - normalizedDeltaY * radiusVariation));
-      const r4 = Math.min(baseRadius + radiusVariation, Math.max(baseRadius - radiusVariation, baseRadius + normalizedDeltaY * radiusVariation));
-      shape1Ref.current.style.borderRadius = `${r1}% ${r2}% ${r3}% ${r4}%`;
-      shape1Ref.current.style.transform = `translate(${moveX1}px, ${moveY1}px) scale(1)`;
-    }
-    if (shape2Ref.current) {
-      const moveX2 = normalizedDeltaX * 15; const moveY2 = normalizedDeltaY * 25;
-      const rotate2 = normalizedDeltaX * 3; const scaleX2 = 1 + normalizedDeltaX * 0.05; const scaleY2 = 1 - normalizedDeltaY * 0.05;
-      shape2Ref.current.style.transform = `translate(${moveX2}px, ${moveY2}px) rotate(${rotate2}deg) scale(${scaleX2}, ${scaleY2})`;
-    }
-  }, []);
 
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
+
     // Observa las secciones para añadir la clase 'visible' cuando entran en el viewport.
     const observerOptions = { threshold: 0.1 };
-    const observerCallback = (entries, observer) => { // Added observer parameter
+    const observerCallback = (entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add("visible");
-          // Optionally, you can unobserve once it's visible to save resources
-          // observer.unobserve(entry.target);
         }
-        // Removed the else part that removed the 'visible' class
       });
     };
     const observer = new IntersectionObserver(observerCallback, observerOptions);
@@ -134,12 +100,12 @@ function Main() {
       if (section) { observer.observe(section); }
     });
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+
       sectionsToObserve.forEach(section => {
         if (section) { observer.unobserve(section); }
       });
     };
-  }, [handleMouseMove]);
+  }, []);
 
   const handleLogin = () => navigate("/login");
 
@@ -354,7 +320,7 @@ function Main() {
       </button> </header>
 
       <section className="main-content"> <div className="content-grid"> <div className="image-container"> <img src={imagenPrincipal} alt="Presentación de la plataforma Rivalt" className="responsive-image" /> </div> <div className="text-content"> <h1>CREA TU PRÓXIMO TORNEO CON <span className="highlight">RIVALT</span></h1> <ul className="features-list"> <li><span className="bullet">-</span> 100% Gratis</li> <li><span className="bullet">-</span> Fácil y rápido</li> </ul> <button onClick={handleLogin} className="form-button primary start-button"> EMPREZAR AHORA </button> </div> </div> </section>
-      <section ref={basketballPromoSectionRef} className="basketball-promo-section"> <div className="basketball-promo-bg-shape"></div> <div className="basketball-promo-content"> <div className="basketball-promo-text-container"> <h2>Descubre lo que puedes hacer</h2> <p> Rivalt te ofrece todas las herramientas necesarias para organizar y gestionar torneos de cualquier tipo de forma sencilla e intuitiva. Desde la creación de brackets hasta el seguimiento en tiempo real. </p> <div className="info-features"> <div><FaRegLightbulb /> Crea Torneos Personalizados</div> <div><FaUserCog /> Gestiona Participantes Fácilmente</div> <div><FaChartLine /> Resultados en Tiempo Real</div> </div> </div> <div className="basketball-promo-image-container"> <img src={JugadorBaloncestoPNG} alt="Jugador de Baloncesto con Rivalt" className="basketball-player-image" /> <div className="basketball-floating-ball"> <FaBasketballBall /> </div> </div> </div> </section>
+      <section ref={basketballPromoSectionRef} className="basketball-promo-section"> <div className="basketball-promo-bg-shape"></div> <div className="basketball-promo-content"> <div className="basketball-promo-text-container"> <h2>Descubre lo que puedes hacer</h2> <p> Rivalt te ofrece todas las herramientas necesarias para organizar y gestionar torneos de cualquier tipo de forma sencilla e intuitiva. Desde la creación de brackets hasta el seguimiento en tiempo real. </p> <div className="info-features"> <div><FaRegLightbulb /> Crea Torneos Personalizados</div> <div><FaUserCog /> Gestiona Participantes Fácilmente</div> <div><FaChartLine /> Seguimiento de resultados</div> </div> </div> <div className="basketball-promo-image-container"> <img src={JugadorBaloncestoPNG} alt="Jugador de Baloncesto con Rivalt" className="basketball-player-image" /> <div className="basketball-floating-ball"> <FaBasketballBall /> </div> </div> </div> </section>
       <section ref={mobilePromoSectionRef} className="mobile-promo-section"> <div className="mobile-promo-shape mobile-promo-shape-1"></div> <div className="mobile-promo-shape mobile-promo-shape-2"></div> <div className="mobile-promo-shape mobile-promo-shape-3"></div> <div className="mobile-promo-content"> <div className="mobile-promo-image-container"> <img src={phoneImage} alt="Rivalt en el móvil" /> </div> <div className="mobile-promo-text-container"> <h2>Rivalt donde quieras</h2> <p> Lleva la gestión de tus torneos contigo. Rivalt también está disponible en móvil, para que no te pierdas ni un detalle. Accede y administra desde cualquier dispositivo. </p> </div> </div> </section>
 
       <Planes isAuthenticated={isUserAuthenticated} />

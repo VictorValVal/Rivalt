@@ -342,6 +342,7 @@ function Nuevo() {
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 required
+                maxLength={30}
               />
               <select
                 className="form-input"
@@ -365,6 +366,7 @@ function Nuevo() {
                   value={otroDeporte}
                   onChange={(e) => setOtroDeporte(e.target.value)}
                   required={deporte === "Otro"}
+                  maxLength={30}
                   style={{ marginTop: '1rem' }}
                 />
               )}

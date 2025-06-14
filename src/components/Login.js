@@ -20,7 +20,9 @@ function Login() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [nombre, setNombre] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); // Errores generales del formulario/Firebase
+  const [passwordInputError, setPasswordInputError] = useState(""); // Errores específicos del campo contraseña
+  const [confirmPasswordInputError, setConfirmPasswordInputError] = useState(""); // Errores específicos del campo confirmar contraseña
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
@@ -33,43 +35,7 @@ function Login() {
   const shape1Ref = useRef(null);
   const shape2Ref = useRef(null);
 
-  // Maneja el movimiento del ratón para animar las formas de fondo.
-  const handleMouseMove = (event) => {
-    const { clientX, clientY } = event;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const centerX = windowWidth / 2;
-    const centerY = windowHeight / 2;
-    const normalizedDeltaX = (clientX - centerX) / centerX;
-    const normalizedDeltaY = (clientY - centerY) / centerY;
-    if (shape1Ref.current) {
-      const moveX1 = normalizedDeltaX * -20;
-      const moveY1 = normalizedDeltaY * -15;
-      shape1Ref.current.style.transform = `translate(${moveX1}px, ${moveY1}px) scale(1)`;
-    }
-    if (shape2Ref.current) {
-      const moveX2 = normalizedDeltaX * 10;
-      const moveY2 = normalizedDeltaY * 18;
-      const rotate2 = normalizedDeltaX * 2;
-      const scaleX2 = 1 + normalizedDeltaX * 0.03;
-      const scaleY2 = 1 - normalizedDeltaY * 0.03;
-      shape2Ref.current.style.transform = `translate(${moveX2}px, ${moveY2}px) rotate(${rotate2}deg) scale(${scaleX2}, ${scaleY2})`;
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      if (shape1Ref.current) {
-        shape1Ref.current.style.transform = 'translate(0,0) scale(1)';
-      }
-      if (shape2Ref.current) {
-        shape2Ref.current.style.transform = 'translate(0,0) rotate(0) scale(1,1)';
-      }
-    };
-  }, []);
-
+  
   // Maneja los errores de autenticación de Firebase.
   const handleAuthError = (firebaseError) => {
     switch (firebaseError.code) {
@@ -158,10 +124,55 @@ function Login() {
     return null;
   };
 
+  // Manejador para el cambio en el campo de contraseña
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    if (!isLogin) { // Solo validar en modo registro
+      const error = validatePassword(newPassword);
+      setPasswordInputError(error);
+      // Si la confirmación de contraseña ya tiene texto, revalidar también
+      if (confirmPassword.length > 0) {
+        if (newPassword !== confirmPassword) {
+          setConfirmPasswordInputError("Las contraseñas no coinciden.");
+        } else {
+          setConfirmPasswordInputError("");
+        }
+      } else {
+          setConfirmPasswordInputError(""); // Limpiar si la confirmación está vacía
+      }
+    } else {
+      setPasswordInputError(""); // Limpiar si estamos en modo login
+      setConfirmPasswordInputError("");
+    }
+  };
+
+  // Manejador para el cambio en el campo de confirmar contraseña
+  const handleConfirmPasswordChange = (e) => {
+    const newConfirmPassword = e.target.value;
+    setConfirmPassword(newConfirmPassword);
+    if (!isLogin) { // Solo validar en modo registro
+      if (newConfirmPassword.length > 0 && password.length > 0) {
+        if (password !== newConfirmPassword) {
+          setConfirmPasswordInputError("Las contraseñas no coinciden.");
+        } else {
+          setConfirmPasswordInputError("");
+        }
+      } else {
+        setConfirmPasswordInputError(""); // Limpiar si alguno de los campos está vacío
+      }
+    } else {
+      setConfirmPasswordInputError(""); // Limpiar si estamos en modo login
+    }
+  };
+
+
   // Maneja el avance al siguiente paso del formulario de registro.
   const handleNextStep = (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); // Limpiar errores generales
+    setPasswordInputError(""); // Limpiar errores específicos de contraseña
+    setConfirmPasswordInputError(""); // Limpiar errores específicos de confirmación
 
     if (registrationStep === 1) {
       if (!email.trim() || !password || !confirmPassword) {
@@ -172,13 +183,15 @@ function Login() {
         setError("Por favor, introduce un correo electrónico válido.");
         return;
       }
-      const passwordError = validatePassword(password);
-      if (passwordError) {
-        setError(passwordError);
+      const passwordValidationResult = validatePassword(password);
+      if (passwordValidationResult) {
+        setPasswordInputError(passwordValidationResult); // Mostrar error bajo el input
+        setError("Por favor, corrige los errores en la contraseña."); // Error general
         return;
       }
       if (password !== confirmPassword) {
-        setError("Las contraseñas no coinciden.");
+        setConfirmPasswordInputError("Las contraseñas no coinciden."); // Mostrar error bajo el input
+        setError("Las contraseñas no coinciden."); // Error general
         return;
       }
       setRegistrationStep(2);
@@ -189,6 +202,8 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setPasswordInputError(""); // Limpiar errores específicos de contraseña
+    setConfirmPasswordInputError(""); // Limpiar errores específicos de confirmación
     setIsLoading(true);
 
     if (isLogin) {
@@ -202,7 +217,33 @@ function Login() {
         setIsLoading(false);
         return;
       }
-    } else {
+    } else { // Modo registro
+      if (registrationStep === 1) { // Si el usuario intentó enviar desde el paso 1 directamente (esto no debería pasar con el botón Siguiente)
+         // Validaciones para el paso 1 en caso de envío directo (redundante pero seguro)
+         if (!email.trim() || !password || !confirmPassword) {
+             setError("Correo, contraseña y confirmación son obligatorios.");
+             setIsLoading(false);
+             return;
+         }
+         if (!validateEmail(email)) {
+             setError("Por favor, introduce un correo electrónico válido.");
+             setIsLoading(false);
+             return;
+         }
+         const passwordValidationResult = validatePassword(password);
+         if (passwordValidationResult) {
+             setPasswordInputError(passwordValidationResult);
+             setError("Por favor, corrige los errores en la contraseña.");
+             setIsLoading(false);
+             return;
+         }
+         if (password !== confirmPassword) {
+             setConfirmPasswordInputError("Las contraseñas no coinciden.");
+             setError("Las contraseñas no coinciden.");
+             setIsLoading(false);
+             return;
+         }
+      }
       if (registrationStep === 2) {
         const nameError = validateName(nombre);
         if (nameError) {
@@ -218,7 +259,7 @@ function Login() {
         const userCredential = await signInWithEmailAndPassword(authInstance, email, password);
         await completePlanUpgradeAfterLogin(userCredential.user.uid, intendedPlan);
         navigate("/home");
-      } else {
+      } else { // Registro
         const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
         await setDoc(doc(db, "usuarios", userCredential.user.uid), {
           nombre: nombre.trim(),
@@ -239,6 +280,8 @@ function Login() {
   // Maneja el inicio de sesión con Google.
   const handleGoogleSignIn = async () => {
     setError("");
+    setPasswordInputError("");
+    setConfirmPasswordInputError("");
     setIsGoogleLoading(true);
     try {
       const result = await signInWithPopup(authInstance, googleProvider);
@@ -281,6 +324,8 @@ function Login() {
   const toggleMode = () => {
     setIsSwitching(true);
     setError("");
+    setPasswordInputError(""); // Limpiar errores específicos al cambiar de modo
+    setConfirmPasswordInputError(""); // Limpiar errores específicos al cambiar de modo
     setRegistrationStep(1);
     setNombre("");
     setEmail("");
@@ -296,7 +341,18 @@ function Login() {
 
   // Valida el primer paso del formulario de registro.
   const isStep1Valid = () => {
-    return email.trim() !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword && validateEmail(email) && validatePassword(password) === null;
+    // Validar email, password y confirmPassword para habilitar el botón "Siguiente"
+    const emailValid = validateEmail(email);
+    const passwordValidationResult = validatePassword(password);
+    const passwordsMatch = password === confirmPassword;
+
+    // Solo se considera válido si no hay errores en el email, contraseña o confirmación
+    return email.trim() !== "" &&
+           password !== "" &&
+           confirmPassword !== "" &&
+           emailValid &&
+           passwordValidationResult === null &&
+           passwordsMatch;
   };
 
   // Valida el segundo paso del formulario de registro.
@@ -339,12 +395,36 @@ function Login() {
                 </div>
                 <div className="form-group">
                   <label className="form-label" htmlFor="password">Contraseña</label>
-                  <input className="form-input" type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Introduce tu contraseña" required disabled={isLoading || isGoogleLoading || isSwitching} />
+                  <input
+                    className="form-input"
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange} 
+                    placeholder="Introduce tu contraseña"
+                    required
+                    disabled={isLoading || isGoogleLoading || isSwitching}
+                  />
+                  {!isLogin && passwordInputError && (
+                     <p className="input-error-message">{passwordInputError}</p>
+                  )}
                 </div>
                 {!isLogin && (
                   <div className="form-group">
                     <label className="form-label" htmlFor="confirmPassword">Confirmar Contraseña</label>
-                    <input className="form-input" type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repite tu contraseña" required={!isLogin} disabled={isLoading || isGoogleLoading || isSwitching} />
+                    <input
+                      className="form-input"
+                      type="password"
+                      id="confirmPassword"
+                      value={confirmPassword}
+                      onChange={handleConfirmPasswordChange} 
+                      placeholder="Repite tu contraseña"
+                      required={!isLogin}
+                      disabled={isLoading || isGoogleLoading || isSwitching}
+                    />
+                    {!isLogin && confirmPasswordInputError && (
+                        <p className="input-error-message">{confirmPasswordInputError}</p>
+                    )}
                   </div>
                 )}
               </>
@@ -359,6 +439,7 @@ function Login() {
               </div>
             )}
 
+            {/* Este es para errores generales del formulario o de Firebase */}
             {error && <p className="form-error-message">{error}</p>}
 
             {isLogin || registrationStep === TOTAL_REGISTRATION_STEPS ? (
@@ -372,7 +453,7 @@ function Login() {
             )}
 
             {!isLogin && registrationStep === TOTAL_REGISTRATION_STEPS && (
-              <button type="button" onClick={() => { setRegistrationStep(1); setError(""); }} className="form-button secondary full-width" disabled={isLoading || isGoogleLoading || isSwitching} style={{ marginTop: '0.5rem' }}>
+              <button type="button" onClick={() => { setRegistrationStep(1); setError(""); setPasswordInputError(""); setConfirmPasswordInputError(""); }} className="form-button secondary full-width" disabled={isLoading || isGoogleLoading || isSwitching} style={{ marginTop: '0.5rem' }}>
                 Volver
               </button>
             )}

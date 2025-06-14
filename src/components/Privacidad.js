@@ -1,4 +1,3 @@
-// components/Privacidad.js
 import React, { useEffect } from 'react';
 import './estilos/Legales.css';
 

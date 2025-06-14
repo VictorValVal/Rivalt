@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import './estilos/Legales.css'; // Crearemos este archivo CSS
+import './estilos/Legales.css';
 
 const Terminos = () => {
     useEffect(() => {
-        window.scrollTo(0, 0); // Para que la página se muestre desde el inicio
+        window.scrollTo(0, 0); 
     }, []);
 
     return (
@@ -49,7 +49,7 @@ const Terminos = () => {
             <h2>4. Contenido de Usuario</h2>
             <ul>
                 <li><strong>Responsabilidad</strong>: Eres el único responsable de todo el Contenido de Usuario que publiques (nombres de equipo, logotipos, resultados informados, etc.). Rivalt no controla el Contenido de Usuario publicado a través de los Servicios y, como tal, no garantiza la exactitud, integridad o calidad de dicho Contenido de Usuario.</li>
-                <li><strong>Licencia a Rivalt</strong>: Al publicar Contenido de Usuario en o a través de los Servicios, otorgas a Rivalt una licencia mundial, no exclusiva, libre de regalías, sublicenciable y transferible para usar, reproducir, distribuir, preparar trabajos derivados, mostrar y ejecutar el Contenido de Usuario en conexión con la provisión, mantenimiento y mejora de los Servicios y el negocio de Rivalt, incluyendo, sin limitación, para la promoción y redistribución de parte o la totalidad de los Servicios (y trabajos derivados de los mismos) en cualquier formato de medios y a través de cualquier canal de medios. Esta licencia continúa incluso si dejas de usar nuestros Servicios, principalmente para fines operativos y de archivo.</li>
+                <li><strong>Licencia a Rivalt</strong>: Al publicar Contenido de Usuario en o a través de los Servicios, otorgas a Rivalt una licencia mundial, no exclusiva, libre de regalías, sublicenciable y transferible para usar, reproducir, distribuir, preparar trabajos derivados, display y ejecutar el Contenido de Usuario en conexión con la provisión, mantenimiento y mejora de los Servicios y el negocio de Rivalt, incluyendo, sin limitación, para la promoción y redistribución de parte o la totalidad de los Servicios (y trabajos derivados de los mismos) en cualquier formato de medios y a través de cualquier canal de medios. Esta licencia continúa incluso si dejas de usar nuestros Servicios, principalmente para fines operativos y de archivo.</li>
                 <li><strong>Derecho a Eliminar</strong>: Rivalt se reserva el derecho (pero no la obligación) de preseleccionar, rechazar o eliminar cualquier Contenido de Usuario a su sola discreción si considera que dicho contenido viola estos Términos o es de alguna manera perjudicial u objetable.</li>
             </ul>
 

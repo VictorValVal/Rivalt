@@ -1,4 +1,3 @@
-// src/components/Calendario.js
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import "../components/estilos/Calendario.css";
@@ -29,13 +28,9 @@ import ReactModal from 'react-modal';
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Configura el elemento raíz para ReactModal
 ReactModal.setAppElement("#root");
 
-/**
- * Genera la estructura de una llave de eliminación simple.
- * Valida que el número de participantes sea una potencia de 2 y mayor o igual a 2.
- */
+
 const generateBracketStructure = (numParticipants) => {
     if (!numParticipants || numParticipants < 2 || !Number.isInteger(Math.log2(numParticipants))) {
         return [];
@@ -574,6 +569,7 @@ function Calendario() {
                             onChange={(e) => setLocalScore(e.target.value)}
                             min="0"
                             required
+                            maxLength={5}
                             className="form-input"
                         />
                     </div>

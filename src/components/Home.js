@@ -210,10 +210,13 @@ function Home() {
   const currentSimultaneousLimit = PLAN_LIMITS[userPlan]?.simultaneos;
 
   const handlePlanBannerClick = () => {
-    if (userPlan !== 'pro') {
-      navigate("/#planes-section");
+  if (userPlan !== 'pro') {
+    const planesSection = document.getElementById('planes-section');
+    if (planesSection) {
+      planesSection.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }
+};
 
   return (
     <div style={{ backgroundColor: '#121212', minHeight: '100vh' }}>

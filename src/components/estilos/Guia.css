@@ -1,0 +1,183 @@
+/* Contenedor principal de la página de la guía */
+.guia-page-container {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Contenido principal con márgenes y ancho máximo */
+.guia-content {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 25px 40px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  border: 1px solid #2b2b2b;
+}
+
+/* Cabecera de la guía */
+.guia-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.guia-header h1 {
+  color: #FFFFFF;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.guia-intro {
+  font-size: 1.1rem;
+  color: #AAAAAA;
+  line-height: 1.7;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Estilo de las secciones principales (1. , 2., etc.) */
+.guia-section {
+  margin-bottom: 50px;
+}
+
+.guia-section > h2 {
+  font-size: 2.2rem;
+  color: #FF6D14;
+  font-weight: 600;
+  margin-bottom: 25px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #333;
+}
+
+/* Estilo de los artículos dentro de cada sección */
+.guia-article {
+  margin-bottom: 35px;
+}
+
+.guia-article h3 {
+  font-size: 1.6rem;
+  color: #FFFFFF;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.guia-article h4 {
+  font-size: 1.2rem;
+  color: #e0e0e0;
+  font-weight: 500;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.guia-article p,
+.guia-article li {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #b0b0b0;
+  margin-bottom: 1rem;
+}
+
+.guia-article ul, .guia-article ol {
+  padding-left: 25px;
+}
+
+.guia-article li {
+  margin-bottom: 0.8rem;
+}
+
+.guia-article strong {
+  color: #FFC107;
+  font-weight: 600;
+}
+
+.guia-article a {
+  color: #FF6D14;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.guia-article a:hover {
+  color: #ff8a47;
+  text-decoration: underline;
+}
+
+/* Marcador de posición para las imágenes del manual */
+.manual-image-placeholder {
+  background-color: #2a2a2a;
+  border: 2px dashed #444;
+  border-radius: 8px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 25px 0;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.manual-image-placeholder:hover {
+    border-color: #FF6D14;
+    background-color: #303030;
+}
+
+.manual-image-placeholder span {
+  color: #777;
+  font-size: 0.9rem;
+  font-style: italic;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Fila para mostrar imágenes lado a lado */
+.guia-image-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.guia-image-row .manual-image-placeholder {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 992px) {
+  .guia-content {
+    padding: 20px 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .guia-header h1 {
+    font-size: 2.2rem;
+  }
+  .guia-section > h2 {
+    font-size: 1.8rem;
+  }
+  .guia-article h3 {
+    font-size: 1.4rem;
+  }
+  .guia-article p, .guia-article li {
+    font-size: 0.95rem;
+  }
+  .guia-image-row {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .guia-content {
+    padding: 15px;
+    margin: 20px 10px;
+  }
+  .guia-header h1 {
+    font-size: 1.8rem;
+  }
+  .guia-intro {
+    font-size: 1rem;
+  }
+}
