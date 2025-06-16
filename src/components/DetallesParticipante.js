@@ -8,22 +8,26 @@ import "./estilos/DetallesParticipante.css";
 const db = getFirestore(app);
 
 function DetallesParticipante() {
+  // Obtiene los parámetros de la URL (torneoId, tipo de participante, ID del participante)
   const { torneoId, tipo, participanteId } = useParams();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation(); // Hook para acceder al objeto de ubicación
+  const navigate = useNavigate(); // Hook para la navegación programática
 
-  const [data, setData] = useState(null);
-  const [torneoMode, setTorneoMode] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [estadisticasUsuario, setEstadisticasUsuario] = useState({ torneosJugados: 0 });
-  const [miembrosEquipo, setMiembrosEquipo] = useState([]);
-  const [nombreTorneoActual, setNombreTorneoActual] = useState("");
+  // Estados para la información del participante, el modo del torneo, carga, errores y estadísticas
+  const [data, setData] = useState(null); // Datos del participante o equipo
+  const [torneoMode, setTorneoMode] = useState(null); // Modo del torneo (individual o equipo)
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(""); // Mensajes de error
+  const [estadisticasUsuario, setEstadisticasUsuario] = useState({ torneosJugados: 0 }); // Estadísticas para usuarios individuales
+  const [miembrosEquipo, setMiembrosEquipo] = useState([]); // Miembros del equipo si es un equipo
+  const [nombreTorneoActual, setNombreTorneoActual] = useState(""); // Nombre del torneo actual
 
+  // Manejador para volver a la lista de participantes del torneo
   const handleVolverAParticipantes = () => {
     navigate(`/torneo/${torneoId}`, { state: { activeTab: "participantes", fromDetails: true } });
   };
 
+  // Efecto para cargar los datos del participante o equipo al cargar el componente o cambiar los IDs
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -32,6 +36,7 @@ function DetallesParticipante() {
       setMiembrosEquipo([]);
 
       let currentTorneoMode = null;
+      // Obtiene el modo del torneo actual
       if (torneoId) {
         const torneoRef = doc(db, "torneos", torneoId);
         const torneoSnap = await getDoc(torneoRef);
@@ -43,13 +48,14 @@ function DetallesParticipante() {
       }
 
       try {
-        if (tipo === "usuario") {
+        if (tipo === "usuario") { // Si el tipo es "usuario"
           const usuarioRef = doc(db, "usuarios", participanteId);
           const usuarioSnap = await getDoc(usuarioRef);
           if (usuarioSnap.exists()) {
             const usuarioData = usuarioSnap.data();
             setData({ ...usuarioData, id: usuarioSnap.id, tipo: "usuario" });
 
+            // Obtiene los torneos en los que ha participado el usuario
             const torneosQuery = query(
               collection(db, "torneos"),
               where("participantes", "array-contains", participanteId)
@@ -60,14 +66,16 @@ function DetallesParticipante() {
           } else {
             setError("Usuario no encontrado.");
           }
-        } else if (tipo === "equipo") {
-          if (location.state?.equipoData) {
+        } else if (tipo === "equipo") { // Si el tipo es "equipo"
+          if (location.state?.equipoData) { // Prioriza los datos pasados por el estado de la navegación
             const equipo = location.state.equipoData;
             setData({ ...equipo, id: participanteId, tipo: "equipo" });
 
+            // Carga los detalles de los miembros del equipo
             if (equipo.miembros && equipo.miembros.length > 0) {
               const miembrosDataPromises = equipo.miembros.map(async (miembroIdentificador) => {
                 let miembroInfo = { identificador: miembroIdentificador, nombre: miembroIdentificador, email: "" };
+                // Intenta buscar el miembro por UID si parece un UID de Firebase
                 if (typeof miembroIdentificador === 'string' && miembroIdentificador.length > 15) {
                     try {
                         const userRef = doc(db, "usuarios", miembroIdentificador);
@@ -76,13 +84,13 @@ function DetallesParticipante() {
                             miembroInfo.nombre = userSnap.data().nombre || miembroIdentificador;
                             miembroInfo.email = userSnap.data().email || "";
                         } else {
-                             miembroInfo.nombre = miembroIdentificador;
+                             miembroInfo.nombre = miembroIdentificador; // Si no se encuentra, usa el ID
                         }
                     } catch (e) {
                         console.warn("Error buscando miembro por UID:", miembroIdentificador, e);
                         miembroInfo.nombre = `Usuario (${miembroIdentificador.substring(0,6)}...) (Error)`;
                     }
-                } else if (miembroIdentificador.includes('@')) {
+                } else if (miembroIdentificador.includes('@')) { // Si parece un email
                     miembroInfo.email = miembroIdentificador;
                     miembroInfo.nombre = miembroIdentificador.split('@')[0];
                 }
@@ -92,11 +100,12 @@ function DetallesParticipante() {
               setMiembrosEquipo(miembrosResueltos);
             }
 
-          } else {
+          } else { // Si no hay datos en el estado, busca el equipo en el torneo
             const torneoRef = doc(db, "torneos", torneoId);
             const torneoSnap = await getDoc(torneoRef);
             if (torneoSnap.exists()) {
               const torneoData = torneoSnap.data();
+              // Busca el equipo por el ID del capitán (que es el participanteId en este caso)
               const equipoEncontrado = torneoData.participantes?.find(p => typeof p === 'object' && p.capitan === participanteId);
               if (equipoEncontrado) {
                 setData({ ...equipoEncontrado, id: participanteId, tipo: "equipo" });
@@ -122,10 +131,11 @@ function DetallesParticipante() {
         console.error("Error al cargar datos del participante:", err);
         setError("No se pudieron cargar los detalles. " + err.message);
       } finally {
-        setLoading(false);
+        setLoading(false); // Finaliza el estado de carga
       }
     };
 
+    // Llama a cargarDatos solo si los parámetros necesarios están presentes
     if (participanteId && tipo && torneoId) {
       cargarDatos();
     } else {
@@ -134,6 +144,7 @@ function DetallesParticipante() {
     }
   }, [participanteId, tipo, torneoId, location.state]);
 
+  // Función auxiliar para obtener la inicial del nombre o email para el avatar por defecto
   const getInicial = (nombre, email) => {
     if (!nombre || typeof nombre !== 'string') {
         if (email && typeof email === 'string') return email.charAt(0).toUpperCase();
@@ -142,14 +153,15 @@ function DetallesParticipante() {
     return nombre.charAt(0).toUpperCase();
   };
 
+  // Función para formatear un timestamp a una fecha legible
   const formatDate = (timestamp) => {
     if (!timestamp) return "Fecha desconocida";
-    if (timestamp.seconds) {
+    if (timestamp.seconds) { // Si es un objeto Timestamp de Firebase
       return new Date(timestamp.seconds * 1000).toLocaleDateString("es-ES", {
         year: 'numeric', month: 'long', day: 'numeric'
       });
     }
-    const date = new Date(timestamp);
+    const date = new Date(timestamp); // Si es un objeto Date normal
     if (!isNaN(date.getTime())) {
       return date.toLocaleDateString("es-ES", {
         year: 'numeric', month: 'long', day: 'numeric'
@@ -158,10 +170,12 @@ function DetallesParticipante() {
     return "Fecha inválida";
   };
 
+  // Muestra un mensaje de carga mientras los datos se están obteniendo
   if (loading) {
     return <div className="detalles-participante-loading">Cargando detalles...</div>;
   }
 
+  // Muestra un mensaje de error si hubo problemas al cargar y permite volver
   if (error) {
     return (
       <div className="detalles-participante-error">
@@ -173,6 +187,7 @@ function DetallesParticipante() {
     );
   }
 
+  // Muestra un mensaje si no se encontraron datos para el participante
   if (!data) {
     return (
         <div className="detalles-participante-error">
@@ -186,6 +201,7 @@ function DetallesParticipante() {
 
   return (
     <div className="detalles-participante-container">
+        {/* Cabecera con botón de volver y título */}
         <div className="dp-header">
             <button onClick={handleVolverAParticipantes} className="dp-boton-volver dp-header-volver">
                 <FaArrowLeft />
@@ -194,12 +210,13 @@ function DetallesParticipante() {
                 Detalles del {data.tipo === "usuario" ? "Jugador" : "Equipo"}
                 {nombreTorneoActual && <span className="dp-subtitulo-torneo">en {nombreTorneoActual}</span>}
             </h1>
-            <div style={{width: "40px"}}></div>
+            <div style={{width: "40px"}}></div> {/* Espaciador para centrar el título */}
         </div>
 
+      {/* Tarjeta de detalles para un usuario individual */}
       {data.tipo === "usuario" && (
         <div className="dp-card dp-usuario-card">
-          {torneoMode === "individual" && (
+          {torneoMode === "individual" && ( // Muestra el avatar solo si el torneo es individual
             <div className="dp-avatar-container">
               {data.photoURL ? (
                 <img src={data.photoURL} alt={`Avatar de ${data.nombre || 'participante'}`} className="dp-avatar dp-avatar-img" />
@@ -213,6 +230,7 @@ function DetallesParticipante() {
           <div className="dp-info-grupo">
             <h2 className="dp-nombre">{data.nombre || "Nombre no disponible"} {data.apellidos || ""}</h2>
           </div>
+          {/* Información de contacto y registro */}
           <div className="dp-info-item">
             <FaEnvelope className="dp-info-icon" />
             <span>{data.email || "Email no disponible"}</span>
@@ -222,6 +240,7 @@ function DetallesParticipante() {
             <span>Se unió: {formatDate(data.fechaRegistro) || "No especificado"}</span>
           </div>
 
+          {/* Sección de estadísticas (para usuarios) */}
           <div className="dp-seccion dp-estadisticas">
             <h3 className="dp-subtitulo-seccion"><FaChartLine /> Estadísticas</h3>
             <div className="dp-info-item">
@@ -231,12 +250,14 @@ function DetallesParticipante() {
         </div>
       )}
 
+      {/* Tarjeta de detalles para un equipo */}
       {data.tipo === "equipo" && (
         <div className="dp-card dp-equipo-card">
           <div className="dp-info-grupo">
-            <FaShieldAlt className="dp-icono-titulo-equipo" />
+            <FaShieldAlt className="dp-icono-titulo-equipo" /> {/* Icono de escudo para equipos */}
             <h2 className="dp-nombre-equipo">{data.nombre || "Nombre de equipo no disponible"}</h2>
           </div>
+           {/* Muestra el capitán del equipo si está disponible */}
            {data.capitanNombre && (
             <div className="dp-info-item">
                 <FaUserCircle className="dp-info-icon" />
@@ -244,6 +265,7 @@ function DetallesParticipante() {
             </div>
           )}
 
+          {/* Sección de integrantes del equipo */}
           <div className="dp-seccion dp-miembros">
             <h3 className="dp-subtitulo-seccion"><FaUsers /> Integrantes del Equipo</h3>
             {miembrosEquipo.length > 0 ? (

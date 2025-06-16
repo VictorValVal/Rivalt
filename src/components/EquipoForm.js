@@ -44,48 +44,46 @@ function EquipoForm({ onSubmit, onCancel, maxMiembros }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-
     if (!nombreEquipo.trim()) {
       setError("El nombre del equipo no puede estar vacío.");
       return;
     }
-
-    // Validate each member's input
-    for (let i = 0; i < miembros.length; i++) {
-        if (!miembros[i].trim()) {
-            setError(`El email o nick del miembro ${i + 1} no puede estar vacío.`);
-            return;
-        }
+    if (miembros.some(m => !m.trim())) {
+      setError("Todos los campos de miembro deben tener un nombre o correo.");
+      return;
+    }
+    if (miembros.length === 0) {
+        setError("El equipo debe tener al menos un miembro.");
+        return;
     }
 
-    onSubmit({ nombreEquipo, miembros });
+    setError("");
+    onSubmit(nombreEquipo, miembros);
   };
 
   return (
-    <form className="equipo-form" onSubmit={handleSubmit}>
-      <h2 className="form-title">
-        <FaUsers /> Crear Nuevo Equipo
-      </h2>
+    <form onSubmit={handleSubmit} className="equipo-form-container">
+      <div className="form-header">
+        <FaUsers className="header-icon" />
+        <h2>Crear Nuevo Equipo</h2>
+      </div>
+
       {error && <p className="error-message">{error}</p>}
+
       <div className="form-group">
-        <label htmlFor="nombreEquipo" className="form-label">
-          Nombre del Equipo:
-        </label>
+        <label htmlFor="nombreEquipo">Nombre del Equipo</label>
         <input
-          type="text"
           id="nombreEquipo"
+          type="text"
+          placeholder="Ej: Los Invencibles"
           value={nombreEquipo}
           onChange={handleChangeNombreEquipo}
           className="form-input"
-          placeholder="Ej: Los Invencibles"
-          maxLength={50} // Added character limit
-          required
         />
       </div>
 
       <div className="form-group">
-        <label className="form-label">Miembros:</label>
+        <label>Miembros del Equipo (emails o nicks)</label>
         {miembros.map((miembro, index) => (
           <div key={index} className="miembro-input-group">
             <input
@@ -94,8 +92,6 @@ function EquipoForm({ onSubmit, onCancel, maxMiembros }) {
               value={miembro}
               onChange={(e) => handleChangeMiembro(index, e.target.value)}
               className="form-input"
-              maxLength={100} // Added character limit
-              required
             />
             {miembros.length > 1 && (
               <button

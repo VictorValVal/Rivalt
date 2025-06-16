@@ -51,7 +51,7 @@ function Unirse() {
 
   const [currentUser, setCurrentUser] = useState(null);
   const [userPlan, setUserPlan] = useState('free');
-  const [userTotalTournaments, setUserTotalTournaments] = useState(0);
+  const [userTotalTournaments, setUserTotalTournaments] = useState(1);
   const [isLoadingPlanData, setIsLoadingPlanData] = useState(true);
 
   // Efecto para la autenticación del usuario y carga de datos del plan/torneos

@@ -39,7 +39,6 @@
   margin: 0 auto;
 }
 
-/* Estilo de las secciones principales (1. , 2., etc.) */
 .guia-section {
   margin-bottom: 50px;
 }
@@ -90,7 +89,7 @@
 }
 
 .guia-article strong {
-  color: #FFC107;
+  color: #FF6D14;
   font-weight: 600;
 }
 
@@ -180,4 +179,78 @@
   .guia-intro {
     font-size: 1rem;
   }
+}
+
+.back-button {
+  background-color: #f0f0f0; /* Light gray background */
+  color: #333; /* Dark text */
+  border: 1px solid #ccc; /* Light border */
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 20px; /* Space below the button */
+  transition: background-color 0.2s ease; /* Smooth transition on hover */
+}
+
+.back-button:hover {
+  background-color: #e0e0e0; /* Slightly darker on hover */
+}
+
+.guia-header {
+  position: relative; /* This is crucial for absolute positioning of the button */
+  /* You might need to adjust padding-top if the button overlaps the title */
+  padding-top: 50px; /* Example: add some space if needed */
+  text-align: center; /* Example: if your header text is centered */
+}
+
+/* Although the button uses inline styles, you might want to add hover effects or minor adjustments */
+.guia-header-back-button:hover {
+  opacity: 0.8; /* Example: slightly fade on hover */
+}
+
+
+/* Contenido principal de la guía (texto, secciones) */
+.guia-content {
+  flex-grow: 1; /* Permite que el contenido empuje el footer hacia abajo */
+  max-width: 900px; /* Ancho máximo para legibilidad, ajusta si es necesario */
+
+  padding: 20px; /* Espaciado interno */
+}
+
+/* --- */
+
+/* Estilos para el botón de flecha "Volver Atrás" */
+.guia-back-to-top-button {
+  color: #E0E0E0; /* Color de la flecha */
+  background: transparent; /* Fondo transparente */
+  border: none; /* Sin borde */
+  font-size: 1.8rem; /* Tamaño de la flecha, ajusta si lo ves muy pequeño/grande */
+  cursor: pointer; /* Cambia el cursor a puntero al pasar por encima */
+  padding: 0.5rem; /* Pequeño padding interno */
+
+  /* Posicionamiento: Arriba y Centrado Horizontalmente */
+  position: fixed; /* Fija el botón respecto al viewport (ventana del navegador) */
+  top: 10px; /* Distancia desde el borde superior de la ventana */
+  left: 50%; /* Coloca el borde izquierdo del botón en el centro horizontal de la ventana */
+  transform: translateX(-50%); /* Mueve el botón hacia la izquierda la mitad de su propio ancho, centrándolo perfectamente */
+  z-index: 1000; /* Asegura que el botón esté por encima de otros elementos */
+
+  /* Estilos para el hover */
+  transition: color 0.2s ease, background-color 0.2s ease; /* Transición suave para los cambios al pasar el ratón */
+}
+
+.guia-back-to-top-button:hover {
+  color: #FFFFFF; /* Color de la flecha al pasar el ratón */
+  background-color: rgba(0, 0, 0, 0.2); /* Fondo sutil al pasar el ratón */
+  border-radius: 50%; /* Hace el fondo circular al pasar el ratón */
+}
+
+
+
+/* Ajustes para el encabezado si es necesario, ya no contendrá el botón fijo */
+.guia-header {
+  text-align: center; /* Centra el título de la guía */
+  margin-bottom: 20px; /* Espacio debajo del encabezado */
+  /* Si el título se solapa con el botón fijo, el padding-top del .guia-page-container debería solucionarlo */
 }
